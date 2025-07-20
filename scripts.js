@@ -863,28 +863,26 @@ setTimeout(() => {
     console.log('🎯 Enhanced Multi-Film Modal: Ready with thumbnails!');
 });
 
-// Services Toggle System with Mobile Modal (Desktop Untouched)
+// Enhanced Services Toggle System with solve4 fix
 class ServicesToggleSystem {
     constructor() {
-        // Define all services with their trigger and description classes
+        console.log('🚀 Initializing Services Toggle System...');
+        
         this.services = [
             { triggerClass: 'brand', descriptionClass: 'brand-descr', name: 'Brand' },
             { triggerClass: 'creative', descriptionClass: 'creative-descr', name: 'Creative' },
             { triggerClass: 'imc', descriptionClass: 'imc-descr', name: 'Integrated Communications' },
-            { triggerClass: 'solve4', descriptionClass: 'solve4-descr', name: 'Solve for' },
+            { triggerClass: 'solve4', descriptionClass: 'solve4-descr', name: 'Solve for [insert challenge here]' },
             { triggerClass: 'scriptwriting', descriptionClass: 'scriptwriting-descr', name: 'Scriptwriting' },
             { triggerClass: 'film-conceptualisation', descriptionClass: 'film-concept-descr', name: 'Film Conceptualisation' },
             { triggerClass: 'directing', descriptionClass: 'film-direct-descr', name: 'Film Directing' }
         ];
 
-        // Check if mobile
         this.isMobile = window.innerWidth < 768;
-
-        // Find the main content container
         this.servicesContent = document.querySelector('.capabilities') || document.querySelector('.services');
 
         if (!this.servicesContent) {
-            console.log('Services toggle: Main content container not found');
+            console.log('❌ Services content container not found');
             return;
         }
 
@@ -893,67 +891,123 @@ class ServicesToggleSystem {
         this.serviceElements = new Map();
 
         this.init();
-        this.createMobileModal(); // Create modal for mobile
+        
+        if (this.isMobile) {
+            this.createMobileModal();
+        }
 
-        // Listen for resize to switch between mobile/desktop
         window.addEventListener('resize', () => this.handleResize());
+        
+        console.log('✅ Services Toggle System initialized');
     }
 
     init() {
-        // Store the original services content
+        console.log('🔧 Initializing individual services...');
         this.originalServicesContent = this.servicesContent.innerHTML;
 
-        // Process each service
-        this.services.forEach(service => {
-            const triggerElement = document.querySelector(`.${service.triggerClass}`);
-            const descriptionElement = document.querySelector(`.${service.descriptionClass}`);
-
-            if (triggerElement && descriptionElement) {
-                // Store elements for this service
-                const serviceData = {
-                    trigger: triggerElement,
-                    description: descriptionElement,
-                    service: service
-                };
-
-                this.serviceElements.set(service.triggerClass, serviceData);
-
-                // Hide original description
-                descriptionElement.style.display = 'none';
-
-                // Add click listener
-                triggerElement.addEventListener('click', (e) => this.handleServiceToggle(e, service.triggerClass));
-
-                // Make clickable
-                triggerElement.style.cursor = 'pointer';
-                triggerElement.style.userSelect = 'none';
-
-                console.log(`✅ ${service.name} initialized successfully`);
-            } else {
-                console.log(`❌ ${service.name} elements not found`);
-            }
+        // Enhanced initialization with multiple attempts for solve4
+        this.services.forEach((service, index) => {
+            // Staggered delays to ensure all elements are available
+            const delay = index * 150; // 150ms between each service
+            
+            setTimeout(() => {
+                this.initializeService(service);
+            }, delay);
         });
+
+        // Special handling for solve4 - try again after 2 seconds if not found
+        setTimeout(() => {
+            if (!this.serviceElements.has('solve4')) {
+                console.log('🔄 solve4 not found in first pass, retrying...');
+                const solve4Service = this.services.find(s => s.triggerClass === 'solve4');
+                if (solve4Service) {
+                    this.initializeService(solve4Service, true); // Force attempt
+                }
+            }
+        }, 2000);
+    }
+
+    initializeService(service, forceAttempt = false) {
+        const triggerElement = document.querySelector(`.${service.triggerClass}`);
+        const descriptionElement = document.querySelector(`.${service.descriptionClass}`);
+
+        console.log(`🔍 ${service.name}:`);
+        console.log(`  Trigger (.${service.triggerClass}):`, triggerElement);
+        console.log(`  Description (.${service.descriptionClass}):`, descriptionElement);
+
+        if (triggerElement && descriptionElement) {
+            // Check if already initialized
+            if (this.serviceElements.has(service.triggerClass)) {
+                console.log(`⚠️ ${service.name} already initialized, skipping`);
+                return;
+            }
+
+            const serviceData = {
+                trigger: triggerElement,
+                description: descriptionElement,
+                service: service
+            };
+
+            this.serviceElements.set(service.triggerClass, serviceData);
+            descriptionElement.style.display = 'none';
+
+            // Enhanced element preparation for solve4
+            if (service.triggerClass === 'solve4' || forceAttempt) {
+                // Extra preparations for solve4
+                triggerElement.style.pointerEvents = 'auto';
+                triggerElement.style.position = 'relative';
+                triggerElement.style.zIndex = '10';
+            }
+
+            // Clone element to remove any conflicting listeners
+            const newTrigger = triggerElement.cloneNode(true);
+            triggerElement.parentNode.replaceChild(newTrigger, triggerElement);
+
+            // Add event listener
+            newTrigger.addEventListener('click', (e) => {
+                console.log(`🖱️ ${service.name} clicked!`);
+                this.handleServiceToggle(e, service.triggerClass);
+            });
+
+            // Update service data with new trigger
+            serviceData.trigger = newTrigger;
+            this.serviceElements.set(service.triggerClass, serviceData);
+
+            // Make clickable
+            newTrigger.style.cursor = 'pointer';
+            newTrigger.style.userSelect = 'none';
+
+            console.log(`✅ ${service.name} initialized successfully`);
+        } else {
+            console.log(`❌ ${service.name} elements not found`);
+            if (!triggerElement) console.log(`   Missing: .${service.triggerClass}`);
+            if (!descriptionElement) console.log(`   Missing: .${service.descriptionClass}`);
+        }
     }
 
     handleServiceToggle(e, serviceKey) {
+        console.log(`🔄 Handling toggle for: ${serviceKey}`);
         e.preventDefault();
         e.stopPropagation();
 
         const serviceData = this.serviceElements.get(serviceKey);
-        if (!serviceData) return;
+        if (!serviceData) {
+            console.log(`❌ No service data found for: ${serviceKey}`);
+            return;
+        }
 
-        // If this service is already active, close it
         if (this.activeService === serviceKey) {
+            console.log(`🔒 Closing active service: ${serviceKey}`);
             this.closeActiveService();
             return;
         }
 
-        // Close any currently active service first
         if (this.activeService) {
+            console.log(`🔄 Closing previous service: ${this.activeService}`);
             this.closeActiveService();
         }
 
-        // Open the clicked service
+        console.log(`🚀 Opening service: ${serviceKey} (Mobile: ${this.isMobile})`);
         if (this.isMobile) {
             this.openServiceMobile(serviceKey);
         } else {
@@ -961,37 +1015,26 @@ class ServicesToggleSystem {
         }
     }
 
-    // DESKTOP FUNCTIONALITY - COMPLETELY UNTOUCHED
     openServiceDesktop(serviceKey) {
         const serviceData = this.serviceElements.get(serviceKey);
         if (!serviceData) return;
 
         const trigger = serviceData.trigger;
-
-        // Update trigger: [+] to [-]
         const currentText = trigger.textContent;
         const newText = currentText.replace('[+]', '[-]');
         trigger.textContent = newText;
 
-        // Add active class and attribute for maximum specificity
         trigger.classList.add('service-active');
         trigger.setAttribute('data-service-active', 'true');
 
-        // Fade out current content first
         this.servicesContent.style.opacity = '0';
 
         setTimeout(() => {
-            // Replace services content with this service's description
             this.servicesContent.innerHTML = serviceData.description.innerHTML;
-
-            // Style the numbers in brackets green
             this.styleNumbersInBrackets();
-
-            // Add class to indicate active state
             this.servicesContent.classList.add('showing-service-description');
             this.servicesContent.setAttribute('data-active-service', serviceKey);
 
-            // Fade in the new content
             requestAnimationFrame(() => {
                 this.servicesContent.style.opacity = '1';
             });
@@ -1002,18 +1045,17 @@ class ServicesToggleSystem {
     }
 
     closeServiceDesktop() {
-        // Fade out before restoring content
         this.servicesContent.style.opacity = '0';
 
         setTimeout(() => {
-            // Restore original services content
             this.servicesContent.innerHTML = this.originalServicesContent;
-
-            // Remove active state indicators
             this.servicesContent.classList.remove('showing-service-description');
             this.servicesContent.removeAttribute('data-active-service');
+            
+            // Re-initialize after restoring content
+            this.serviceElements.clear();
+            this.init();
 
-            // Fade back in
             requestAnimationFrame(() => {
                 this.servicesContent.style.opacity = '1';
             });
@@ -1023,33 +1065,25 @@ class ServicesToggleSystem {
         console.log('🖥️ Desktop: Closed service');
     }
 
-    // MOBILE FUNCTIONALITY - NEW MODAL APPROACH
     openServiceMobile(serviceKey) {
         const serviceData = this.serviceElements.get(serviceKey);
         if (!serviceData) return;
 
         const trigger = serviceData.trigger;
-
-        // Update trigger: [+] to [-]
         const currentText = trigger.textContent;
         const newText = currentText.replace('[+]', '[-]');
         trigger.textContent = newText;
 
-        // Add active class
         trigger.classList.add('service-active');
         trigger.setAttribute('data-service-active', 'true');
 
-        // Show modal with content
         this.showMobileModal(serviceData);
-
         this.activeService = serviceKey;
         console.log(`📱 Mobile: Opened ${serviceData.service.name} in modal`);
     }
 
     closeServiceMobile() {
-        // Hide modal
         this.hideMobileModal();
-
         this.activeService = null;
         console.log('📱 Mobile: Closed service modal');
     }
@@ -1061,18 +1095,11 @@ class ServicesToggleSystem {
         if (!serviceData) return;
 
         const trigger = serviceData.trigger;
-
-        // Restore trigger: [-] to [+] and remove green class and attribute
         const currentText = trigger.textContent;
         const newText = currentText.replace('[-]', '[+]');
         trigger.textContent = newText;
         trigger.classList.remove('service-active');
         trigger.removeAttribute('data-service-active');
-        
-        // Force reset any inline styles
-        trigger.style.fontSize = '';
-        trigger.style.fontWeight = '';
-        trigger.style.transform = '';
 
         if (this.isMobile) {
             this.closeServiceMobile();
@@ -1081,12 +1108,9 @@ class ServicesToggleSystem {
         }
     }
 
-    // CREATE MOBILE MODAL
     createMobileModal() {
-        // Only create on mobile
         if (!this.isMobile) return;
 
-        // Create modal elements
         const modalOverlay = document.createElement('div');
         modalOverlay.id = 'services-modal-overlay';
         modalOverlay.className = 'services-modal-overlay';
@@ -1110,22 +1134,18 @@ class ServicesToggleSystem {
         modalBody.className = 'services-modal-body';
         modalBody.id = 'services-modal-body';
 
-        // Assemble modal
         modalHeader.appendChild(modalTitle);
         modalHeader.appendChild(closeButton);
         modalContent.appendChild(modalHeader);
         modalContent.appendChild(modalBody);
         modalOverlay.appendChild(modalContent);
 
-        // Add to document
         document.body.appendChild(modalOverlay);
 
-        // Store references
         this.modalOverlay = modalOverlay;
         this.modalBody = modalBody;
         this.modalTitle = modalTitle;
 
-        // Add event listeners
         closeButton.addEventListener('click', () => this.closeActiveService());
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
@@ -1133,7 +1153,6 @@ class ServicesToggleSystem {
             }
         });
 
-        // ESC key listener
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.activeService && this.isMobile) {
                 this.closeActiveService();
@@ -1146,27 +1165,21 @@ class ServicesToggleSystem {
     showMobileModal(serviceData) {
         if (!this.modalOverlay || !this.modalBody) return;
 
-        // Set modal content
         this.modalTitle.textContent = serviceData.service.name;
         this.modalBody.innerHTML = serviceData.description.innerHTML;
-
-        // Style numbers in modal
         this.styleNumbersInBracketsMobile(this.modalBody);
 
-        // Show modal with animation
         this.modalOverlay.style.display = 'flex';
         requestAnimationFrame(() => {
             this.modalOverlay.classList.add('modal-active');
         });
 
-        // Prevent body scroll
         document.body.style.overflow = 'hidden';
     }
 
     hideMobileModal() {
         if (!this.modalOverlay) return;
 
-        // Hide modal with animation
         this.modalOverlay.classList.remove('modal-active');
         
         setTimeout(() => {
@@ -1174,33 +1187,27 @@ class ServicesToggleSystem {
             this.modalBody.innerHTML = '';
         }, 300);
 
-        // Restore body scroll
         document.body.style.overflow = '';
     }
 
-    // Method to close all services
     closeAll() {
         if (this.activeService) {
             this.closeActiveService();
         }
     }
 
-    // Method to handle window resize
     handleResize() {
         const wasMobile = this.isMobile;
         this.isMobile = window.innerWidth < 768;
 
-        // If switching between mobile/desktop, handle modal
         if (wasMobile !== this.isMobile) {
             this.closeAll();
-
             if (this.isMobile && !this.modalOverlay) {
                 this.createMobileModal();
             }
         }
     }
 
-    // DESKTOP NUMBER STYLING - UNTOUCHED
     styleNumbersInBrackets() {
         const walker = document.createTreeWalker(
             this.servicesContent,
@@ -1211,7 +1218,6 @@ class ServicesToggleSystem {
 
         const textNodes = [];
         let node;
-
         while (node = walker.nextNode()) {
             textNodes.push(node);
         }
@@ -1225,14 +1231,12 @@ class ServicesToggleSystem {
                 const styledText = text.replace(bracketNumberRegex, (match, number) => {
                     return `<span style="color: #32b550;">[${number}]</span>`;
                 });
-
                 span.innerHTML = styledText;
                 textNode.parentNode.replaceChild(span, textNode);
             }
         });
     }
 
-    // MOBILE NUMBER STYLING
     styleNumbersInBracketsMobile(container) {
         const walker = document.createTreeWalker(
             container,
@@ -1243,7 +1247,6 @@ class ServicesToggleSystem {
 
         const textNodes = [];
         let node;
-
         while (node = walker.nextNode()) {
             textNodes.push(node);
         }
@@ -1257,7 +1260,6 @@ class ServicesToggleSystem {
                 const styledText = text.replace(bracketNumberRegex, (match, number) => {
                     return `<span style="color: #32b550;">[${number}]</span>`;
                 });
-
                 span.innerHTML = styledText;
                 textNode.parentNode.replaceChild(span, textNode);
             }
@@ -1265,10 +1267,11 @@ class ServicesToggleSystem {
     }
 }
 
-// INITIALIZATION
+// Initialize with enhanced timing
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🌟 DOM loaded, initializing Services Toggle System...');
+    
     setTimeout(() => {
-        console.log('🎯 Initializing Services Toggle System with Mobile Modal...');
         window.servicesToggleSystem = new ServicesToggleSystem();
-    }, 500);
+    }, 1000);
 });
