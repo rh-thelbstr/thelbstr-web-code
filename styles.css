@@ -961,4 +961,23 @@ a, button, .clickable, [data-cursor="pointer"] {
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
+   /* Fix for service text size after modal close */
+.brand, .creative, .imc, .scriptwriting, .film-conceptualisation, .directing {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    transform: none !important;
+    transition: none !important;
+   }
+
+   /* Ensure consistent styling when not active */
+   .brand:not([data-service-active="true"]),
+   .creative:not([data-service-active="true"]),
+   .imc:not([data-service-active="true"]),
+   .scriptwriting:not([data-service-active="true"]),
+   .film-conceptualisation:not([data-service-active="true"]),
+   .directing:not([data-service-active="true"]) {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    transform: scale(1) !important;
+   }
 }
