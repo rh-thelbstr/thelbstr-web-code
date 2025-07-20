@@ -1,0 +1,964 @@
+/* ===========================================
+   FIXED FILM MODAL - ALL ISSUES RESOLVED
+   =========================================== */
+
+/* Modal Base */
+.film-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    z-index: 10000 !important;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow-y: auto;
+    overflow-x: hidden;
+    pointer-events: auto !important;
+    cursor: auto !important;
+}
+
+.film-modal.is-active {
+    display: block;
+    opacity: 1;
+    pointer-events: auto !important;
+    cursor: auto !important;
+}
+
+.modal-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: auto !important;
+}
+
+/* Close Button - Follows scroll */
+.modal-close, #closeModal {
+    position: fixed !important; /* Changed back to fixed */
+    top: 1.5rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: none !important;
+    border: none !important;
+    color: white !important;
+    font-family: 'Selecta' !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    letter-spacing: 1px !important;
+    cursor: pointer !important;
+    transition: opacity 0.3s ease !important;
+    z-index: 10001 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+}
+
+#closeModal:hover {
+    opacity: 0.7 !important;
+}
+
+/* Mobile close button */
+@media (max-width: 768px) {
+    .modal-close, #closeModal {
+        top: 1rem !important;
+        font-size: 12px !important;
+    }
+}
+
+/* Video Section - Smaller to show credits start */
+.video-section {
+    width: 100%;
+    height: 70vh; /* Reduced from 100vh to 70vh */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    position: relative;
+    padding: 3rem;
+    box-sizing: border-box;
+    cursor: auto !important;
+}
+
+.video-wrapper {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 16/9;
+    border-radius: 0;
+    overflow: hidden;
+    cursor: auto !important;
+}
+
+.video-player {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    cursor: auto !important;
+}
+
+/* Credits Section */
+.credits-section {
+    width: 100%;
+    background: #000000;
+    padding: 3rem;
+    color: white;
+    font-family: 'Selecta';
+    min-height: 40vh;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.credits-container {
+    max-width: 1000px; /* Increased from 800px for wider names */
+    margin: 0 auto;
+    background: none;
+    padding: 0;
+    color: white;
+    font-family: 'Selecta';
+    font-size: 14px;
+    letter-spacing: 1px;
+    line-height: 1.3;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-align: center;
+}
+
+.credits-grid {
+    display: block;
+    margin-top: 0;
+}
+
+.credit-section {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    border-left: none;
+    margin-bottom: 0;
+    transition: none;
+}
+
+.credit-line {
+    margin-bottom: 0.3rem;
+    font-size: 14px;
+    line-height: 1.3;
+    display: block;
+    font-weight: normal;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.credit-role {
+    color: #32b550;
+    font-weight: normal;
+    text-align: right;
+    display: inline-block;
+    width: 47%; /* CHANGE: from 45% to 47% */
+    margin-right: 2%; /* CHANGE: from 5% to 2% */
+    vertical-align: top;
+}
+
+.credit-name {
+    color: white;
+    font-weight: normal;
+    text-align: left;
+    display: inline-block;
+    width: 49%; /* CHANGE: from 45% to 49% */
+    vertical-align: top;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .modal-close, #closeModal {
+        top: 1rem !important;
+        font-size: 12px !important;
+    }
+    
+    .video-section {
+        height: 50vh;
+        padding: 0 !important; /* Remove padding for full width */
+    }
+    
+    .video-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+    
+    .video-player {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0 !important; /* Sharp corners for full width */
+    }
+    
+    .credits-section {
+        padding: 2rem 1rem;
+    }
+    
+    .credits-container {
+        max-width: 100%;
+        text-align: center;
+    }
+    
+    .credit-line {
+        text-align: center;
+        margin-bottom: 0.3rem;
+    }
+    
+    .credit-role {
+        color: #32b550;
+        font-weight: normal;
+        text-align: right;
+        display: inline-block;
+        width: 45%;
+        margin-right: 3%;
+        vertical-align: top;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+    
+    .credit-name {
+        color: white;
+        font-weight: normal;
+        text-align: left;
+        display: inline-block;
+        width: 50%;
+        vertical-align: top;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+}
+
+/* Force cursor visibility */
+.film-modal *, 
+.film-modal *:hover {
+    cursor: auto !important;
+}
+
+/* Smooth Scrolling */
+.film-modal {
+    scroll-behavior: smooth;
+}
+
+/* Fix z-index conflicts with GSAP */
+.film-modal {
+    z-index: 10000 !important;
+    pointer-events: auto !important;
+}
+
+.film-modal.is-active {
+    pointer-events: auto !important;
+}
+
+/* === EKTA BIO MOBILE ACCORDION STYLES === */
+/* Add this to your existing header CSS section */
+
+/* Mobile only styles */
+@media (max-width: 767px) {
+    
+    /* Make trigger clickable */
+    .bio-ekta-trigger {
+        cursor: pointer;
+        user-select: none;
+        transition: opacity 0.2s ease;
+    }
+    
+    /* Touch feedback */
+    .bio-ekta-trigger:active {
+        opacity: 0.7;
+    }
+    
+    /* Content container - initially hidden but preserve child styling */
+    .slide-18-copy {
+        display: none !important;
+        margin-top: 1rem;
+        animation: fadeIn 0.3s ease-in-out;
+        
+        /* Container properties only - don't override child elements */
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* When content is shown, override display */
+    .slide-18-copy[style*="display: block"] {
+        display: block !important;
+    }
+    
+    /* Preserve Webflow text block styling */
+    .slide-18-copy .text-block-80,
+    .slide-18-copy [class*="text-block"],
+    .slide-18-copy p,
+    .slide-18-copy h1,
+    .slide-18-copy h2,
+    .slide-18-copy h3,
+    .slide-18-copy h4,
+    .slide-18-copy h5,
+    .slide-18-copy h6 {
+        /* Don't override font properties - let Webflow handle them */
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        
+        /* Only add basic spacing */
+        margin-bottom: 1rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Last element spacing */
+    .slide-18-copy > *:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    /* Preserve link styling */
+    .slide-18-copy a {
+        display: inline !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        /* Let Webflow handle link colors and styling */
+    }
+    
+    /* Ensure div blocks within the content are visible */
+    .slide-18-copy div,
+    .slide-18-copy [class*="div-block"] {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Force any hidden elements to be visible when accordion is open */
+    .slide-18-copy * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* === SLIDE 14 MOBILE ACCORDION STYLES === */
+
+/* Mobile only styles */
+@media (max-width: 767px) {
+    
+    /* Make triggers clickable */
+    .bio-expand-trigger-4,
+    .brands-expand-trigger-5,
+    .recog-expand-trigger-6 {
+        cursor: pointer;
+        user-select: none;
+        transition: opacity 0.2s ease;
+    }
+    
+    /* Hover feedback */
+    .bio-expand-trigger-4:active,
+    .brands-expand-trigger-5:active,
+    .recog-expand-trigger-6:active {
+        opacity: 0.7;
+    }
+    
+    /* Content containers - initially hidden */
+    .rh-bio-description,
+    .brands-list-mobile,
+    .recog-list-mobile {
+        display: none;
+        margin-top: 1rem;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    /* Fade in animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Ensure content flows nicely when expanded */
+    .rh-bio-description p,
+    .brands-list-mobile p,
+    .recog-list-mobile p {
+        margin-bottom: 1rem;
+    }
+    
+    .rh-bio-description p:last-child,
+    .brands-list-mobile p:last-child,
+    .recog-list-mobile p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Progress bar styling - add this to your CSS */
+.nav-progress-fill {
+    background-color: white !important;
+    transition: width 0.2s ease, height 0.2s ease;
+}
+
+/* Different colors based on nav theme */
+.nav-bar.nav-green .nav-progress-fill {
+    background-color: white !important;
+}
+
+.nav-bar.nav-black .nav-progress-fill {
+    background-color: #32b550 !important;
+}
+
+.nav-bar.nav-white .nav-progress-fill {
+    background-color: #32b550 !important;
+}
+
+/* Gentle over-scroll prevention that preserves GSAP scrolling */
+html {
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+}
+
+body {
+    overscroll-behavior: none;
+    overscroll-behavior-x: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Only target the scroll container, not html/body */
+.scroll-container {
+    overscroll-behavior: contain;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: none;
+}
+
+/* Text selection - all browsers and devices */
+*::selection {
+    background-color: #32b550 !important;
+    color: white !important;
+}
+
+*::-moz-selection {
+    background-color: #32b550 !important;
+    color: white !important;
+}
+
+*::-webkit-selection {
+    background-color: #32b550 !important;
+    color: white !important;
+}
+
+/* White selection on green background slides - all devices */
+.slide-1 *::selection,
+.slide-5 *::selection,
+.slide-11 *::selection {
+    background-color: white !important;
+    color: #32b550 !important;
+}
+
+.slide-1 *::-moz-selection,
+.slide-5 *::-moz-selection,
+.slide-11 *::-moz-selection {
+    background-color: white !important;
+    color: #32b550 !important;
+}
+
+.slide-1 *::-webkit-selection,
+.slide-5 *::-webkit-selection,
+.slide-11 *::-webkit-selection {
+    background-color: white !important;
+    color: #32b550 !important;
+}
+
+/* Additional mobile-specific targeting */
+@media (max-width: 767px) {
+    body *::selection {
+        background: #32b550 !important;
+        color: white !important;
+    }
+    
+    body *::-webkit-selection {
+        background: #32b550 !important;
+        color: white !important;
+    }
+}
+/* Disable custom cursor on mobile/touch devices */
+@media (max-width: 767px), (hover: none) {
+    body {
+        cursor: auto !important;
+    }
+    
+    a, button, .clickable, [data-cursor="pointer"] {
+        cursor: auto !important;
+    }
+    
+    .custom-cursor {
+        display: none !important;
+    }
+}
+
+/* Re-enable normal cursors for touch devices */
+@media (hover: none) and (pointer: coarse) {
+    body, a, button, .clickable, [data-cursor="pointer"] {
+        cursor: auto !important;
+    }
+}
+
+* Green lobster - use CSS mask for exact color */
+.custom-cursor.lobster-green {
+    background-image: none;
+}
+
+.custom-cursor.lobster-green::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #32b550;
+    mask: url('https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/6848235c72d6106a5f898c68_LTR25_Icons_Final__Lobster2.png') center/55px auto no-repeat;
+    -webkit-mask: url('https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/6848235c72d6106a5f898c68_LTR25_Icons_Final__Lobster2.png') center/55px auto no-repeat;
+}
+
+/* Black lobster - use CSS mask for exact color */
+.custom-cursor.lobster-black {
+    background-image: none;
+}
+
+.custom-cursor.lobster-black::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000000;
+    mask: url('https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/6848235c72d6106a5f898c68_LTR25_Icons_Final__Lobster2.png') center/55px auto no-repeat;
+    -webkit-mask: url('https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/6848235c72d6106a5f898c68_LTR25_Icons_Final__Lobster2.png') center/55px auto no-repeat;
+}
+
+/* Hide the default cursor */
+body {
+    cursor: none !important;
+}
+
+a, button, .clickable, [data-cursor="pointer"] {
+    cursor: none !important;
+}
+
+/* Custom circular cursor element */
+.custom-cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: background-color 0s ease, border-color 0s ease;
+    will-change: transform, background-color;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid;
+    background-image: url('https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/6848235c72d6106a5f898c68_LTR25_Icons_Final__Lobster2.png');
+    background-size: 55px auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Light backgrounds (green/white) - use black circle */
+.custom-cursor.light {
+    background-color: black;
+    border-color: black;
+}
+
+/* Dark backgrounds (black) - use green circle */
+.custom-cursor.dark {
+    background-color: #32b550;
+    border-color: #32b550;
+}
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    position: relative;
+    transform: none !important;
+  }
+
+  .scroll-container {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+  }
+
+  /* Nav visibility defaults */
+  #nav-white,
+  #nav-green,
+  #nav-black {
+    display: none !important;
+  }
+
+  .show-nav {
+    display: flex !important;
+  }
+   :root {
+  --expand-transition: 0.4s ease;
+  --expand-padding: 1rem;
+  --expand-max-width: 60ch;
+  --expand-focus-color: #007acc;
+}
+
+/* Update your existing expand-content class */
+.expand-content {
+  display: none !important;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height var(--expand-transition), 
+              opacity var(--expand-transition),
+              padding-top var(--expand-transition);
+  max-width: var(--expand-max-width);
+  line-height: 1.5;
+  padding-top: 0;
+}
+
+.expand-content.expanded {
+  display: block !important;
+  max-height: 500px !important;
+  opacity: 1 !important;
+  padding-top: var(--expand-padding) !important;
+}
+
+/* Update your existing expand-trigger class */
+.expand-trigger {
+ cursor: none !important;
+  user-select: none;
+  font-size: 1rem;
+  margin-left: var(--expand-padding);
+  transition: color var(--expand-transition);
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0.75rem; /* Increased from 0.5rem for mobile */
+  border-radius: 4px;
+  min-height: 44px; /* iOS minimum touch target */
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile-specific adjustments */
+@media screen and (max-width: 767px) {
+  .expand-trigger {
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .expand-content {
+    max-width: 90vw;
+    font-size: 0.9rem;
+  }
+  
+  .expand-content.expanded {
+    padding-top: 1.5rem !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+.expand-trigger:hover {
+  color: #ccc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.expand-trigger:focus {
+  outline: 2px solid var(--expand-focus-color);
+  outline-offset: 2px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .expand-trigger,
+  .expand-content {
+    transition: none;
+  }
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+  /* --- Fix for mobile scroll lock --- */
+  html {
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+  }
+
+  /* --- Nav bar theme background + text color --- */
+  .nav-bar {
+    transition: background-color 0.6s ease-in-out, color 0.6s ease-in-out;
+    will-change: background-color, color;
+  }
+
+  .nav-bar.nav-white {
+    background-color: white;
+    color: black;
+  }
+
+  .nav-bar.nav-green {
+    background-color: #32b550;
+    color: white;
+  }
+
+  .nav-bar.nav-black {
+    background-color: black;
+    color: white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-bar {
+      transition: none !important;
+    }
+  }
+
+  /* --- Text links inheriting nav-bar color --- */
+  .nav-text-rotated-1,
+  .nav-text-rotated-2,
+  .nav-text-rotated-3,
+  .nav-instagram-link {
+    color: currentColor !important;
+  }
+
+  /* --- Menu icon image style (PNG-based) --- */
+  .nav-burger-icon-black img {
+    width: 40px;
+    height: auto;
+    display: block;
+  }
+
+  .nav-burger-icon-black {
+    display: flex;
+    align-items: center;
+  }
+
+  /* --- Logo image switching logic (PNG-based) --- */
+  .nav-lbstr-logo {
+    width: 120px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .nav-bar.nav-white .nav-lbstr-logo {
+    content: url('https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/67f8dcf067144fc2254b710e_black_lbstr_logo.png');
+  }
+
+  .nav-bar.nav-green .nav-lbstr-logo,
+  .nav-bar.nav-black .nav-lbstr-logo {
+    content: url('https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/67f8dcf063d3844144a2565e_white_lbstr_logo.png');
+  }
+
+  /* --- Mobile-only: fix scroll lock & layout --- */
+  @media screen and (max-width: 767px) {
+    .wrapper {
+      width: 100% !important;
+      display: block !important;
+      overflow: visible !important;
+    }
+
+    .slide {
+      width: 100vw !important;
+      height: auto !important;
+      display: block !important;
+      overflow: visible !important;
+    }
+
+    .scroll-container {
+      min-height: 100vh !important;
+      height: auto !important;
+      overflow-y: auto !important;
+    }
+    .nav-bar {
+    height: 60px !important;
+  }
+}
+
+/* DESKTOP STYLES - COMPLETELY UNTOUCHED */
+.brand.service-active,
+.creative.service-active,
+.imc.service-active,
+.scriptwriting.service-active,
+.film-conceptualisation.service-active,
+.directing.service-active {
+    color: #32b550 !important;
+    border-bottom: 1px solid #32b550 !important;
+}
+
+.brand, .creative, .imc, .scriptwriting, .film-conceptualisation, .directing {
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+[data-service-active="true"] {
+    color: #32b550 !important;
+    border-bottom: 1px solid #32b550 !important;
+}
+
+.brand:hover, .creative:hover, .imc:hover, 
+.scriptwriting:hover, .film-conceptualisation:hover, .directing:hover {
+    opacity: 0.8;
+}
+
+.showing-service-description {
+    color: white !important;
+    transition: opacity 0.4s ease-in-out !important;
+}
+
+.capabilities, .services {
+    transition: opacity 0.4s ease-in-out;
+}
+
+.showing-service-description * {
+    color: white !important;
+}
+
+.showing-service-description span[style*="color: #32b550"] {
+    color: #32b550 !important;
+}
+
+/* MOBILE MODAL STYLES */
+@media (max-width: 767px) {
+    .services-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+
+    .services-modal-overlay.modal-active {
+        opacity: 1;
+    }
+
+    .services-modal-content {
+        background: #1a1a1a;
+        border-radius: 12px;
+        max-width: 90vw;
+        max-height: 80vh;
+        width: 100%;
+        border: 1px solid #32b550;
+        box-shadow: 0 10px 30px rgba(50, 181, 80, 0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s ease-in-out;
+        overflow: hidden;
+    }
+
+    .modal-active .services-modal-content {
+        transform: scale(1);
+    }
+
+    .services-modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #32b550;
+    }
+
+    .services-modal-title {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        font-family: inherit;
+    }
+
+    .services-modal-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.25rem;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+    }
+
+    .services-modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .services-modal-body {
+        padding: 1.5rem;
+        color: #cccccc;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        max-height: 60vh;
+        overflow-y: auto;
+        background: #1a1a1a;
+    }
+
+    .services-modal-body * {
+        color: #cccccc !important;
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .services-modal-body span[style*="color: #32b550"] {
+        color: #32b550 !important;
+    }
+
+    /* Ensure modal text is readable */
+    .services-modal-body p,
+    .services-modal-body div,
+    .services-modal-body span {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+}
