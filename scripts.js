@@ -871,7 +871,7 @@ class ServicesToggleSystem {
             { triggerClass: 'brand', descriptionClass: 'brand-descr', name: 'Brand' },
             { triggerClass: 'creative', descriptionClass: 'creative-descr', name: 'Creative' },
             { triggerClass: 'imc', descriptionClass: 'imc-descr', name: 'Integrated Communications' },
-            { triggerClass: 'solve4', descriptionClass: 'solve4-descr', name: 'Solve for [insert challenge here]' },
+            { triggerClass: 'solve4', descriptionClass: 'solve4-descr', name: 'Solve for' },
             { triggerClass: 'scriptwriting', descriptionClass: 'scriptwriting-descr', name: 'Scriptwriting' },
             { triggerClass: 'film-conceptualisation', descriptionClass: 'film-concept-descr', name: 'Film Conceptualisation' },
             { triggerClass: 'directing', descriptionClass: 'film-direct-descr', name: 'Film Directing' }
