@@ -1259,12 +1259,6 @@ class ServicesToggleSystem {
     }
 }
 
-// CSS for Desktop (Untouched) + Mobile Modal
-const servicesToggleCSS = `
-
-// Inject CSS
-document.head.insertAdjacentHTML('beforeend', servicesToggleCSS);
-
 // INITIALIZATION
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
