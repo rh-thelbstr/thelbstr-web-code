@@ -1067,6 +1067,11 @@ class ServicesToggleSystem {
         trigger.textContent = newText;
         trigger.classList.remove('service-active');
         trigger.removeAttribute('data-service-active');
+        
+        // Force reset any inline styles
+        trigger.style.fontSize = '';
+        trigger.style.fontWeight = '';
+        trigger.style.transform = '';
 
         if (this.isMobile) {
             this.closeServiceMobile();
