@@ -818,6 +818,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 .brand.service-active,
 .creative.service-active,
 .imc.service-active,
+.solve4.service-active,
 .scriptwriting.service-active,
 .film-conceptualisation.service-active,
 .directing.service-active {
@@ -825,7 +826,7 @@ a, button, .clickable, [data-cursor="pointer"] {
     border-bottom: 1px solid #32b550 !important;
 }
 
-.brand, .creative, .imc, .scriptwriting, .film-conceptualisation, .directing {
+.brand, .creative, .imc, .solve4, .scriptwriting, .film-conceptualisation, .directing {
     transition: color 0.3s ease, border-bottom 0.3s ease;
 }
 
@@ -834,7 +835,7 @@ a, button, .clickable, [data-cursor="pointer"] {
     border-bottom: 1px solid #32b550 !important;
 }
 
-.brand:hover, .creative:hover, .imc:hover, 
+.brand:hover, .creative:hover, .imc:hover, .solve4:hover,
 .scriptwriting:hover, .film-conceptualisation:hover, .directing:hover {
     opacity: 0.8;
 }
@@ -973,6 +974,7 @@ a, button, .clickable, [data-cursor="pointer"] {
    .brand:not([data-service-active="true"]),
    .creative:not([data-service-active="true"]),
    .imc:not([data-service-active="true"]),
+   .solve4:not([data-service-active="true"]),
    .scriptwriting:not([data-service-active="true"]),
    .film-conceptualisation:not([data-service-active="true"]),
    .directing:not([data-service-active="true"]) {
