@@ -337,60 +337,54 @@
     }
 }
 
-/* === SLIDE 14 MOBILE ACCORDION STYLES === */
-
-/* Mobile only styles */
+/* === SLIDE 14 MODAL STYLES === */
 @media (max-width: 767px) {
-    
-    /* Make triggers clickable */
-   .bio-expand-trigger-4,
-    .brands-expand-trigger-5,
-    .recog-expand-trigger-6 {
-        cursor: pointer;
-        user-select: none;
-        transition: opacity 0.2s ease;
-    }
-    
-    /* Hover feedback */
-   .bio-expand-trigger-4:active,
-    .brands-expand-trigger-5:active,
-    .recog-expand-trigger-6:active {
-        opacity: 0.7;
-    }
-    
-    /* Content containers - initially hidden */
-   .rh-bio-description,
-    .brands-list-mobile,
-    .recog-list-mobile {
-        display: none;
-        margin-top: 1rem;
-        animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    /* Fade in animation */
-   @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Ensure content flows nicely when expanded */
-   .rh-bio-description p,
-    .brands-list-mobile p,
-    .recog-list-mobile p {
-        margin-bottom: 1rem;
-    }
-    
-    .rh-bio-description p:last-child,
-    .brands-list-mobile p:last-child,
-    .recog-list-mobile p:last-child {
-        margin-bottom: 0;
-    }
+  .slide14-modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    align-items: stretch;
+    justify-content: stretch;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .slide14-modal-content {
+    background: #000;
+    width: 100%; height: 100%;
+    overflow: hidden;
+  }
+  .slide14-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: #32b550;
+    height: 60px;
+  }
+  .slide14-modal-title {
+    font-size: 1.25rem;
+    color: #fff;
+  }
+  .slide14-modal-close {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+  .slide14-modal-body {
+    padding: 1.5rem;
+    color: #fff;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+  }
+  /* fade-in when active */
+  .modal-active {
+    opacity: 1;
+  }
 }
 
 /* Progress bar styling - add this to your CSS */
