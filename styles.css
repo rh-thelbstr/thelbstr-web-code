@@ -1087,10 +1087,10 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 
     /* When modal is active, animate content in */
-    .slide14-modal-overlay.modal-active .slide14-modal-content {
-        opacity: 1 !important;
-        transform: scale(1) !important;
-    }
+.modal-active .slide14-modal-content {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+   }
 
     /* Header section */
     .slide14-modal-header {
