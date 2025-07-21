@@ -1043,7 +1043,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         justify-content: center !important;
         border-radius: 0 !important;
         line-height: 1 !important;
-        transition: all 0.3s ease !important;
+        transition: all 0.5s ease !important;
         transform: rotate(0deg) !important;
     }
 
@@ -1054,7 +1054,7 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 
     .mobile-modal-close:active {
-        transform: scale(1.05) rotate(90deg) !important;
+        transform: scale(1.05) rotate(360deg) !important;
     }
 
     /* Content section */
