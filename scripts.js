@@ -311,31 +311,114 @@ if (fill) {
         });
     }
 
-    handleClick(e) {
-        const trigger = e.target;
-        const content = trigger.contentElement;
-        const contentId = trigger.contentId;
-        const title = trigger.title;
+   handleClick(e) {
+    const trigger = e.target;
+    const content = trigger.contentElement;
+    const contentId = trigger.contentId;
+    const title = trigger.title;
 
-        if (this.isMobile) {
-            // Mobile: Show alert (for now)
-            e.preventDefault();
-            e.stopPropagation();
-            alert(`${title} clicked! Mobile modal would open here.`);
-            console.log(`📱 Mobile: ${title} clicked`);
+    if (this.isMobile) {
+        // Mobile: Open modal
+        e.preventDefault();
+        e.stopPropagation();
+        this.openMobileModal(title, content);
+        console.log(`📱 Mobile modal opened: ${title}`);
+    } else {
+        // Desktop: Use existing accordion logic
+        const isAlreadyOpen = this.openId === contentId;
+        this.closeAll();
+        
+        if (!isAlreadyOpen) {
+            this.openContent(trigger, content);
+            this.openId = contentId;
         } else {
-            // Desktop: Use existing accordion logic
-            const isAlreadyOpen = this.openId === contentId;
-            this.closeAll();
-            
-            if (!isAlreadyOpen) {
-                this.openContent(trigger, content);
-                this.openId = contentId;
-            } else {
-                this.openId = null;
-            }
+            this.openId = null;
         }
     }
+}
+
+// Add this new method to create mobile modals
+openMobileModal(title, contentElement) {
+    // Get the text content from the accordion content
+    const contentText = contentElement.textContent || contentElement.innerText || '';
+    
+    // Create modal overlay
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'mobile-modal-overlay';
+    modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 1.5rem;
+        box-sizing: border-box;
+        overflow-y: auto;
+    `;
+
+    // Create modal content
+    modalOverlay.innerHTML = `
+        <div style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        ">
+            <h2 style="
+                color: #32b550;
+                font-family: 'Selecta', sans-serif;
+                font-size: 1.8rem;
+                margin: 0;
+                font-weight: normal;
+            ">${title}</h2>
+            <button class="mobile-modal-close" style="
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+                font-family: 'Selecta', sans-serif;
+                padding: 0.5rem;
+            ">✕</button>
+        </div>
+        <div style="
+            color: white;
+            font-family: 'Selecta', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            flex: 1;
+        ">${contentText}</div>
+    `;
+
+    // Add to document
+    document.body.appendChild(modalOverlay);
+    document.body.style.overflow = 'hidden';
+
+    // Close functionality
+    const closeBtn = modalOverlay.querySelector('.mobile-modal-close');
+    const closeModal = () => {
+        document.body.removeChild(modalOverlay);
+        document.body.style.overflow = '';
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    // Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
 
     // Keep all existing methods for desktop
     handleKeydown(e) {
