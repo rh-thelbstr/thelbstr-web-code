@@ -260,7 +260,6 @@
 @media (max-width: 767px) {
     
     /* Make trigger clickable */
-   /*
     .bio-ekta-trigger {
         cursor: pointer;
         user-select: none;
@@ -268,33 +267,28 @@
     }
     */
     /* Touch feedback */
-   /* 
    .bio-ekta-trigger:active {
         opacity: 0.7;
     }
     
     /* Content container - initially hidden but preserve child styling */
-   /* 
    .slide-18-copy {
         display: none !important;
         margin-top: 1rem;
         animation: fadeIn 0.3s ease-in-out;
         
-        /* Container properties only - don't override child elements */
-   /*     
+        /* Container properties only - don't override child elements */   
    width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
     }
     
     /* When content is shown, override display */
-   /* 
    .slide-18-copy[style*="display: block"] {
         display: block !important;
     }
     
     /* Preserve Webflow text block styling */
-   /* 
    .slide-18-copy .text-block-80,
     .slide-18-copy [class*="text-block"],
     .slide-18-copy p,
@@ -304,27 +298,23 @@
     .slide-18-copy h4,
     .slide-18-copy h5,
     .slide-18-copy h6 {
-        /* Don't override font properties - let Webflow handle them */
-   /*     
+        /* Don't override font properties - let Webflow handle them */  
    display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
         
-        /* Only add basic spacing */
-   /*     
+        /* Only add basic spacing */    
    margin-bottom: 1rem;
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
     
     /* Last element spacing */
-   /* 
    .slide-18-copy > *:last-child {
         margin-bottom: 0 !important;
     }
     
     /* Preserve link styling */
-   /* 
    .slide-18-copy a {
         display: inline !important;
         visibility: visible !important;
@@ -333,7 +323,6 @@
     }
     
     /* Ensure div blocks within the content are visible */
-/*   
 .slide-18-copy div,
     .slide-18-copy [class*="div-block"] {
         display: block !important;
@@ -342,7 +331,6 @@
     }
     
     /* Force any hidden elements to be visible when accordion is open */
-/*    
 .slide-18-copy * {
         max-width: 100% !important;
         box-sizing: border-box !important;
@@ -355,7 +343,6 @@
 @media (max-width: 767px) {
     
     /* Make triggers clickable */
-   /* 
    .bio-expand-trigger-4,
     .brands-expand-trigger-5,
     .recog-expand-trigger-6 {
@@ -365,7 +352,6 @@
     }
     
     /* Hover feedback */
-   /*
    .bio-expand-trigger-4:active,
     .brands-expand-trigger-5:active,
     .recog-expand-trigger-6:active {
@@ -373,7 +359,6 @@
     }
     
     /* Content containers - initially hidden */
-   /* 
    .rh-bio-description,
     .brands-list-mobile,
     .recog-list-mobile {
@@ -383,7 +368,6 @@
     }
     
     /* Fade in animation */
-   /* 
    @keyframes fadeIn {
         from {
             opacity: 0;
@@ -396,7 +380,6 @@
     }
     
     /* Ensure content flows nicely when expanded */
-   /*
    .rh-bio-description p,
     .brands-list-mobile p,
     .recog-list-mobile p {
