@@ -441,111 +441,83 @@ document.addEventListener('DOMContentLoaded', () => {
     new ExpandAccordion(); // Works for both desktop and mobile now
 });
 
-// === SLIDE 14 MOBILE ACCORDION ===
+// === SLIDE 14 MODAL SYSTEM ===
+class Slide14ModalSystem {
+  constructor() {
+    if (window.innerWidth >= 768) return; // desktop: keep existing layout
+    this.triggers = [
+      { triggerClass: "bio-expand-trigger-4",    contentClass: "rh-bio-description", title: "Biography" },
+      { triggerClass: "brands-expand-trigger-5", contentClass: "brands-list-mobile",  title: "Brands"    },
+      { triggerClass: "recog-expand-trigger-6",  contentClass: "recog-list-mobile",   title: "Recognition" }
+    ];
+    this.activeModal = null;
+    this.init();
+    this.createModal();
+  }
 
-class Slide14Accordion {
-    constructor() {
-        // Only run on mobile
-        if (window.innerWidth >= 768) return;
-        
-        this.triggers = [
-            { triggerClass: "bio-expand-trigger-4", contentClass: "rh-bio-description" },
-            { triggerClass: "brands-expand-trigger-5", contentClass: "brands-list-mobile" },
-            { triggerClass: "recog-expand-trigger-6", contentClass: "recog-list-mobile" }
-        ];
-        
-        this.openId = null;
-        this.init();
-    }
+  init() {
+    this.triggers.forEach(({ triggerClass, contentClass, title }) => {
+      const trigger = document.querySelector(`.${triggerClass}`);
+      const content = document.querySelector(`.${contentClass}`);
+      if (!trigger || !content) return;
+      content.style.display = 'none';
+      trigger.style.cursor = 'pointer';
+      trigger.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        this.openModal(title, content.innerHTML);
+      });
+      console.log(`✅ Slide 14: ${title} modal initialized`);
+    });
+  }
 
-    init() {
-        this.triggers.forEach(({ triggerClass, contentClass }) => {
-            const trigger = document.querySelector(`.${triggerClass}`);
-            const content = document.querySelector(`.${contentClass}`);
-            
-            if (trigger && content) {
-                // Store references
-                trigger.contentElement = content;
-                trigger.contentClass = contentClass;
-                trigger.triggerClass = triggerClass;
-                
-                // Add click listener
-                trigger.addEventListener('click', (e) => this.handleClick(e));
-                
-                // Set initial state - closed
-                this.closeContent(trigger, content);
-                
-                console.log(`Slide 14 accordion: .${triggerClass} initialized`);
-            } else {
-                console.log(`Slide 14 accordion: .${triggerClass} or .${contentClass} not found`);
-            }
-        });
-    }
+  createModal() {
+    const html = `
+      <div id="slide14-modal-overlay" class="slide14-modal-overlay">
+        <div class="slide14-modal-content">
+          <div class="slide14-modal-header">
+            <h3 class="slide14-modal-title" id="slide14-modal-title">Title</h3>
+            <button class="slide14-modal-close" id="slide14-modal-close" aria-label="Close modal">×</button>
+          </div>
+          <div class="slide14-modal-body" id="slide14-modal-body"></div>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+    this.overlay = document.getElementById('slide14-modal-overlay');
+    this.titleEl = document.getElementById('slide14-modal-title');
+    this.bodyEl  = document.getElementById('slide14-modal-body');
+    this.close   = document.getElementById('slide14-modal-close');
+    this.close.addEventListener('click', () => this.closeModal());
+    this.overlay.addEventListener('click', e => {
+      if (e.target === this.overlay) this.closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && this.overlay.style.display === 'flex') this.closeModal();
+    });
+    console.log('✅ Slide 14 modal created');
+  }
 
-    handleClick(e) {
-        const trigger = e.target;
-        const content = trigger.contentElement;
-        const contentClass = trigger.contentClass;
-        const triggerClass = trigger.triggerClass;
-        
-        const isAlreadyOpen = this.openId === triggerClass;
+  openModal(title, content) {
+    this.titleEl.textContent = title;
+    this.bodyEl.innerHTML    = content;
+    this.overlay.style.display = 'flex';
+    requestAnimationFrame(() => this.overlay.classList.add('modal-active'));
+    document.body.style.overflow = 'hidden';
+  }
 
-        // Close all sections first
-        this.closeAll();
-
-        // Open this section if it wasn't already open
-        if (!isAlreadyOpen) {
-            this.openContent(trigger, content);
-            this.openId = triggerClass;
-        } else {
-            this.openId = null;
-        }
-    }
-
-    openContent(trigger, content) {
-        // Update trigger text from [+] to [-]
-        const currentText = trigger.textContent;
-        const newText = currentText.replace('[+]', '[-]');
-        trigger.textContent = newText;
-        
-        // Show content
-        content.style.display = 'block';
-        
-        console.log(`Opened: .${trigger.triggerClass}`);
-    }
-
-    closeContent(trigger, content) {
-        // Update trigger text from [-] to [+]
-        const currentText = trigger.textContent;
-        const newText = currentText.replace('[-]', '[+]');
-        trigger.textContent = newText;
-        
-        // Hide content
-        content.style.display = 'none';
-        
-        console.log(`Closed: .${trigger.triggerClass}`);
-    }
-
-    closeAll() {
-        this.triggers.forEach(({ triggerClass, contentClass }) => {
-            const trigger = document.querySelector(`.${triggerClass}`);
-            const content = document.querySelector(`.${contentClass}`);
-            
-            if (trigger && content) {
-                this.closeContent(trigger, content);
-            }
-        });
-    }
+  closeModal() {
+    this.overlay.classList.remove('modal-active');
+    setTimeout(() => {
+      this.overlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
+  }
 }
 
-// Initialize when DOM is ready
+// initialize on mobile only
 document.addEventListener('DOMContentLoaded', () => {
-    // Only run on mobile
-    if (window.innerWidth < 768) {
-        new Slide14Accordion();
-        console.log('Slide 14 mobile accordion initialized');
-    }
+  if (window.innerWidth < 768) new Slide14ModalSystem();
 });
+
 // === EKTA BIO MOBILE ACCORDION ===
 // Add this to your existing before </body> section
 
