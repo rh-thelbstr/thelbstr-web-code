@@ -1054,7 +1054,7 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 
     .mobile-modal-close:active {
-        transform: scale(1.05) rotate(360deg) !important;
+        transform: scale(1.05) rotate(300deg) !important;
     }
 
     /* Content section */
