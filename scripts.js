@@ -1267,11 +1267,73 @@ class ServicesToggleSystem {
     }
 }
 
-// Initialize with enhanced timing
+// Add this AFTER your existing ServicesToggleSystem initialization
+// This ensures solve4 is always registered even if the normal init misses it
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🌟 DOM loaded, initializing Services Toggle System...');
     
     setTimeout(() => {
         window.servicesToggleSystem = new ServicesToggleSystem();
+        
+        // SOLVE4 FORCE REGISTRATION - runs after main system initializes
+        setTimeout(() => {
+            console.log('🔧 Checking solve4 registration...');
+            
+            if (window.servicesToggleSystem && !window.servicesToggleSystem.serviceElements.has('solve4')) {
+                console.log('⚠️ solve4 not found in service map, force registering...');
+                
+                const solve4Element = document.querySelector('.solve4');
+                const solve4Descr = document.querySelector('.solve4-descr');
+                
+                if (solve4Element && solve4Descr) {
+                    // Create service data
+                    const serviceData = {
+                        trigger: solve4Element,
+                        description: solve4Descr,
+                        service: { 
+                            triggerClass: 'solve4', 
+                            descriptionClass: 'solve4-descr', 
+                            name: 'Solve for [insert challenge here]' 
+                        }
+                    };
+                    
+                    // Add to service map
+                    window.servicesToggleSystem.serviceElements.set('solve4', serviceData);
+                    
+                    // Hide description
+                    solve4Descr.style.display = 'none';
+                    
+                    // Clone element to remove conflicts
+                    const newSolve4 = solve4Element.cloneNode(true);
+                    solve4Element.parentNode.replaceChild(newSolve4, solve4Element);
+                    
+                    // Update service data with new element
+                    serviceData.trigger = newSolve4;
+                    window.servicesToggleSystem.serviceElements.set('solve4', serviceData);
+                    
+                    // Make it clickable
+                    newSolve4.style.cursor = 'pointer';
+                    newSolve4.style.userSelect = 'none';
+                    newSolve4.style.pointerEvents = 'auto';
+                    
+                    // Add click listener
+                    newSolve4.addEventListener('click', function(e) {
+                        console.log('🖱️ solve4 clicked via force registration!');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.servicesToggleSystem.handleServiceToggle(e, 'solve4');
+                    });
+                    
+                    console.log('✅ solve4 force registered successfully');
+                    console.log('Final service map size:', window.servicesToggleSystem.serviceElements.size);
+                } else {
+                    console.log('❌ solve4 elements not found for force registration');
+                }
+            } else {
+                console.log('✅ solve4 already registered normally');
+            }
+        }, 2000); // Wait 2 seconds after main system initialization
+        
     }, 1000);
 });
