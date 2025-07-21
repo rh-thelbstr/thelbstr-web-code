@@ -270,118 +270,123 @@ if (fill) {
 }
   });
 
-  class ExpandAccordion {
-  constructor() {
-    this.triggers = [
-      { triggerId: "expand-trigger-1", contentId: "obsessed-content" },
-      { triggerId: "expand-trigger-2", contentId: "disciplined-content" },
-      { triggerId: "expand-trigger-3", contentId: "kind-content" },
-    ];
-    this.openId = null;
-    this.init();
-  }
-
-  init() {
-    this.triggers.forEach(({ triggerId, contentId }) => {
-      const trigger = document.getElementById(triggerId);
-      const content = document.getElementById(contentId);
-      
-      if (trigger && content) {
-        // Store references for efficiency
-        trigger.contentElement = content;
-        trigger.contentId = contentId;
+ class ExpandAccordion {
+    constructor() {
+        this.isMobile = window.innerWidth < 768;
         
-        // Add event listeners
-        trigger.addEventListener('click', (e) => this.handleClick(e));
-        trigger.addEventListener('keydown', (e) => this.handleKeydown(e));
-        
-        // Set initial state
-        this.closeContent(trigger, content);
-      }
-    });
-  }
-
-  handleClick(e) {
-    const trigger = e.target;
-    const content = trigger.contentElement;
-    const contentId = trigger.contentId;
-    const isAlreadyOpen = this.openId === contentId;
-    
-    // Close all first
-    this.closeAll();
-    
-    // Open this one if it wasn't already open
-    if (!isAlreadyOpen) {
-      this.openContent(trigger, content);
-      this.openId = contentId;
-    } else {
-      this.openId = null;
+        this.triggers = [
+            { triggerId: "expand-trigger-1", contentId: "obsessed-content", title: "Obsessed" },
+            { triggerId: "expand-trigger-2", contentId: "disciplined-content", title: "Disciplined" },
+            { triggerId: "expand-trigger-3", contentId: "kind-content", title: "Kind" },
+        ];
+        this.openId = null;
+        this.init();
     }
-  }
 
-  handleKeydown(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      this.handleClick(e);
+    init() {
+        this.triggers.forEach(({ triggerId, contentId, title }) => {
+            const trigger = document.getElementById(triggerId);
+            const content = document.getElementById(contentId);
+
+            if (trigger && content) {
+                // Store references for efficiency
+                trigger.contentElement = content;
+                trigger.contentId = contentId;
+                trigger.title = title; // Add title for mobile
+
+                // Add event listeners
+                trigger.addEventListener('click', (e) => this.handleClick(e));
+                trigger.addEventListener('keydown', (e) => this.handleKeydown(e));
+
+                // Set initial state based on device
+                if (this.isMobile) {
+                    // Mobile: Hide content, make trigger clickable
+                    content.style.display = 'none';
+                    trigger.style.cursor = 'pointer';
+                } else {
+                    // Desktop: Use existing accordion logic
+                    this.closeContent(trigger, content);
+                }
+            }
+        });
     }
-  }
 
-  openContent(trigger, content) {
-    // Update ARIA
-    trigger.setAttribute('aria-expanded', 'true');
-    
-    // Update visual state
-    trigger.textContent = '[–]';
-    content.classList.add('expanded');
-    
-    // Announce to screen readers
-    this.announceChange('expanded');
-  }
+    handleClick(e) {
+        const trigger = e.target;
+        const content = trigger.contentElement;
+        const contentId = trigger.contentId;
+        const title = trigger.title;
 
-  closeContent(trigger, content) {
-    // Update ARIA
-    trigger.setAttribute('aria-expanded', 'false');
-    
-    // Update visual state
-    trigger.textContent = '[+]';
-    content.classList.remove('expanded');
-  }
+        if (this.isMobile) {
+            // Mobile: Show alert (for now)
+            e.preventDefault();
+            e.stopPropagation();
+            alert(`${title} clicked! Mobile modal would open here.`);
+            console.log(`📱 Mobile: ${title} clicked`);
+        } else {
+            // Desktop: Use existing accordion logic
+            const isAlreadyOpen = this.openId === contentId;
+            this.closeAll();
+            
+            if (!isAlreadyOpen) {
+                this.openContent(trigger, content);
+                this.openId = contentId;
+            } else {
+                this.openId = null;
+            }
+        }
+    }
 
-  closeAll() {
-    this.triggers.forEach(({ triggerId, contentId }) => {
-      const trigger = document.getElementById(triggerId);
-      const content = document.getElementById(contentId);
-      
-      if (trigger && content) {
-        this.closeContent(trigger, content);
-      }
-    });
-  }
+    // Keep all existing methods for desktop
+    handleKeydown(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.handleClick(e);
+        }
+    }
 
-  announceChange(state) {
-    // Create temporary announcement for screen readers
-    const announcement = document.createElement('div');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = `Section ${state}`;
-    
-    document.body.appendChild(announcement);
-    
-    // Remove after announcement
-    setTimeout(() => {
-      if (document.body.contains(announcement)) {
-        document.body.removeChild(announcement);
-      }
-    }, 1000);
-  }
+    openContent(trigger, content) {
+        trigger.setAttribute('aria-expanded', 'true');
+        trigger.textContent = '[--]';
+        content.classList.add('expanded');
+        this.announceChange('expanded');
+    }
+
+    closeContent(trigger, content) {
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.textContent = '[+]';
+        content.classList.remove('expanded');
+    }
+
+    closeAll() {
+        this.triggers.forEach(({ triggerId, contentId }) => {
+            const trigger = document.getElementById(triggerId);
+            const content = document.getElementById(contentId);
+            if (trigger && content) {
+                this.closeContent(trigger, content);
+            }
+        });
+    }
+
+    announceChange(state) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = `Section ${state}`;
+        document.body.appendChild(announcement);
+
+        setTimeout(() => {
+            if (document.body.contains(announcement)) {
+                document.body.removeChild(announcement);
+            }
+        }, 1000);
+    }
 }
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.innerWidth >= 768) {
-        new ExpandAccordion();
-    }
+    new ExpandAccordion(); // Works for both desktop and mobile now
 });
 
 // === SLIDE 14 MOBILE ACCORDION ===
