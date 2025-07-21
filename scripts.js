@@ -379,7 +379,9 @@ if (fill) {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  new ExpandAccordion();
+    if (window.innerWidth >= 768) {
+        new ExpandAccordion();
+    }
 });
 
 // === SLIDE 14 MOBILE ACCORDION ===
