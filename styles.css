@@ -1052,7 +1052,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         height: 100vh !important;
         background: rgba(0, 0, 0, 0.8) !important;
         z-index: 10000 !important;
-        display: flex !important;
+        display: none !important;
         flex-direction: column !important;
         padding: 0 !important;
         box-sizing: border-box !important;
@@ -1062,7 +1062,8 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 
     .slide14-modal-overlay.modal-active {
-        opacity: 1 !important;
+       display: flex !important; /* KEEP: Show when active */
+       opacity: 1 !important;
     }
 
    /* Modal Content Wrapper */
