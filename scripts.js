@@ -399,7 +399,7 @@ openMobileModal(title, contentElement) {
 
     openContent(trigger, content) {
         trigger.setAttribute('aria-expanded', 'true');
-        trigger.textContent = '[--]';
+        trigger.textContent = '[-]';
         content.classList.add('expanded');
         this.announceChange('expanded');
     }
