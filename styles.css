@@ -881,13 +881,12 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 
     .services-modal-content {
-        background: #1a1a1a;
+        background: #FFFFFF;
         border-radius: 12px;
         max-width: 90vw;
         max-height: 80vh;
         width: 100%;
         border: 1px solid #32b550;
-        box-shadow: 0 10px 30px rgba(50, 181, 80, 0.3);
         transform: scale(0.9);
         transition: transform 0.3s ease-in-out;
         overflow: hidden;
