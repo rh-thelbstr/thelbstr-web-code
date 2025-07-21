@@ -269,6 +269,7 @@ if (fill) {
   });
 }
   });
+/*
   class ExpandAccordion {
   constructor() {
     this.triggers = [
@@ -568,6 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Ekta bio mobile accordion initialized');
     }
 });
+*/
 
 // === ENHANCED MULTI-FILM MODAL WITH THUMBNAILS ===
 
@@ -863,6 +865,7 @@ setTimeout(() => {
     console.log('🎯 Enhanced Multi-Film Modal: Ready with thumbnails!');
 });
 
+/*
 // Enhanced Services Toggle System with solve4 fix
 class ServicesToggleSystem {
     constructor() {
@@ -1337,3 +1340,4 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }, 1000);
 });
+*/
