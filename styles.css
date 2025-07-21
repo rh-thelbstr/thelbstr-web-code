@@ -1080,3 +1080,24 @@ a, button, .clickable, [data-cursor="pointer"] {
         overflow-wrap: break-word !important;
     }
 }
+/* SLIDE 11 DESKTOP BRACKET FIX */
+@media (min-width: 768px) {
+    .expand-trigger {
+        white-space: nowrap !important;
+        display: inline-block !important;
+        min-width: auto !important;
+        width: auto !important;
+    }
+    
+    /* Ensure the trigger text doesn't wrap */
+    #expand-trigger-1,
+    #expand-trigger-2, 
+    #expand-trigger-3 {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        display: inline-block !important;
+        width: auto !important;
+        min-width: 50px !important;
+    }
+}
