@@ -958,30 +958,28 @@ class ServicesToggleSystem {
     }
 
     init() {
-        console.log('🔧 Initializing individual services...');
-        this.originalServicesContent = this.servicesContent.innerHTML;
+    console.log('🔧 Initializing individual services...');
+    this.originalServicesContent = this.servicesContent.innerHTML;
 
-        // Enhanced initialization with multiple attempts for solve4
-        this.services.forEach((service, index) => {
-            // Staggered delays to ensure all elements are available
-            const delay = index * 150; // 150ms between each service
-            
-            setTimeout(() => {
-                this.initializeService(service);
-            }, delay);
-        });
-
-        // Special handling for solve4 - try again after 2 seconds if not found
+    // Reduce delays - they're causing timing issues
+    this.services.forEach((service, index) => {
+        const delay = index * 50; // Reduced from 150ms to 50ms
         setTimeout(() => {
-            if (!this.serviceElements.has('solve4')) {
-                console.log('🔄 solve4 not found in first pass, retrying...');
-                const solve4Service = this.services.find(s => s.triggerClass === 'solve4');
-                if (solve4Service) {
-                    this.initializeService(solve4Service, true); // Force attempt
-                }
+            this.initializeService(service);
+        }, delay);
+    });
+
+    // Reduce solve4 retry delay
+    setTimeout(() => {
+        if (!this.serviceElements.has('solve4')) {
+            console.log('🔄 solve4 not found in first pass, retrying...');
+            const solve4Service = this.services.find(s => s.triggerClass === 'solve4');
+            if (solve4Service) {
+                this.initializeService(solve4Service, true);
             }
-        }, 2000);
-    }
+        }
+    }, 1000); // Reduced from 2000ms to 1000ms
+}
 
     initializeService(service, forceAttempt = false) {
         const triggerElement = document.querySelector(`.${service.triggerClass}`);
@@ -1101,25 +1099,38 @@ class ServicesToggleSystem {
     }
 
     closeServiceDesktop() {
-        this.servicesContent.style.opacity = '0';
-
-        setTimeout(() => {
-            this.servicesContent.innerHTML = this.originalServicesContent;
-            this.servicesContent.classList.remove('showing-service-description');
-            this.servicesContent.removeAttribute('data-active-service');
-            
-            // Re-initialize after restoring content
-            this.serviceElements.clear();
-            this.init();
-
-            requestAnimationFrame(() => {
-                this.servicesContent.style.opacity = '1';
-            });
-        }, 300);
-
-        this.activeService = null;
-        console.log('🖥️ Desktop: Closed service');
-    }
+    this.servicesContent.style.opacity = '0';
+    
+    setTimeout(() => {
+        this.servicesContent.innerHTML = this.originalServicesContent;
+        this.servicesContent.classList.remove('showing-service-description');
+        this.servicesContent.removeAttribute('data-active-service');
+        
+        // Instead of clearing and re-init, just restore trigger states
+        this.restoreTriggerStates();
+        
+        requestAnimationFrame(() => {
+            this.servicesContent.style.opacity = '1';
+        });
+    }, 300);
+    
+    this.activeService = null;
+    console.log('🖥️ Desktop: Closed service');
+}
+    // ADD THE NEW HELPER METHOD HERE:
+restoreTriggerStates() {
+    // Restore all trigger texts to [+] state
+    this.serviceElements.forEach((serviceData, key) => {
+        const trigger = document.querySelector(`.${serviceData.service.triggerClass}`);
+        if (trigger) {
+            const currentText = trigger.textContent;
+            const newText = currentText.replace('[-]', '[+]');
+            trigger.textContent = newText;
+            trigger.classList.remove('service-active');
+            trigger.removeAttribute('data-service-active');
+        }
+    });
+}
 
     openServiceMobile(serviceKey) {
         const serviceData = this.serviceElements.get(serviceKey);
