@@ -524,7 +524,7 @@ class Slide18ModalSystem {
     if (window.innerWidth >= 768) return; // mobile only
     this.triggerClass = "bio-ekta-trigger";
     this.contentClass = "slide-18-copy";
-    this.title = "Ekta Bio";
+    this.title = "Bio";
     this.activeModal = null;
     this.init();
     this.createModal();
