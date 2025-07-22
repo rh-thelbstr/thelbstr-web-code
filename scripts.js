@@ -181,7 +181,8 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
       ["slide-18", "nav-green"],
       ["slide-19", "nav-black"],
       ["slide-20", "nav-black"],
-      ["slide-21", "nav-green"]
+      ["slide-21", "nav-green"],
+      ["slide-22", "nav-black"] 
       
     ]);
 
