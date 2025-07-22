@@ -611,8 +611,8 @@ closeModal() {
         this.modalOverlay.style.display = 'none';
         document.body.style.overflow = '';
     }, 300);
-}
-
+  }
+} 
 // Update the initialization to include Slide 18
 document.addEventListener('DOMContentLoaded', () => {
   if (window.innerWidth < 768) {
