@@ -581,11 +581,11 @@ class Slide18ModalSystem {
       if (e.target === this.modalOverlay) this.closeModal();
     });
 
-      document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && this.modalOverlay.classList.contains('show')) {
-    this.closeModal();
-  }
-});
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && this.modalOverlay.style.display === 'flex') {
+        this.closeModal();
+      }
+    });
 
     console.log('✅ Slide 18 modal created');
   }
@@ -595,24 +595,28 @@ class Slide18ModalSystem {
     this.modalBody.innerHTML = content;
     this.modalOverlay.style.display = 'flex';
     
-    // Change this line - use 'show' instead of 'modal-active'
-    setTimeout(() => {
-        this.modalOverlay.classList.add('show');
-    }, 10);
+    requestAnimationFrame(() => {
+      this.modalOverlay.classList.add('modal-active');
+    });
     
     document.body.style.overflow = 'hidden';
-}
+    this.activeModal = title;
+    console.log(`📱 Slide 18: Opened ${title} modal`);
+  }
 
-closeModal() {
-    // Change this line - use 'show' instead of 'modal-active'
-    this.modalOverlay.classList.remove('show');
+  closeModal() {
+    this.modalOverlay.classList.remove('modal-active');
     
     setTimeout(() => {
-        this.modalOverlay.style.display = 'none';
-        document.body.style.overflow = '';
-    }, 300);
+      this.modalOverlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 500);
+    
+    this.activeModal = null;
+    console.log('📱 Slide 18: Closed modal');
   }
-} 
+}
+
 // Update the initialization to include Slide 18
 document.addEventListener('DOMContentLoaded', () => {
   if (window.innerWidth < 768) {
