@@ -1130,8 +1130,7 @@ restoreTriggerStates(skipServiceKey = null) {
         // Skip the service we're about to activate
         if (key === skipServiceKey) return;
         
-        // Use the stored trigger reference instead of querySelector
-        const trigger = serviceData.trigger;
+        const trigger = document.querySelector(`.${serviceData.service.triggerClass}`);
         if (trigger) {
             const currentText = trigger.textContent;
             const newText = currentText.replace('[-]', '[+]');
