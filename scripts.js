@@ -595,26 +595,22 @@ class Slide18ModalSystem {
     this.modalBody.innerHTML = content;
     this.modalOverlay.style.display = 'flex';
     
-    requestAnimationFrame(() => {
-      this.modalOverlay.classList.add('modal-active');
-    });
+    // Simple fade in
+    setTimeout(() => {
+        this.modalOverlay.classList.add('show');
+    }, 10);
     
     document.body.style.overflow = 'hidden';
-    this.activeModal = title;
-    console.log(`📱 Slide 18: Opened ${title} modal`);
-  }
+}
 
-  closeModal() {
-    this.modalOverlay.classList.remove('modal-active');
+closeModal() {
+    // Simple fade out
+    this.modalOverlay.classList.remove('show');
     
     setTimeout(() => {
-      this.modalOverlay.style.display = 'none';
-      document.body.style.overflow = '';
-    }, 500);
-    
-    this.activeModal = null;
-    console.log('📱 Slide 18: Closed modal');
-  }
+        this.modalOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 // Update the initialization to include Slide 18
