@@ -1094,8 +1094,15 @@ a, button, .clickable, [data-cursor="pointer"] {
         z-index: 10000 !important;
         display: none !important;
         opacity: 0 !important;
-        transition: opacity 0.3s ease !important;
+        transform: scale(0.95) !important;
+        transition: opacity 0.3s ease, transform 0.3s ease !important;
     }
+  
+   /* When modal is active, animate content in */
+   .slide18-modal-overlay.show .slide18-modal-content {
+       opacity: 1 !important;
+       transform: scale(1) !important;
+   }
 
     .slide18-modal-overlay.show {
         display: flex !important;
