@@ -1130,7 +1130,8 @@ restoreTriggerStates(skipServiceKey = null) {
         // Skip the service we're about to activate
         if (key === skipServiceKey) return;
         
-        const trigger = document.querySelector(`.${serviceData.service.triggerClass}`);
+        // Use the stored trigger reference instead of querySelector
+        const trigger = serviceData.trigger;
         if (trigger) {
             const currentText = trigger.textContent;
             const newText = currentText.replace('[-]', '[+]');
@@ -1143,7 +1144,6 @@ restoreTriggerStates(skipServiceKey = null) {
         }
     });
 }
-
     openServiceMobile(serviceKey) {
         const serviceData = this.serviceElements.get(serviceKey);
         if (!serviceData) return;
