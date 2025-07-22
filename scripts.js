@@ -1069,21 +1069,23 @@ class ServicesToggleSystem {
         }
     }
 
-    openServiceDesktop(serviceKey) {
+       openServiceDesktop(serviceKey) {
         const serviceData = this.serviceElements.get(serviceKey);
         if (!serviceData) return;
+
+        // First restore all OTHER triggers, but skip the current one
+        this.restoreTriggerStates(serviceKey);
 
         const trigger = serviceData.trigger;
         const currentText = trigger.textContent;
         const newText = currentText.replace('[+]', '[-]');
         trigger.textContent = newText;
-
         trigger.classList.add('service-active');
         trigger.setAttribute('data-service-active', 'true');
-
-        // ADD THESE LINES TO MAKE IT GREEN:
+    
+        // Make it green and bold
         trigger.style.color = '#32b550';
-        trigger.style.fontWeight = 'bold'; // Optional: make it bold too
+        trigger.style.fontWeight = 'bold';
 
         this.servicesContent.style.opacity = '0';
 
@@ -1111,7 +1113,7 @@ class ServicesToggleSystem {
         this.servicesContent.removeAttribute('data-active-service');
         
         // Instead of clearing and re-init, just restore trigger states
-        this.restoreTriggerStates();
+        this.restoreTriggerStates(); // Keep this as-is when closing all services
         
         requestAnimationFrame(() => {
             this.servicesContent.style.opacity = '1';
@@ -1122,9 +1124,12 @@ class ServicesToggleSystem {
     console.log('🖥️ Desktop: Closed service');
 }
     // ADD THE NEW HELPER METHOD HERE:
-restoreTriggerStates() {
-    // Restore all trigger texts to [+] state
+restoreTriggerStates(skipServiceKey = null) {
+    // Restore all trigger texts to [+] state, except the one we're about to activate
     this.serviceElements.forEach((serviceData, key) => {
+        // Skip the service we're about to activate
+        if (key === skipServiceKey) return;
+        
         const trigger = document.querySelector(`.${serviceData.service.triggerClass}`);
         if (trigger) {
             const currentText = trigger.textContent;
@@ -1132,7 +1137,7 @@ restoreTriggerStates() {
             trigger.textContent = newText;
             trigger.classList.remove('service-active');
             trigger.removeAttribute('data-service-active');
-            // ADD THESE LINES TO RESET STYLING:
+            // Reset styling
             trigger.style.color = '';
             trigger.style.fontWeight = '';
         }
