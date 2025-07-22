@@ -1097,8 +1097,16 @@ a, button, .clickable, [data-cursor="pointer"] {
         padding: 0 !important;
         box-sizing: border-box !important;
         overflow-y: auto !important;
-        opacity: 0;
-        transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity: 0 !important;
+        transform: scale(0.95) !important;       
+        transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;       
+    }
+   
+   /* When modal is active, animate content in */
+   .slide18-modal-overlay.modal-active .slide18-modal-content {
+      opacity: 1 !important;
+      transform: scale(1) !important;
     }
 
     .slide18-modal-overlay.modal-active {
