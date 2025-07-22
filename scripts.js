@@ -581,11 +581,11 @@ class Slide18ModalSystem {
       if (e.target === this.modalOverlay) this.closeModal();
     });
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && this.modalOverlay.style.display === 'flex') {
-        this.closeModal();
-      }
-    });
+      document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && this.modalOverlay.classList.contains('show')) {
+    this.closeModal();
+  }
+});
 
     console.log('✅ Slide 18 modal created');
   }
@@ -595,7 +595,7 @@ class Slide18ModalSystem {
     this.modalBody.innerHTML = content;
     this.modalOverlay.style.display = 'flex';
     
-    // Simple fade in
+    // Change this line - use 'show' instead of 'modal-active'
     setTimeout(() => {
         this.modalOverlay.classList.add('show');
     }, 10);
@@ -604,7 +604,7 @@ class Slide18ModalSystem {
 }
 
 closeModal() {
-    // Simple fade out
+    // Change this line - use 'show' instead of 'modal-active'
     this.modalOverlay.classList.remove('show');
     
     setTimeout(() => {
