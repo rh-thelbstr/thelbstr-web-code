@@ -1440,3 +1440,281 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// ===== LBSTR MENU - FORCE EVERYTHING APPROACH =====
+// Put this in "Before </body> tag" - NO CSS in head needed
+
+console.log('🚀 LBSTR Force Menu: Starting...');
+
+// Try multiple times to catch the elements when they're ready
+function tryInitMenu() {
+  const burger = document.querySelector('.nav-burger-icon-black');
+  const menu = document.querySelector('.nav-menu-desktop');
+  
+  console.log('🔍 Attempt - Burger:', !!burger, 'Menu:', !!menu, 'GSAP:', typeof gsap !== 'undefined');
+  
+  if (!burger || !menu || typeof gsap === 'undefined') {
+    return false; // Not ready yet
+  }
+  
+  console.log('✅ All elements found - forcing setup...');
+  
+  // FORCE EVERYTHING - No CSS dependencies
+  
+  // 1. Force nav bar to stay on top
+  const navBar = document.querySelector('.nav-bar, #nav-bar, [class*="nav-bar"]');
+  if (navBar) {
+    navBar.style.cssText += `
+      position: fixed !important;
+      z-index: 10000 !important;
+      pointer-events: auto !important;
+    `;
+  }
+  
+  // 2. FORCE menu to be visible and positioned
+  menu.style.cssText = `
+    position: fixed !important;
+    top: 0px !important;
+    left: 0px !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+    background-color: rgb(50, 181, 80) !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateX(-100%) !important;
+    transition: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-sizing: border-box !important;
+  `;
+  
+  // 3. FORCE burger to be clickable
+  burger.style.cssText += `
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 10001 !important;
+    position: relative !important;
+  `;
+  
+  console.log('🎨 Everything forced - menu should now be setup');
+  
+  // 4. Test that menu is actually positioned correctly
+  setTimeout(() => {
+    const rect = menu.getBoundingClientRect();
+    console.log('📐 Menu position check:', {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      visible: rect.width > 0 && rect.height > 0
+    });
+  }, 100);
+  
+  let isOpen = false;
+  let currentTween = null;
+  
+  // ANIMATION FUNCTIONS
+  function openMenu() {
+    console.log('🎬 FORCE Opening menu...');
+    isOpen = true;
+    
+    if (currentTween) currentTween.kill();
+    
+    // Force body scroll lock
+    document.body.style.overflow = 'hidden';
+    
+    // Get stagger elements
+    const navLinks = menu.querySelectorAll('a, .link-block');
+    const closeButton = menu.querySelector('.close-button-menu');
+    const socialHandles = menu.querySelector('.social-handles');
+    
+    console.log('🔍 Stagger elements found:', {
+      links: navLinks.length,
+      closeBtn: !!closeButton,
+      social: !!socialHandles
+    });
+    
+    // AGGRESSIVE RESET - Clear all GSAP properties first
+    console.log('🔄 AGGRESSIVE reset of all content...');
+    
+    navLinks.forEach(link => {
+      gsap.set(link, { clearProps: "all" }); // Clear all GSAP properties
+      link.style.cssText = ''; // Clear all inline styles
+    });
+    
+    if (closeButton) {
+      gsap.set(closeButton, { clearProps: "all" });
+      closeButton.style.cssText = '';
+    }
+    
+    if (socialHandles) {
+      gsap.set(socialHandles, { clearProps: "all" });
+      socialHandles.style.cssText = '';
+    }
+    
+    console.log('✅ All GSAP properties cleared');
+    
+    // Small delay to ensure reset is complete
+    setTimeout(() => {
+      // Now set initial states for stagger
+      gsap.set(navLinks, { opacity: 0, y: 20 });
+      if (closeButton) gsap.set(closeButton, { opacity: 0, y: 20 });
+      if (socialHandles) gsap.set(socialHandles, { opacity: 0, y: 20 });
+      
+      console.log('✅ Initial stagger states set');
+      
+      // GSAP Timeline for stagger
+      currentTween = gsap.timeline({
+        onComplete: () => {
+          console.log('✅ FORCE menu open complete');
+          currentTween = null;
+        }
+      });
+      
+      // Step 1: Slide panel
+      currentTween.to(menu, {
+        x: '0%',
+        duration: 0.8,
+        ease: "power2.out",
+        force3D: true,
+        onStart: () => console.log('🎬 Panel should be sliding in now...'),
+        onComplete: () => console.log('✅ Panel slide complete')
+      });
+      
+      // Step 2: Stagger links
+      if (navLinks.length > 0) {
+        currentTween.to(navLinks, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "power3.out",
+          onComplete: () => console.log('✅ Links staggered')
+        }, "-=0.5");
+      }
+      
+      // Step 3: Close button
+      if (closeButton) {
+        currentTween.to(closeButton, {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          ease: "power2.out"
+        }, "-=0.3");
+      }
+      
+      // Step 4: Social
+      if (socialHandles) {
+        currentTween.to(socialHandles, {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          ease: "power2.out"
+        }, "-=0.2");
+      }
+      
+    }, 50); // 50ms delay for reset to complete
+  }
+  
+  function closeMenu() {
+    console.log('🚪 FORCE Closing menu...');
+    isOpen = false;
+    
+    if (currentTween) currentTween.kill();
+    
+    // Get all content elements
+    const navLinks = menu.querySelectorAll('a, .link-block');
+    const closeButton = menu.querySelector('.close-button-menu');
+    const socialHandles = menu.querySelector('.social-handles');
+    const allStaggerContent = [...navLinks];
+    if (closeButton) allStaggerContent.push(closeButton);
+    if (socialHandles) allStaggerContent.push(socialHandles);
+    
+    currentTween = gsap.timeline({
+      onComplete: () => {
+        document.body.style.overflow = '';
+        
+        // FORCE RESET all elements after close (prevents stuck state)
+        console.log('🔄 Resetting all elements after close...');
+        allStaggerContent.forEach(el => {
+          el.style.opacity = '';
+          el.style.transform = '';
+        });
+        
+        console.log('✅ FORCE menu closed and reset');
+        currentTween = null;
+      }
+    });
+    
+    // Quick fade stagger content
+    currentTween.to(allStaggerContent, {
+      opacity: 0,
+      y: 20,
+      duration: 0.2,
+      ease: "power2.in",
+      onComplete: () => console.log('✅ Content faded for close')
+    });
+    
+    // Slide panel out
+    currentTween.to(menu, {
+      x: '-100%',
+      duration: 0.6,
+      ease: "power2.in",
+      force3D: true,
+      onComplete: () => console.log('✅ Panel slid out')
+    }, "-=0.1");
+  }
+  
+  // EVENT LISTENERS
+  burger.addEventListener('click', function(e) {
+    console.log('🎯 FORCE Burger clicked!');
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isOpen) {
+      openMenu();
+    } else {
+      closeMenu();
+    }
+  });
+  
+  // Close button
+  const closeButton = menu.querySelector('.close-button-menu');
+  if (closeButton) {
+    closeButton.addEventListener('click', function(e) {
+      console.log('❌ FORCE Close clicked!');
+      e.preventDefault();
+      e.stopPropagation();
+      if (isOpen) closeMenu();
+    });
+  }
+  
+  // ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isOpen) {
+      console.log('⌨️ FORCE ESC pressed');
+      closeMenu();
+    }
+  });
+  
+  console.log('✅ FORCE menu setup complete!');
+  return true; // Success
+}
+
+// Try initializing multiple times
+const delays = [500, 1000, 2000, 3000, 5000];
+let initialized = false;
+
+delays.forEach((delay, index) => {
+  setTimeout(() => {
+    if (!initialized && tryInitMenu()) {
+      initialized = true;
+      console.log(`🎉 FORCE menu initialized on attempt ${index + 1}`);
+    }
+  }, delay);
+});
+
+console.log('🎯 FORCE initialization attempts scheduled');
+});
