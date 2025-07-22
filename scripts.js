@@ -518,87 +518,111 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.innerWidth < 768) new Slide14ModalSystem();
 });
 
-// === EKTA BIO MOBILE ACCORDION ===
-// Add this to your existing before </body> section
+// === SLIDE 18 MODAL SYSTEM ===
+class Slide18ModalSystem {
+  constructor() {
+    if (window.innerWidth >= 768) return; // mobile only
+    this.triggerClass = "bio-ekta-trigger";
+    this.contentClass = "slide-18-copy";
+    this.title = "Ekta Bio";
+    this.activeModal = null;
+    this.init();
+    this.createModal();
+  }
 
-class EktaBioAccordion {
-    constructor() {
-        // Only run on mobile
-        if (window.innerWidth >= 768) return;
-        
-        this.triggerClass = "bio-ekta-trigger";
-        this.contentClass = "slide-18-copy";
-        this.isOpen = false;
-        this.init();
+  init() {
+    const trigger = document.querySelector(`.${this.triggerClass}`);
+    const content = document.querySelector(`.${this.contentClass}`);
+    
+    if (!trigger || !content) {
+      console.log(`❌ Slide 18: .${this.triggerClass} or .${this.contentClass} not found`);
+      return;
     }
 
-    init() {
-        const trigger = document.querySelector(`.${this.triggerClass}`);
-        const content = document.querySelector(`.${this.contentClass}`);
-        
-        if (trigger && content) {
-            // Store references
-            trigger.contentElement = content;
-            trigger.contentClass = this.contentClass;
-            trigger.triggerClass = this.triggerClass;
-            
-            // Add click listener
-            trigger.addEventListener('click', (e) => this.handleClick(e));
-            
-            // Set initial state - closed
-            this.closeContent(trigger, content);
-            
-            console.log(`Ekta bio accordion: .${this.triggerClass} initialized`);
-        } else {
-            console.log(`Ekta bio accordion: .${this.triggerClass} or .${this.contentClass} not found`);
-        }
-    }
+    // Hide content and make trigger clickable
+    content.style.display = 'none';
+    trigger.style.cursor = 'pointer';
+    trigger.style.userSelect = 'none';
 
-    handleClick(e) {
-        const trigger = e.target;
-        const content = trigger.contentElement;
-        
-        if (this.isOpen) {
-            this.closeContent(trigger, content);
-        } else {
-            this.openContent(trigger, content);
-        }
-    }
+    // Add click listener
+    trigger.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.openModal(this.title, content.innerHTML);
+    });
 
-    openContent(trigger, content) {
-        // Update trigger text from [+] to [-]
-        const currentText = trigger.textContent;
-        const newText = currentText.replace('[+]', '[-]');
-        trigger.textContent = newText;
-        
-        // Show content
-        content.style.display = 'block';
-        this.isOpen = true;
-        
-        console.log(`Opened: .${trigger.triggerClass}`);
-    }
+    console.log(`✅ Slide 18: ${this.title} modal initialized`);
+  }
 
-    closeContent(trigger, content) {
-        // Update trigger text from [-] to [+]
-        const currentText = trigger.textContent;
-        const newText = currentText.replace('[-]', '[+]');
-        trigger.textContent = newText;
-        
-        // Hide content
-        content.style.display = 'none';
-        this.isOpen = false;
-        
-        console.log(`Closed: .${trigger.triggerClass}`);
-    }
+  createModal() {
+    const modalHTML = `
+      <div id="slide18-modal-overlay" class="slide18-modal-overlay">
+        <div class="slide18-modal-content">
+          <div class="slide18-modal-header">
+            <h3 class="slide18-modal-title" id="slide18-modal-title">Title</h3>
+            <button class="slide18-modal-close" id="slide18-modal-close" aria-label="Close modal">×</button>
+          </div>
+          <div class="slide18-modal-body" id="slide18-modal-body"></div>
+        </div>
+      </div>`;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Store references
+    this.modalOverlay = document.getElementById('slide18-modal-overlay');
+    this.modalTitle = document.getElementById('slide18-modal-title');
+    this.modalBody = document.getElementById('slide18-modal-body');
+    this.closeButton = document.getElementById('slide18-modal-close');
+
+    // Event listeners
+    this.closeButton.addEventListener('click', () => this.closeModal());
+    
+    this.modalOverlay.addEventListener('click', e => {
+      if (e.target === this.modalOverlay) this.closeModal();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && this.modalOverlay.style.display === 'flex') {
+        this.closeModal();
+      }
+    });
+
+    console.log('✅ Slide 18 modal created');
+  }
+
+  openModal(title, content) {
+    this.modalTitle.textContent = title;
+    this.modalBody.innerHTML = content;
+    this.modalOverlay.style.display = 'flex';
+    
+    requestAnimationFrame(() => {
+      this.modalOverlay.classList.add('modal-active');
+    });
+    
+    document.body.style.overflow = 'hidden';
+    this.activeModal = title;
+    console.log(`📱 Slide 18: Opened ${title} modal`);
+  }
+
+  closeModal() {
+    this.modalOverlay.classList.remove('modal-active');
+    
+    setTimeout(() => {
+      this.modalOverlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 500);
+    
+    this.activeModal = null;
+    console.log('📱 Slide 18: Closed modal');
+  }
 }
 
-// Initialize when DOM is ready
+// Update the initialization to include Slide 18
 document.addEventListener('DOMContentLoaded', () => {
-    // Only run on mobile
-    if (window.innerWidth < 768) {
-        new EktaBioAccordion();
-        console.log('Ekta bio mobile accordion initialized');
-    }
+  if (window.innerWidth < 768) {
+    new Slide14ModalSystem();
+    new Slide18ModalSystem(); // Add this line
+  }
 });
 
 // === ENHANCED MULTI-FILM MODAL WITH THUMBNAILS ===
