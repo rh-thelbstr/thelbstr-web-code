@@ -1404,3 +1404,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }, 1000);
 });
+
+// Scroll Position Memory for Mobile
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollContainer = document.querySelector('.scroll-container');
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile && scrollContainer) {
+        // Restore scroll position on page load
+        const savedScrollTop = sessionStorage.getItem('mobileScrollPosition');
+        if (savedScrollTop) {
+            scrollContainer.scrollTop = parseInt(savedScrollTop);
+        }
+        
+        // Save scroll position on scroll
+        scrollContainer.addEventListener('scroll', () => {
+            sessionStorage.setItem('mobileScrollPosition', scrollContainer.scrollTop);
+        });
+        
+        // Save scroll position before page unload
+        window.addEventListener('beforeunload', () => {
+            sessionStorage.setItem('mobileScrollPosition', scrollContainer.scrollTop);
+        });
+    }
+});
