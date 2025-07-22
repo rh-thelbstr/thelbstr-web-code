@@ -1081,6 +1081,10 @@ class ServicesToggleSystem {
         trigger.classList.add('service-active');
         trigger.setAttribute('data-service-active', 'true');
 
+        // ADD THESE LINES TO MAKE IT GREEN:
+        trigger.style.color = '#32b550';
+        trigger.style.fontWeight = 'bold'; // Optional: make it bold too
+
         this.servicesContent.style.opacity = '0';
 
         setTimeout(() => {
@@ -1128,6 +1132,9 @@ restoreTriggerStates() {
             trigger.textContent = newText;
             trigger.classList.remove('service-active');
             trigger.removeAttribute('data-service-active');
+            // ADD THESE LINES TO RESET STYLING:
+            trigger.style.color = '';
+            trigger.style.fontWeight = '';
         }
     });
 }
