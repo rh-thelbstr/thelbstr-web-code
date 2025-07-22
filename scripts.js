@@ -1717,4 +1717,3 @@ delays.forEach((delay, index) => {
 });
 
 console.log('🎯 FORCE initialization attempts scheduled');
-});
