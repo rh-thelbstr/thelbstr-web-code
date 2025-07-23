@@ -310,23 +310,23 @@ body {
 }
 
 /* White selection on green background slides - all devices */
-.slide-1 *::selection,
-.slide-5 *::selection,
-.slide-11 *::selection {
+#home *::selection,
+#choice *::selection,
+#values *::selection {
     background-color: white !important;
     color: #32b550 !important;
 }
 
-.slide-1 *::-moz-selection,
-.slide-5 *::-moz-selection,
-.slide-11 *::-moz-selection {
+#home *::-moz-selection,
+#choice *::-moz-selection,
+#values *::-moz-selection {
     background-color: white !important;
     color: #32b550 !important;
 }
 
-.slide-1 *::-webkit-selection,
-.slide-5 *::-webkit-selection,
-.slide-11 *::-webkit-selection {
+#home *::-webkit-selection,
+#choice *::-webkit-selection,
+#values *::-webkit-selection {
     background-color: white !important;
     color: #32b550 !important;
 }
