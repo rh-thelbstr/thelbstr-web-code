@@ -161,28 +161,28 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
 
 }
     const slideThemeMap = new Map([
-      ["slide-1", "nav-black"],
-      ["slide-2", "nav-green"],
+      ["home", "nav-black"],
+      ["the-beginning", "nav-green"],
       ["slide-3", "nav-green"],
-      ["slide-4", "nav-black"],
-      ["slide-5", "nav-black"],
-      ["slide-6", "nav-green"],
-      ["slide-7", "nav-black"],
+      ["screenplay", "nav-black"],
+      ["choice", "nav-black"],
+      ["ekta", "nav-green"],
+      ["stranger", "nav-black"],
       ["slide-8", "nav-green"],
-      ["slide-9", "nav-green"],
-      ["slide-10", "nav-green"],
-      ["slide-11", "nav-black"],
-      ["slide-12", "nav-green"],
+      ["partners", "nav-green"],
+      ["the-lbstr", "nav-green"],
+      ["values", "nav-black"],
+      ["crafts", "nav-green"],
       ["strategy", "nav-black"],
-      ["slide-14", "nav-green"],
-      ["slide-15", "nav-black"],
-      ["slide-16", "nav-green"],
-      ["slide-17", "nav-green"],
-      ["slide-18", "nav-green"],
-      ["slide-19", "nav-black"],
-      ["slide-20", "nav-black"],
-      ["slide-21", "nav-green"],
-      ["slide-22", "nav-black"] 
+      ["the-strategist", "nav-green"],
+      ["problem-solving", "nav-black"],
+      ["storytelling", "nav-green"],
+      ["ideas", "nav-green"],
+      ["the-storyteller", "nav-green"],
+      ["commercial-stories", "nav-black"],
+      ["personal-stories", "nav-black"],
+      ["services", "nav-green"],
+      ["contact", "nav-black"] 
       
     ]);
 
