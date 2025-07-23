@@ -173,7 +173,7 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
       ["slide-10", "nav-green"],
       ["slide-11", "nav-black"],
       ["slide-12", "nav-green"],
-      ["slide-13", "nav-black"],
+      ["strategy", "nav-black"],
       ["slide-14", "nav-green"],
       ["slide-15", "nav-black"],
       ["slide-16", "nav-green"],
