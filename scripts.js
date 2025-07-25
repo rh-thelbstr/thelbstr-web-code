@@ -1441,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 // ===== LBSTR MENU - FORCE EVERYTHING APPROACH =====
-// Put this in "Before </body> tag" - NO CSS in head needed
+// Put this in "Before body tag" - NO CSS in head needed
 
 console.log('🚀 LBSTR Force Menu: Starting...');
 
@@ -1910,9 +1910,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.lbstrSimpleNavigation = new LBSTRSimpleNavigation();
   }, 3000);
 });
-</script>
 
-<script>
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const burgerMobile = document.querySelector('.nav-burger-icon-black');
@@ -1952,9 +1950,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, 500);
   });
-</script>
 
-<script>
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const burger    = document.querySelector('.nav-burger-icon-black');
@@ -2008,10 +2004,9 @@ document.addEventListener('DOMContentLoaded', () => {
       );
     }, 500);
   });
-</script>
 
 <!-- DEVICE-AWARE NAVIGATION SYSTEM -->
-<script>
+    
 console.log('🎯 Device-Aware Navigation: Starting...');
 
 document.addEventListener('DOMContentLoaded', () => {
