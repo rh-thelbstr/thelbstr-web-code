@@ -3157,3 +3157,146 @@ if (window.innerWidth < 768) {
         }, 1000); // Wait for page to settle
     });
 }
+
+// ===============================================
+// NAV BAR RESTORE FIX - Mobile Only
+// Add this to your GitHub scripts.js (after the progress bar fix)
+// ===============================================
+
+// Only run on mobile
+if (window.innerWidth < 768) {
+    console.log('🧭 Nav Bar Restore Fix: Starting...');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            console.log('🧭 Restoring mobile nav bar...');
+            
+            // Find all possible nav bar elements
+            const navSelectors = [
+                '.nav-bar',
+                '#nav-bar',
+                '.navbar',
+                '.w-nav',
+                'nav',
+                '[class*="nav-bar"]'
+            ];
+            
+            let navBar = null;
+            
+            // Try each selector until we find the nav
+            for (const selector of navSelectors) {
+                navBar = document.querySelector(selector);
+                if (navBar) {
+                    console.log(`✅ Found nav bar: ${selector}`);
+                    break;
+                }
+            }
+            
+            if (!navBar) {
+                console.log('❌ Nav bar not found with any selector');
+                return;
+            }
+            
+            // =================================
+            // FORCE NAV BAR VISIBILITY
+            // =================================
+            
+            // Ensure nav bar is visible and properly positioned
+            navBar.style.setProperty('display', 'flex', 'important');
+            navBar.style.setProperty('visibility', 'visible', 'important');
+            navBar.style.setProperty('opacity', '1', 'important');
+            navBar.style.setProperty('position', 'fixed', 'important');
+            navBar.style.setProperty('top', '0', 'important');
+            navBar.style.setProperty('left', '0', 'important');
+            navBar.style.setProperty('right', '0', 'important');
+            navBar.style.setProperty('width', '100%', 'important');
+            navBar.style.setProperty('z-index', '10000', 'important'); // Higher than progress bar
+            navBar.style.setProperty('pointer-events', 'auto', 'important');
+            
+            // Ensure nav has proper height
+            const currentHeight = navBar.offsetHeight;
+            if (currentHeight < 50) {
+                navBar.style.setProperty('height', '60px', 'important');
+                navBar.style.setProperty('min-height', '60px', 'important');
+            }
+            
+            console.log(`✅ Nav bar restored - height: ${navBar.offsetHeight}px`);
+            
+            // =================================
+            // ADJUST PROGRESS BAR Z-INDEX
+            // =================================
+            
+            const progressFill = document.querySelector('.nav-progress-fill');
+            if (progressFill) {
+                // Make sure progress bar is below nav bar
+                progressFill.style.setProperty('z-index', '9999', 'important'); // Lower than nav
+                console.log('✅ Progress bar z-index adjusted to be below nav');
+            }
+            
+            // =================================
+            // ENSURE NAV CONTENT IS VISIBLE
+            // =================================
+            
+            // Make sure all nav content is visible
+            const navChildren = navBar.querySelectorAll('*');
+            navChildren.forEach((child, index) => {
+                if (child.style.display === 'none' || 
+                    child.style.visibility === 'hidden' || 
+                    child.style.opacity === '0') {
+                    
+                    child.style.setProperty('display', '', 'important');
+                    child.style.setProperty('visibility', 'visible', 'important');
+                    child.style.setProperty('opacity', '1', 'important');
+                }
+            });
+            
+            console.log(`✅ Made ${navChildren.length} nav children visible`);
+            
+            // =================================
+            // CONTINUOUS NAV BAR MONITORING
+            // =================================
+            
+            // Check every 2 seconds that nav bar stays visible
+            setInterval(() => {
+                const navDisplay = window.getComputedStyle(navBar).display;
+                const navVisibility = window.getComputedStyle(navBar).visibility;
+                const navOpacity = window.getComputedStyle(navBar).opacity;
+                
+                if (navDisplay === 'none' || navVisibility === 'hidden' || navOpacity === '0') {
+                    console.log('🔧 Nav bar hidden, restoring...');
+                    
+                    navBar.style.setProperty('display', 'flex', 'important');
+                    navBar.style.setProperty('visibility', 'visible', 'important');
+                    navBar.style.setProperty('opacity', '1', 'important');
+                    navBar.style.setProperty('z-index', '10000', 'important');
+                }
+            }, 2000);
+            
+            // =================================
+            // TEST NAV BAR ELEMENTS
+            // =================================
+            
+            // Check for specific nav elements
+            const logo = navBar.querySelector('.nav-lbstr-logo, [class*="logo"]');
+            const burger = navBar.querySelector('.nav-burger-icon-black, [class*="burger"]');
+            
+            console.log('🔍 Nav elements check:');
+            console.log(`  Logo found: ${!!logo}`);
+            console.log(`  Burger found: ${!!burger}`);
+            
+            if (logo) {
+                logo.style.setProperty('display', 'block', 'important');
+                logo.style.setProperty('visibility', 'visible', 'important');
+            }
+            
+            if (burger) {
+                burger.style.setProperty('display', 'flex', 'important');
+                burger.style.setProperty('visibility', 'visible', 'important');
+                burger.style.setProperty('pointer-events', 'auto', 'important');
+            }
+            
+            console.log('🎉 Nav bar restore complete!');
+            
+        }, 1200); // Run after progress bar fix
+    });
+}
