@@ -3029,68 +3029,65 @@ if (window.innerWidth < 768) {
 }
 
 // ===============================================
-// MOBILE PROGRESS BAR FIX
-// Add this to the END of your GitHub scripts.js file
+// PERMANENT PROGRESS BAR POSITIONING FIX
+// Add this to your GitHub scripts.js (replace previous progress bar fixes)
 // ===============================================
 
 // Only run on mobile
 if (window.innerWidth < 768) {
-    console.log('📊 Mobile Progress Bar Fix: Starting...');
+    console.log('📊 Permanent Progress Bar Fix: Starting...');
     
-    // Wait for page to fully load
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
-            console.log('📊 Applying mobile progress bar fixes...');
+            console.log('📊 Applying permanent progress bar positioning...');
             
-            const progressFill = document.querySelector('.nav-progress-fill');
-            const navBar = document.querySelector('.nav-bar');
+            const progressBar = document.querySelector('.nav-progress-fill');
+            const navBar = document.querySelector('.nav-bar') || document.querySelector('#nav-bar');
             
-            if (!progressFill) {
-                console.log('❌ Progress bar not found');
+            if (!progressBar || !navBar) {
+                console.log('❌ Missing elements - Progress:', !!progressBar, 'Nav:', !!navBar);
                 return;
             }
             
-            if (!navBar) {
-                console.log('❌ Nav bar not found');
-                return;
+            console.log('✅ Found both progress bar and nav bar');
+            
+            // =================================
+            // POSITION PROGRESS BAR BELOW NAV
+            // =================================
+            
+            function positionProgressBar() {
+                const navRect = navBar.getBoundingClientRect();
+                const navHeight = navRect.height || 60;
+                const navBottom = navRect.bottom;
+                
+                // Position progress bar just below nav bar
+                progressBar.style.setProperty('position', 'fixed', 'important');
+                progressBar.style.setProperty('top', navBottom + 'px', 'important');
+                progressBar.style.setProperty('left', '0', 'important');
+                progressBar.style.setProperty('right', '0', 'important');
+                progressBar.style.setProperty('width', '100%', 'important');
+                progressBar.style.setProperty('height', '4px', 'important');
+                progressBar.style.setProperty('z-index', '9999', 'important');
+                progressBar.style.setProperty('display', 'block', 'important');
+                progressBar.style.setProperty('visibility', 'visible', 'important');
+                progressBar.style.setProperty('opacity', '1', 'important');
+                
+                console.log(`📊 Progress bar positioned at ${navBottom}px (below ${navHeight}px nav)`);
             }
             
-            console.log('✅ Found progress bar and nav bar elements');
+            // =================================
+            // PROGRESS BAR COLOR & WIDTH UPDATE
+            // =================================
             
-            // =======================
-            // FIX 1: Z-INDEX LAYERING
-            // =======================
-            
-            // Force progress bar behind nav bar
-            progressFill.style.setProperty('z-index', '9998', 'important');
-            progressFill.style.setProperty('position', 'fixed', 'important');
-            progressFill.style.setProperty('top', '0', 'important');
-            progressFill.style.setProperty('left', '0', 'important');
-            progressFill.style.setProperty('width', '0%', 'important');
-            progressFill.style.setProperty('height', '4px', 'important');
-            progressFill.style.setProperty('background', '#32b550', 'important');
-            progressFill.style.setProperty('transition', 'width 0.1s ease', 'important');
-            progressFill.style.setProperty('display', 'block', 'important');
-            
-            // Force nav bar above progress bar
-            navBar.style.setProperty('z-index', '9999', 'important');
-            navBar.style.setProperty('position', 'relative', 'important');
-            
-            console.log('✅ Z-index layering fixed - progress bar behind nav');
-            
-            // =======================
-            // FIX 2: IMMEDIATE VISIBILITY
-            // =======================
-            
-            function updateMobileProgress() {
+            function updateProgressBar() {
+                // Update position first
+                positionProgressBar();
+                
+                // Calculate scroll progress
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
                 const scrollHeight = Math.max(
                     document.body.scrollHeight,
-                    document.documentElement.scrollHeight,
-                    document.body.offsetHeight,
-                    document.documentElement.offsetHeight,
-                    document.body.clientHeight,
-                    document.documentElement.clientHeight
+                    document.documentElement.scrollHeight
                 );
                 const clientHeight = window.innerHeight || document.documentElement.clientHeight;
                 
@@ -3098,102 +3095,65 @@ if (window.innerWidth < 768) {
                 const progress = totalScrollable > 0 ? Math.min(1, Math.max(0, scrollTop / totalScrollable)) : 0;
                 
                 // Update width
-                progressFill.style.setProperty('width', `${progress * 100}%`, 'important');
+                progressBar.style.setProperty('width', `${progress * 100}%`, 'important');
                 
-                // Update color based on current nav theme
+                // Update color based on nav theme
                 if (navBar.classList.contains('nav-green')) {
-                    progressFill.style.setProperty('background', 'white', 'important');
+                    progressBar.style.setProperty('background', 'white', 'important');
                 } else if (navBar.classList.contains('nav-black')) {
-                    progressFill.style.setProperty('background', '#32b550', 'important');
+                    progressBar.style.setProperty('background', '#32b550', 'important');
                 } else if (navBar.classList.contains('nav-white')) {
-                    progressFill.style.setProperty('background', '#32b550', 'important');
-                }
-                
-                // Debug logging (remove after testing)
-                if (progress > 0) {
-                    console.log(`📊 Progress: ${(progress * 100).toFixed(1)}% (scroll: ${scrollTop}px)`);
+                    progressBar.style.setProperty('background', '#32b550', 'important');
+                } else {
+                    progressBar.style.setProperty('background', '#32b550', 'important'); // Default
                 }
             }
             
-            // =======================
-            // FIX 3: MULTIPLE EVENT LISTENERS
-            // =======================
+            // =================================
+            // EVENT LISTENERS
+            // =================================
             
-            // Remove any existing listeners first
-            progressFill.removeAttribute('data-progress-listeners');
+            // Initial positioning and setup
+            positionProgressBar();
+            updateProgressBar();
             
-            if (!progressFill.hasAttribute('data-progress-listeners')) {
-                // Add multiple scroll event listeners for maximum compatibility
-                window.addEventListener('scroll', updateMobileProgress, { passive: true });
-                document.addEventListener('scroll', updateMobileProgress, { passive: true });
-                
-                // Also listen to touch events for mobile
-                window.addEventListener('touchmove', updateMobileProgress, { passive: true });
-                document.addEventListener('touchmove', updateMobileProgress, { passive: true });
-                
-                // Listen to resize events
-                window.addEventListener('resize', updateMobileProgress, { passive: true });
-                
-                // Mark as having listeners
-                progressFill.setAttribute('data-progress-listeners', 'true');
-                
-                console.log('✅ Multiple scroll listeners added');
-            }
+            // Update on scroll
+            window.addEventListener('scroll', updateProgressBar, { passive: true });
+            document.addEventListener('scroll', updateProgressBar, { passive: true });
+            window.addEventListener('touchmove', updateProgressBar, { passive: true });
             
-            // =======================
-            // FIX 4: FORCE IMMEDIATE UPDATE
-            // =======================
+            // Update on resize (nav height might change)
+            window.addEventListener('resize', () => {
+                setTimeout(positionProgressBar, 100);
+            }, { passive: true });
             
-            // Update immediately on page load
-            updateMobileProgress();
-            
-            // Force update after short delays to catch any timing issues
-            setTimeout(updateMobileProgress, 100);
-            setTimeout(updateMobileProgress, 500);
-            setTimeout(updateMobileProgress, 1000);
-            
-            console.log('✅ Immediate progress update triggered');
-            
-            // =======================
-            // FIX 5: CONTINUOUS MONITORING
-            // =======================
-            
-            // Watch for nav theme changes and update progress bar color
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                        // Nav class changed, update progress bar color
-                        updateMobileProgress();
-                    }
-                });
+            // Monitor nav bar for theme changes
+            const navObserver = new MutationObserver(() => {
+                updateProgressBar();
             });
             
-            observer.observe(navBar, {
+            navObserver.observe(navBar, {
                 attributes: true,
                 attributeFilter: ['class']
             });
             
-            console.log('✅ Nav theme monitoring active');
+            // =================================
+            // CONTINUOUS MONITORING
+            // =================================
             
-            // =======================
-            // FIX 6: FALLBACK VISIBILITY CHECK
-            // =======================
-            
-            // Check every 2 seconds that progress bar is visible and properly styled
+            // Ensure progress bar stays positioned correctly
             setInterval(() => {
-                if (progressFill.style.display === 'none' || 
-                    progressFill.style.visibility === 'hidden' ||
-                    progressFill.style.opacity === '0') {
-                    
-                    console.log('🔧 Progress bar hidden, restoring...');
-                    progressFill.style.setProperty('display', 'block', 'important');
-                    progressFill.style.setProperty('visibility', 'visible', 'important');
-                    progressFill.style.setProperty('opacity', '1', 'important');
+                const currentTop = progressBar.style.top;
+                const expectedTop = navBar.getBoundingClientRect().bottom + 'px';
+                
+                if (currentTop !== expectedTop) {
+                    console.log('🔧 Repositioning progress bar...');
+                    positionProgressBar();
                 }
-            }, 2000);
+            }, 3000);
             
-            console.log('🎉 Mobile progress bar fix complete!');
+            console.log('🎉 Permanent progress bar positioning complete!');
             
-        }, 1000); // Wait 1 second after DOM ready
+        }, 1000); // Wait for page to settle
     });
 }
