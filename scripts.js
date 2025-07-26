@@ -1887,22 +1887,40 @@ setTimeout(() => {
   }
 
   handleInitialUrl() {
-  console.log('🔍 Handling initial URL…');
-  const rawHash = window.location.hash.replace('#','');
-  let targetId  = rawHash && this.slideMap[rawHash] ? rawHash : null;
+  const rawHash = window.location.hash.replace('#', '');
+  const targetId = rawHash && this.slideMap[rawHash] ? rawHash : null;
 
+  // ✅ MOBILE: Use native scroll only
+  if (window.innerWidth < 768) {
+    console.log('📱 Mobile: Handling deep link via native scroll');
+
+    if (targetId) {
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        console.log(`📍 Scrolled to #${targetId}`);
+      } else {
+        console.warn(`❌ No element with ID: ${targetId}`);
+      }
+    } else {
+      console.log('📍 No hash found — starting at top');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    return; // ⛔ Prevent GSAP from running on mobile
+  }
+
+  // 🖥 DESKTOP: Deep link to slide using GSAP
   if (targetId) {
     const slideNum = this.slideMap[targetId];
     console.log('🎯 Deep‐link to:', targetId, '→ slideNum:', slideNum);
-    setTimeout(() => {
-      gsap.set(this.wrapper, { x: -(slideNum - 1) * window.innerWidth });
-      this.currentSlide = slideNum;
-      console.log('✅ Deep‐link position set');
-      if (ScrollTrigger) ScrollTrigger.refresh();
-    }, 4000);
+
+    gsap.set(this.wrapper, { x: -(slideNum - 1) * window.innerWidth });
+    this.currentSlide = slideNum;
+
+    if (ScrollTrigger) ScrollTrigger.refresh();
     history.replaceState(null, '', `#${targetId}`);
   } else {
-    console.log('🏠 No valid hash, defaulting to first slide');
     const firstId = this.slideToId[1];
     history.replaceState(null, '', `#${firstId}`);
   }
