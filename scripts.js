@@ -1759,6 +1759,29 @@ class LBSTRSimpleNavigation {
     this.setupMenuNavigation();
     this.setupUrlTracking();
     this.userStartedScrolling = false;
+    // 🧠 Delayed handleInitialUrl only when ready
+const waitAndRunHandle = () => {
+  const nav = window.lbstrSimpleNavigation;
+  if (
+    !nav ||
+    !nav.wrapper ||
+    Object.keys(nav.slideMap || {}).length === 0
+  ) {
+    console.log('⏳ Waiting for nav to be ready...');
+    return setTimeout(waitAndRunHandle, 200); // Keep checking
+  }
+
+  if (window.innerWidth < 768) {
+    console.log('📱 Mobile detected – skipping handleInitialUrl');
+    return;
+  }
+
+  console.log('✅ Navigation ready – calling handleInitialUrl');
+  nav.handleInitialUrl();
+};
+
+// Start polling after ~1.5s to give everything time
+setTimeout(waitAndRunHandle, 1500);  
     window.addEventListener('scroll', () => {
     this.userStartedScrolling = true;
   }, { once: true });
