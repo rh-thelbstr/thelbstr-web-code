@@ -240,22 +240,19 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
    const fill = document.querySelector(".nav-progress-fill");
 
 if (fill) {
-    if (window.innerWidth < 768) {
-        // MOBILE: scroll happens on .scroll-container (deferred)
-        requestAnimationFrame(() => {
-            const scrollContainer = document.querySelector('.scroll-container');
-            if (!scrollContainer) return;
+  if (window.innerWidth < 768) {
+    // ✅ MOBILE: use document.body since .scroll-container isn't producing scroll delta
+    requestAnimationFrame(() => {
+      window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const totalHeight = document.body.scrollHeight - window.innerHeight;
+        const progress = totalHeight > 0 ? Math.min(1, scrollTop / totalHeight) : 0;
 
-            scrollContainer.addEventListener("scroll", () => {
-                const scrollTop = scrollContainer.scrollTop;
-                const totalHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-                const progress = totalHeight > 0 ? Math.min(1, scrollTop / totalHeight) : 0;
-
-                fill.style.height = "4px";
-                fill.style.width = `${progress * 100}%`;
-            });
-        });
-    } else {
+        fill.style.height = "4px";
+        fill.style.width = `${progress * 100}%`;
+      });
+    });
+  } else {
     // DESKTOP: scroll happens on window
     window.addEventListener("scroll", () => {
       const scrollTop = window.scrollY;
