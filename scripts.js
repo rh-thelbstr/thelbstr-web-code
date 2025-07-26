@@ -272,8 +272,6 @@ if (fill) {
       fill.style.width = "0%";
     }
   });
-}
-  });
 
  class ExpandAccordion {
     constructor() {
