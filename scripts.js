@@ -238,19 +238,24 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
     window.addEventListener("unload", () => observer.disconnect());
 
    const fill = document.querySelector(".nav-progress-fill");
+
 if (fill) {
     if (window.innerWidth < 768) {
-        // MOBILE: scroll happens on .scroll-container
-        scrollContainer.addEventListener("scroll", () => {
-            const scrollTop = scrollContainer.scrollTop;
-            const totalHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-            const progress = Math.min(1, scrollTop / totalHeight);
-            
-            // Mobile needs explicit height (desktop uses CSS height)
-            fill.style.height = "4px";
-            fill.style.width = `${progress * 100}%`;
+        // MOBILE: scroll happens on .scroll-container (deferred)
+        requestAnimationFrame(() => {
+            const scrollContainer = document.querySelector('.scroll-container');
+            if (!scrollContainer) return;
+
+            scrollContainer.addEventListener("scroll", () => {
+                const scrollTop = scrollContainer.scrollTop;
+                const totalHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+                const progress = Math.min(1, scrollTop / totalHeight);
+
+                fill.style.height = "4px";
+                fill.style.width = `${progress * 100}%`;
+            });
         });
-  } else {
+    } else {
     // DESKTOP: scroll happens on window
     window.addEventListener("scroll", () => {
       const scrollTop = window.scrollY;
