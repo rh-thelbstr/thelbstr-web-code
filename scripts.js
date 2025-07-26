@@ -1799,11 +1799,12 @@ window.addEventListener('scroll', () => {
   this.userStartedScrolling = true;
 }, { once: true });
 
+  setTimeout(() => {
   if (window.scrollY < 5 && !self.userStartedScrolling) {
-    console.log("🥬 No scroll detected – handling initial URL");
-    self.handleInitialUrl();  // ✅ works
+    console.log('📍 No scroll detected - handling initial URL');
+    self.handleInitialUrl(); // ✅ works
   } else {
-    console.log("🙅 User already scrolled – skipping auto-reset");
+    console.log('🟡 User already scrolled - skipping auto-reset');
   }
 }, 100);
     console.log('✅ Simple navigation ready!');
