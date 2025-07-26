@@ -2799,10 +2799,6 @@ if (window.innerWidth < 768) {
       finalBurgerCheck();
     }, 400);
     
-    setTimeout(() => {
-      forceLayoutRecalc();
-    }, 600);
-    
     console.log('🎉 TARGETED ADDITION COMPLETE - All final optimizations applied');
     
   }, 4000); // Wait 4 seconds for your existing fixes
