@@ -263,8 +263,9 @@ if (fill) {
       fill.style.setProperty("height", `${progress * 100}%`, "important");
     });
   }
-  // Reset bar on resize
+  // Reset on resize
   window.addEventListener("resize", () => {
+    if (window.innerWidth < 768) {
       fill.style.removeProperty("height");
       fill.style.setProperty("height", "0%", "important");
     } else {
