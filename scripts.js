@@ -1741,7 +1741,7 @@ class LBSTRSimpleNavigation {
 
   init() {
     // allow other scripts (ScrollTrigger) time to initialize
-    setTimeout(() => this.setup(), 2000);
+    this.setup();
   }
 
   setup() {
