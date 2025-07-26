@@ -1521,27 +1521,3 @@ a, button, .clickable, [data-cursor="pointer"] {
         display: none !important;
     }
 }
-
-/* Mobile Progress Bar - Correct Positioning */
-@media (max-width: 767px) {
-  .nav-progress-fill {
-    position: fixed !important;
-    top: 60px !important; /* ← Changed from 0px to 60px */
-    left: 0px !important;
-    height: 4px !important;
-    background-color: white !important;
-    z-index: 9999 !important;
-    transition: width 0.1s ease !important;
-    width: 0% !important;
-    display: block !important;
-    visibility: visible !important;
-  }
-  
-  .nav-bar.nav-green .nav-progress-fill {
-    background-color: white !important;
-  }
-  
-  .nav-bar.nav-black .nav-progress-fill {
-    background-color: #32b550 !important;
-  }
-}
