@@ -250,6 +250,7 @@ if (fill) {
 
         fill.style.height = "4px";
         fill.style.width = `${progress * 100}%`;
+        console.log(`Scroll: ${Math.round(progress * 100)}% | Bar: ${fill.style.width}`);  
       });
     });
   } else {
