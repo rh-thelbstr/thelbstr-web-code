@@ -261,6 +261,8 @@ if (fill) {
       fill.style.height = `${progress * 100}%`;
     });
   }
+     fill.style.width = "0%";
+    }
 
   // Reset bar on resize
   window.addEventListener("resize", () => {
