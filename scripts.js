@@ -1762,22 +1762,18 @@ class LBSTRSimpleNavigation {
     // 🧠 Delayed handleInitialUrl only when ready
 const waitAndRunHandle = () => {
   const nav = window.lbstrSimpleNavigation;
-  if (
-    !nav ||
-    !nav.wrapper ||
-    Object.keys(nav.slideMap || {}).length === 0
-  ) {
-    console.log('⏳ Waiting for nav to be ready...');
-    return setTimeout(waitAndRunHandle, 200); // Keep checking
+
+  if (!nav || !nav.wrapper || Object.keys(nav.slideMap || {}).length === 0) {
+    console.warn('🧪 Waiting for nav to be ready...');
+    return setTimeout(waitAndRunHandle, 200); // keep checking
   }
 
-  if (window.innerWidth < 768) {
-    console.log('📱 Mobile detected – skipping handleInitialUrl');
-    return;
+  if (window.innerWidth >= 768) {
+    console.log('🖥️ Desktop ready — calling handleInitialUrl...');
+    nav.handleInitialUrl();
+  } else {
+    console.log('📱 Mobile detected — skipping handleInitialUrl()');
   }
-
-  console.log('✅ Navigation ready – calling handleInitialUrl');
-  nav.handleInitialUrl();
 };
 
 // Start polling after ~1.5s to give everything time
