@@ -1758,36 +1758,46 @@ class LBSTRSimpleNavigation {
 
     this.setupMenuNavigation();
     this.setupUrlTracking();
-    this.userStartedScrolling = false;
-    // 🧠 Delayed handleInitialUrl only when ready
+   this.userStartedScrolling = false;
+
+// ========== SMART INIT FLOW ==========
+let retryCount = 0;
+const maxRetries = 10;
+
 const waitAndRunHandle = () => {
   const nav = window.lbstrSimpleNavigation;
 
-  if (!nav || !nav.wrapper || Object.keys(nav.slideMap || {}).length === 0) {
-    console.warn('🧪 Waiting for nav to be ready...');
-    return setTimeout(waitAndRunHandle, 200); // keep checking
+  // Check if nav is ready
+  if (
+    !nav ||
+    !nav.wrapper ||
+    Object.keys(nav.slideMap || {}).length === 0
+  ) {
+    if (retryCount++ < maxRetries) {
+      console.warn(`⏳ Waiting for nav to be ready...`);
+      return setTimeout(waitAndRunHandle, 250); // Retry in 250ms
+    } else {
+      console.error('❌ Navigation never became ready – skipping handleInitialUrl');
+      return;
+    }
   }
 
-  if (window.innerWidth >= 768) {
-    console.log('🖥️ Desktop ready — calling handleInitialUrl...');
-    nav.handleInitialUrl();
-  } else {
-    console.log('📱 Mobile detected — skipping handleInitialUrl()');
-  }
-};
-
-// Start polling after ~1.5s to give everything time
-setTimeout(waitAndRunHandle, 1500);  
-    window.addEventListener('scroll', () => {
-    this.userStartedScrolling = true;
-  }, { once: true });
-
-  const self = this;
-setTimeout(() => {
   if (window.innerWidth < 768) {
-    console.log("📱 Mobile detected — skipping handleInitialUrl()");
+    console.log('📱 Mobile detected – skipping handleInitialUrl()');
     return;
   }
+
+  console.log('🖥️ Desktop ready – calling handleInitialUrl...');
+  nav.handleInitialUrl();
+};
+
+// Kick off delayed polling
+setTimeout(waitAndRunHandle, 1500); // Wait ~1.5s after init
+
+// Detect if user has manually scrolled (blocks auto-reset)
+window.addEventListener('scroll', () => {
+  this.userStartedScrolling = true;
+}, { once: true });
 
   if (window.scrollY < 5 && !self.userStartedScrolling) {
     console.log("🥬 No scroll detected – handling initial URL");
