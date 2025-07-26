@@ -2822,4 +2822,3 @@ if (window.innerWidth < 768) {
 } else {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
-    });
