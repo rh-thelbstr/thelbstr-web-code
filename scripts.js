@@ -2789,39 +2789,3 @@ if (window.innerWidth < 768) {
       
       console.log('✅ Burger state monitoring active');
     }
-    
-    // =================================
-    // FORCE LAYOUT RECALCULATION
-    // =================================
-    function forceLayoutRecalc() {
-      // Force browser to recalculate layout
-      document.body.style.display = 'none';
-      document.body.offsetHeight; // Trigger reflow
-      document.body.style.display = '';
-      
-      // Trigger resize event to refresh everything
-      window.dispatchEvent(new Event('resize'));
-      
-      console.log('🔄 Layout recalculation forced');
-    }
-    
-    // =================================
-    // RUN ALL FINAL FIXES
-    // =================================
-    emergencyScrollUnlock();
-    
-    setTimeout(() => {
-      finalBurgerCheck();
-    }, 400);
-    
-    setTimeout(() => {
-      forceLayoutRecalc();
-    }, 600);
-    
-    console.log('🎉 TARGETED ADDITION COMPLETE - All final optimizations applied');
-    
-  }, 4000); // Wait 4 seconds for your existing fixes
-  
-} else {
-  console.log('💻 Desktop detected - skipping targeted mobile additions');
-}
