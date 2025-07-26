@@ -1763,10 +1763,9 @@ class LBSTRSimpleNavigation {
 // ========== SMART INIT FLOW ==========
 let retryCount = 0;
 const maxRetries = 10;
+const nav = window.lbstrSimpleNavigation;
 
 const waitAndRunHandle = () => {
-  const nav = window.lbstrSimpleNavigation;
-
   // Check if nav is ready
   if (
     !nav ||
@@ -1774,7 +1773,7 @@ const waitAndRunHandle = () => {
     Object.keys(nav.slideMap || {}).length === 0
   ) {
     if (retryCount++ < maxRetries) {
-      console.warn(`⏳ Waiting for nav to be ready...`);
+      console.warn('⏳ Waiting for nav to be ready...');
       return setTimeout(waitAndRunHandle, 250); // Retry in 250ms
     } else {
       console.error('❌ Navigation never became ready – skipping handleInitialUrl');
@@ -1783,11 +1782,11 @@ const waitAndRunHandle = () => {
   }
 
   if (window.innerWidth < 768) {
-    console.log('📱 Mobile detected – skipping handleInitialUrl()');
+    console.log('📵 Mobile detected – skipping handleInitialUrl');
     return;
   }
 
-  console.log('🖥️ Desktop ready – calling handleInitialUrl...');
+  console.log('✅ Desktop ready – calling handleInitialUrl');
   nav.handleInitialUrl();
 };
 
@@ -1799,15 +1798,16 @@ window.addEventListener('scroll', () => {
   this.userStartedScrolling = true;
 }, { once: true });
 
-  setTimeout(() => {
-  if (window.scrollY < 5 && !self.userStartedScrolling) {
-    console.log('📍 No scroll detected - handling initial URL');
-    nav.handleInitialUrl(); // ✅ Correct object
+// Final auto-reset if needed
+setTimeout(() => {
+  if (window.scrollY < 5 && !this.userStartedScrolling) {
+    console.log('📍 No scroll detected – handling initial URL');
+    nav.handleInitialUrl(); // ✅ Now nav is defined here too
   } else {
-    console.log('🟡 User already scrolled - skipping auto-reset');
+    console.log('🟡 User already scrolled – skipping auto-reset');
   }
 }, 100);
-    console.log('✅ Simple navigation ready!');
+console.log('🟢 Simple navigation ready!');
   }
 
   buildMaps() {
