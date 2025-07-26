@@ -245,8 +245,11 @@ if (fill) {
         const totalHeight = document.body.scrollHeight - window.innerHeight;
         const progress = Math.min(1, scrollTop / totalHeight);
         fill.style.height = `${progress * 100}%`;
-    });  
+       }
+  });
 }
+  });
+
  class ExpandAccordion {
     constructor() {
         this.isMobile = window.innerWidth < 768;
