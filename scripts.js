@@ -1887,26 +1887,26 @@ setTimeout(() => {
   }
 
   handleInitialUrl() {
-    console.log('🔍 Handling initial URL…');
-    const rawHash = window.location.hash.replace('#','');
-    let targetId  = rawHash && this.slideMap[rawHash] ? rawHash : null;
+  console.log('🔍 Handling initial URL…');
+  const rawHash = window.location.hash.replace('#','');
+  let targetId  = rawHash && this.slideMap[rawHash] ? rawHash : null;
 
-    if (targetId) {
-      const slideNum = this.slideMap[targetId];
-      console.log('🎯 Deep‐link to:', targetId, '→ slideNum:', slideNum);
-      setTimeout(() => {
-        gsap.set(this.wrapper, { x: -(slideNum - 1) * window.innerWidth });
-        this.currentSlide = slideNum;
-        console.log('✅ Deep‐link position set');
-        if (ScrollTrigger) ScrollTrigger.refresh();
-      }, 4000);
-      history.replaceState(null, '', `#${targetId}`);
-    } else {
-      console.log('🏠 No valid hash, defaulting to first slide');
-      const firstId = this.slideToId[1];
-      history.replaceState(null, '', `#${firstId}`);
-    }
+  if (targetId) {
+    const slideNum = this.slideMap[targetId];
+    console.log('🎯 Deep‐link to:', targetId, '→ slideNum:', slideNum);
+    setTimeout(() => {
+      gsap.set(this.wrapper, { x: -(slideNum - 1) * window.innerWidth });
+      this.currentSlide = slideNum;
+      console.log('✅ Deep‐link position set');
+      if (ScrollTrigger) ScrollTrigger.refresh();
+    }, 4000);
+    history.replaceState(null, '', `#${targetId}`);
+  } else {
+    console.log('🏠 No valid hash, defaulting to first slide');
+    const firstId = this.slideToId[1];
+    history.replaceState(null, '', `#${firstId}`);
   }
+}
   updateUrlHash(slideId) {
     if (!slideId) return;
     const newHash = `#${slideId}`;
