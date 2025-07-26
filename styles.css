@@ -1522,11 +1522,11 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 }
 
-/* Mobile Progress Bar - Immediate Visibility Fix */
+/* Mobile Progress Bar - Correct Positioning */
 @media (max-width: 767px) {
   .nav-progress-fill {
     position: fixed !important;
-    top: 0px !important;
+    top: 60px !important; /* ← Changed from 0px to 60px */
     left: 0px !important;
     height: 4px !important;
     background-color: white !important;
@@ -1537,7 +1537,6 @@ a, button, .clickable, [data-cursor="pointer"] {
     visibility: visible !important;
   }
   
-  /* Theme-based colors */
   .nav-bar.nav-green .nav-progress-fill {
     background-color: white !important;
   }
