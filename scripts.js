@@ -1901,7 +1901,6 @@ class LBSTRSimpleNavigation {
       history.replaceState(null, '', `#${firstId}`);
     }
   }
-}
   updateUrlHash(slideId) {
     if (!slideId) return;
     const newHash = `#${slideId}`;
