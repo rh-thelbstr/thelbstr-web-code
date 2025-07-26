@@ -1787,7 +1787,7 @@ const waitAndRunHandle = () => {
   }
 
   console.log('✅ Desktop ready – calling handleInitialUrl');
-  window.lbstrSimpleNavigation.handleInitialUrl();
+  if (window.lbstrSimpleNavigation?.handleInitialUrl) {   window.lbstrSimpleNavigation.handleInitialUrl(); }
 };
 
 // Kick off delayed polling
@@ -1802,7 +1802,7 @@ window.addEventListener('scroll', () => {
 setTimeout(() => {
   if (window.scrollY < 5 && !this.userStartedScrolling) {
     console.log('📍 No scroll detected – handling initial URL');
-    window.lbstrSimpleNavigation.handleInitialUrl(); // ✅ Now nav is defined here too
+    if (window.lbstrSimpleNavigation?.handleInitialUrl) {   window.lbstrSimpleNavigation.handleInitialUrl(); } // ✅ Now nav is defined here too
   } else {
     console.log('🟡 User already scrolled – skipping auto-reset');
   }
