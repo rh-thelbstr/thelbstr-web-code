@@ -1758,7 +1758,19 @@ class LBSTRSimpleNavigation {
 
     this.setupMenuNavigation();
     this.setupUrlTracking();
-    this.handleInitialUrl();
+    this.userStartedScrolling = false;
+    window.addEventListener('scroll', () => {
+    this.userStartedScrolling = true;
+  }, { once: true });
+
+  setTimeout(() => {
+    if (window.scrollY < 5 && !this.userStartedScrolling) {
+      console.log("⛳ No scroll detected – handling initial URL");
+      this.handleInitialUrl();
+    } else {
+      console.log("🙅 User already scrolled – skipping auto-reset");
+    }
+  }, 100);
     console.log('✅ Simple navigation ready!');
   }
 
