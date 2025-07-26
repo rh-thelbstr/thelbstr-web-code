@@ -248,8 +248,8 @@ if (fill) {
         const totalHeight = document.body.scrollHeight - window.innerHeight;
         const progress = totalHeight > 0 ? Math.min(1, scrollTop / totalHeight) : 0;
 
-        fill.style.height = "4px";
-        fill.style.width = `${progress * 100}%`;
+        fill.style.removeProperty("width");
+        fill.style.setProperty("width", `${progress * 100}%`, "important");
         console.log(`Scroll: ${Math.round(progress * 100)}% | Bar: ${fill.style.width}`);  
       });
     });
@@ -259,16 +259,17 @@ if (fill) {
       const scrollTop = window.scrollY;
       const totalHeight = document.body.scrollHeight - window.innerHeight;
       const progress = Math.min(1, scrollTop / totalHeight);
-      fill.style.height = `${progress * 100}%`;
-      fill.style.width = "0%";
+      fill.style.removeProperty("height");
+      fill.style.setProperty("height", `${progress * 100}%`, "important");
     });
   }
   // Reset bar on resize
   window.addEventListener("resize", () => {
-    if (window.innerWidth < 768) {
-      fill.style.height = "0%";
+      fill.style.removeProperty("height");
+      fill.style.setProperty("height", "0%", "important");
     } else {
-      fill.style.width = "0%";
+      fill.style.removeProperty("width");
+      fill.style.setProperty("width", "0%", "important");
     }
   });
     }
