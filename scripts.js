@@ -237,16 +237,39 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
     slides.forEach((slide) => observer.observe(slide));
     window.addEventListener("unload", () => observer.disconnect());
 
-   const fill = document.querySelector(".nav-progress-fill");
+    const fill = document.querySelector(".nav-progress-fill");
 if (fill) {
+    if (window.innerWidth < 768) {
+        // MOBILE: scroll happens on .scroll-container
+        scrollContainer.addEventListener("scroll", () => {
+            const scrollTop = scrollContainer.scrollTop;
+            const totalHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+            const progress = Math.min(1, scrollTop / totalHeight);
+            
+            // Mobile needs explicit height (desktop uses CSS height)
+            fill.style.height = "4px";
+            fill.style.width = `${progress * 100}%`;
+        });
+  } else {
     // DESKTOP: scroll happens on window
     window.addEventListener("scroll", () => {
-        const scrollTop = window.scrollY;
-        const totalHeight = document.body.scrollHeight - window.innerHeight;
-        const progress = Math.min(1, scrollTop / totalHeight);
-        fill.style.height = `${progress * 100}%`;
+      const scrollTop = window.scrollY;
+      const totalHeight = document.body.scrollHeight - window.innerHeight;
+      const progress = Math.min(1, scrollTop / totalHeight);
+      fill.style.height = `${progress * 100}%`;
     });
+  }
+
+  // Reset bar on resize
+  window.addEventListener("resize", () => {
+    if (window.innerWidth < 768) {
+      fill.style.height = "0%";
+    } else {
+      fill.style.width = "0%";
+    }
+  });
 }
+  });
  class ExpandAccordion {
     constructor() {
         this.isMobile = window.innerWidth < 768;
