@@ -1765,6 +1765,11 @@ class LBSTRSimpleNavigation {
 
   const self = this;
 setTimeout(() => {
+  if (window.innerWidth < 768) {
+    console.log("📱 Mobile detected — skipping handleInitialUrl()");
+    return;
+  }
+
   if (window.scrollY < 5 && !self.userStartedScrolling) {
     console.log("🥬 No scroll detected – handling initial URL");
     self.handleInitialUrl();  // ✅ works
