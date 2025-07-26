@@ -241,11 +241,12 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
 if (fill) {
     // DESKTOP: scroll happens on window
     window.addEventListener("scroll", () => {
-      const scrollTop = window.scrollY;
-      const totalHeight = document.body.scrollHeight - window.innerHeight;
-      const progress = Math.min(1, scrollTop / totalHeight);
-      fill.style.height = `${progress * 100}%`;
+        const scrollTop = window.scrollY;
+        const totalHeight = document.body.scrollHeight - window.innerHeight;
+        const progress = Math.min(1, scrollTop / totalHeight);
+        fill.style.height = `${progress * 100}%`;
     });
+}
  class ExpandAccordion {
     constructor() {
         this.isMobile = window.innerWidth < 768;
