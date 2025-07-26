@@ -1763,14 +1763,15 @@ class LBSTRSimpleNavigation {
     this.userStartedScrolling = true;
   }, { once: true });
 
-  setTimeout(() => {
-    if (window.scrollY < 5 && !this.userStartedScrolling) {
-      console.log("⛳ No scroll detected – handling initial URL");
-      this.handleInitialUrl();
-    } else {
-      console.log("🙅 User already scrolled – skipping auto-reset");
-    }
-  }, 100);
+  const self = this;
+setTimeout(() => {
+  if (window.scrollY < 5 && !self.userStartedScrolling) {
+    console.log("🥬 No scroll detected – handling initial URL");
+    self.handleInitialUrl();  // ✅ works
+  } else {
+    console.log("🙅 User already scrolled – skipping auto-reset");
+  }
+}, 100);
     console.log('✅ Simple navigation ready!');
   }
 
