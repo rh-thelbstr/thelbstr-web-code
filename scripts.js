@@ -249,7 +249,7 @@ if (fill) {
             scrollContainer.addEventListener("scroll", () => {
                 const scrollTop = scrollContainer.scrollTop;
                 const totalHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-                const progress = Math.min(1, scrollTop / totalHeight);
+                const progress = totalHeight > 0 ? Math.min(1, scrollTop / totalHeight) : 0;
 
                 fill.style.height = "4px";
                 fill.style.width = `${progress * 100}%`;
