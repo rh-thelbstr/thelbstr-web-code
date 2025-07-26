@@ -1802,7 +1802,7 @@ window.addEventListener('scroll', () => {
   setTimeout(() => {
   if (window.scrollY < 5 && !self.userStartedScrolling) {
     console.log('📍 No scroll detected - handling initial URL');
-    self.handleInitialUrl(); // ✅ works
+    nav.handleInitialUrl(); // ✅ Correct object
   } else {
     console.log('🟡 User already scrolled - skipping auto-reset');
   }
