@@ -259,17 +259,17 @@ if (fill) {
       const totalHeight = document.body.scrollHeight - window.innerHeight;
       const progress = Math.min(1, scrollTop / totalHeight);
       fill.style.height = `${progress * 100}%`;
+      fill.style.width = "0%";
     });
   }
-     fill.style.width = "0%";
-    }
-
   // Reset bar on resize
   window.addEventListener("resize", () => {
     if (window.innerWidth < 768) {
       fill.style.height = "0%";
     } else {
       fill.style.width = "0%";
+    }
+  });
     }
   });
 
