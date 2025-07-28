@@ -2275,3 +2275,110 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
 })();
+
+// COMPLETE MOBILE MENU SOLUTION
+// Combined: Nav positioning + External X icon (Selecta font) + All previous fixes
+(function() {
+    'use strict';
+    
+    // Only run on mobile
+    if (window.innerWidth >= 768) return;
+    
+    console.log('📱 Loading complete mobile menu solution...');
+    
+    const burger = document.querySelector('.nav-burger-icon-black');
+    const mobileMenu = document.querySelector('.nav-menu-mobile');
+    const navBar = document.querySelector('.nav-bar');
+    
+    if (!burger || !mobileMenu || !navBar) {
+        console.log('❌ Missing mobile menu elements');
+        return;
+    }
+    
+    // Combined click handler for all fixes
+    burger.addEventListener('click', function() {
+        setTimeout(() => {
+            const isMenuOpen = mobileMenu.classList.contains('active') || 
+                              window.getComputedStyle(mobileMenu).display === 'flex';
+            
+            if (isMenuOpen) {
+                console.log('📱 Menu opened - applying all fixes...');
+                
+                // FIX 1: Position mobile menu below nav bar
+                const navHeight = navBar.offsetHeight;
+                
+                mobileMenu.style.setProperty('top', navHeight + 'px', 'important');
+                mobileMenu.style.setProperty('height', `calc(100vh - ${navHeight}px)`, 'important');
+                mobileMenu.style.setProperty('z-index', '9999', 'important');
+                
+                // Ensure nav bar stays on top
+                navBar.style.setProperty('z-index', '10001', 'important');
+                navBar.style.setProperty('position', 'fixed', 'important');
+                navBar.style.setProperty('top', '0', 'important');
+                navBar.style.setProperty('left', '0', 'important');
+                navBar.style.setProperty('right', '0', 'important');
+                
+                // FIX 2: External X icon in Selecta font
+                burger.style.setProperty('opacity', '0', 'important');
+                
+                // Remove any existing external X
+                const existingX = document.querySelector('.external-x-icon');
+                if (existingX) existingX.remove();
+                
+                // Get burger position
+                const burgerRect = burger.getBoundingClientRect();
+                
+                // Create external X with Selecta font
+                const xIcon = document.createElement('div');
+                xIcon.className = 'external-x-icon';
+                xIcon.innerHTML = '✕';
+                xIcon.style.cssText = `
+                    position: fixed !important;
+                    top: ${burgerRect.top}px !important;
+                    left: ${burgerRect.left}px !important;
+                    width: ${burgerRect.width}px !important;
+                    height: ${burgerRect.height}px !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    font-family: 'Selecta', sans-serif !important;
+                    font-size: 2rem !important;
+                    font-weight: normal !important;
+                    color: white !important;
+                    background: rgba(0,0,0,0.7) !important;
+                    border-radius: 4px !important;
+                    z-index: 999999 !important;
+                    cursor: pointer !important;
+                    line-height: 1 !important;
+                    letter-spacing: 1px !important;
+                `;
+                
+                // Make X clickable to close menu
+                xIcon.addEventListener('click', function() {
+                    burger.click();
+                });
+                
+                document.body.appendChild(xIcon);
+                
+                console.log('✅ All mobile menu fixes applied');
+                
+            } else {
+                console.log('📱 Menu closed - restoring elements...');
+                
+                // Restore burger
+                burger.style.removeProperty('opacity');
+                
+                // Remove external X
+                const xIcon = document.querySelector('.external-x-icon');
+                if (xIcon) {
+                    xIcon.remove();
+                }
+                
+                console.log('✅ All elements restored');
+            }
+        }, 50);
+    });
+    
+    console.log('✅ Complete mobile menu solution loaded');
+    
+})();
