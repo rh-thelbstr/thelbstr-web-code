@@ -1422,1668 +1422,220 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
 });
 
-// Scroll Position Memory for Mobile
-document.addEventListener('DOMContentLoaded', () => {
-    const scrollContainer = document.querySelector('.scroll-container');
-    const isMobile = window.innerWidth < 768;
-    
-    if (isMobile && scrollContainer) {
-        // Restore scroll position on page load
-        const savedScrollTop = sessionStorage.getItem('mobileScrollPosition');
-        if (savedScrollTop) {
-            scrollContainer.scrollTop = parseInt(savedScrollTop);
-        }
-        
-        // Save scroll position on scroll
-        scrollContainer.addEventListener('scroll', () => {
-            sessionStorage.setItem('mobileScrollPosition', scrollContainer.scrollTop);
-        });
-        
-        // Save scroll position before page unload
-        window.addEventListener('beforeunload', () => {
-            sessionStorage.setItem('mobileScrollPosition', scrollContainer.scrollTop);
-        });
-    }
-});
-// ===== LBSTR MENU - FORCE EVERYTHING APPROACH =====
-// Put this in "Before body tag" - NO CSS in head needed
-
-console.log('🚀 LBSTR Force Menu: Starting...');
-
-// Try multiple times to catch the elements when they're ready
-function tryInitMenu() {
-  const burger = document.querySelector('.nav-burger-icon-black');
-  const menu = document.querySelector('.nav-menu-desktop');
-  
-  console.log('🔍 Attempt - Burger:', !!burger, 'Menu:', !!menu, 'GSAP:', typeof gsap !== 'undefined');
-  
-  if (!burger || !menu || typeof gsap === 'undefined') {
-    return false; // Not ready yet
-  }
-  
-  console.log('✅ All elements found - forcing setup...');
-  
-  // FORCE EVERYTHING - No CSS dependencies
-  
-  // 1. Force nav bar to stay on top
-  const navBar = document.querySelector('.nav-bar, #nav-bar, [class*="nav-bar"]');
-  if (navBar) {
-    navBar.style.cssText += `
-      position: fixed !important;
-      z-index: 10000 !important;
-      pointer-events: auto !important;
-    `;
-  }
-  
-  // 2. FORCE menu to be visible and positioned
-  menu.style.cssText = `
-    position: fixed !important;
-    top: 0px !important;
-    left: 0px !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 9999 !important;
-    background-color: rgb(50, 181, 80) !important;
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    transform: translateX(-100%) !important;
-    transition: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    box-sizing: border-box !important;
-  `;
-  
-  // 3. FORCE burger to be clickable
-  burger.style.cssText += `
-    pointer-events: auto !important;
-    cursor: pointer !important;
-    z-index: 10001 !important;
-    position: relative !important;
-  `;
-  
-  console.log('🎨 Everything forced - menu should now be setup');
-  
-  // 4. Test that menu is actually positioned correctly
-  setTimeout(() => {
-    const rect = menu.getBoundingClientRect();
-    console.log('📐 Menu position check:', {
-      left: rect.left,
-      top: rect.top,
-      width: rect.width,
-      height: rect.height,
-      visible: rect.width > 0 && rect.height > 0
-    });
-  }, 100);
-  
-  let isOpen = false;
-  let currentTween = null;
-  
-  // ANIMATION FUNCTIONS
-  function openMenu() {
-    console.log('🎬 FORCE Opening menu...');
-    isOpen = true;
-    
-    if (currentTween) currentTween.kill();
-    
-    // Force body scroll lock
-    document.body.style.overflow = 'hidden';
-    
-    // Get stagger elements
-    const navLinks = menu.querySelectorAll('a, .link-block');
-    const closeButton = menu.querySelector('.close-button-menu');
-    const socialHandles = menu.querySelector('.social-handles');
-    
-    console.log('🔍 Stagger elements found:', {
-      links: navLinks.length,
-      closeBtn: !!closeButton,
-      social: !!socialHandles
-    });
-    
-    // AGGRESSIVE RESET - Clear all GSAP properties first
-    console.log('🔄 AGGRESSIVE reset of all content...');
-    
-    navLinks.forEach(link => {
-      gsap.set(link, { clearProps: "all" }); // Clear all GSAP properties
-      link.style.cssText = ''; // Clear all inline styles
-    });
-    
-    if (closeButton) {
-      gsap.set(closeButton, { clearProps: "all" });
-      closeButton.style.cssText = '';
-    }
-    
-    if (socialHandles) {
-      gsap.set(socialHandles, { clearProps: "all" });
-      socialHandles.style.cssText = '';
-    }
-    
-    console.log('✅ All GSAP properties cleared');
-    
-    // Small delay to ensure reset is complete
-    setTimeout(() => {
-      // Now set initial states for stagger
-      gsap.set(navLinks, { opacity: 0, y: 20 });
-      if (closeButton) gsap.set(closeButton, { opacity: 0, y: 20 });
-      if (socialHandles) gsap.set(socialHandles, { opacity: 0, y: 20 });
-      
-      console.log('✅ Initial stagger states set');
-      
-      // GSAP Timeline for stagger
-      currentTween = gsap.timeline({
-        onComplete: () => {
-          console.log('✅ FORCE menu open complete');
-          currentTween = null;
-        }
-      });
-      
-      // Step 1: Slide panel
-      currentTween.to(menu, {
-        x: '0%',
-        duration: 0.8,
-        ease: "power2.out",
-        force3D: true,
-        onStart: () => console.log('🎬 Panel should be sliding in now...'),
-        onComplete: () => console.log('✅ Panel slide complete')
-      });
-      
-      // Step 2: Stagger links
-      if (navLinks.length > 0) {
-        currentTween.to(navLinks, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.08,
-          ease: "power3.out",
-          onComplete: () => console.log('✅ Links staggered')
-        }, "-=0.5");
-      }
-      
-      // Step 3: Close button
-      if (closeButton) {
-        currentTween.to(closeButton, {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          ease: "power2.out"
-        }, "-=0.3");
-      }
-      
-      // Step 4: Social
-      if (socialHandles) {
-        currentTween.to(socialHandles, {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          ease: "power2.out"
-        }, "-=0.2");
-      }
-      
-    }, 50); // 50ms delay for reset to complete
-  }
-  
-  function closeMenu() {
-    console.log('🚪 FORCE Closing menu...');
-    isOpen = false;
-    
-    if (currentTween) currentTween.kill();
-    
-    // Get all content elements
-    const navLinks = menu.querySelectorAll('a, .link-block');
-    const closeButton = menu.querySelector('.close-button-menu');
-    const socialHandles = menu.querySelector('.social-handles');
-    const allStaggerContent = [...navLinks];
-    if (closeButton) allStaggerContent.push(closeButton);
-    if (socialHandles) allStaggerContent.push(socialHandles);
-    
-    currentTween = gsap.timeline({
-      onComplete: () => {
-        document.body.style.overflow = '';
-        
-        // FORCE RESET all elements after close (prevents stuck state)
-        console.log('🔄 Resetting all elements after close...');
-        allStaggerContent.forEach(el => {
-          el.style.opacity = '';
-          el.style.transform = '';
-        });
-        
-        console.log('✅ FORCE menu closed and reset');
-        currentTween = null;
-      }
-    });
-    
-    // Quick fade stagger content
-    currentTween.to(allStaggerContent, {
-      opacity: 0,
-      y: 20,
-      duration: 0.2,
-      ease: "power2.in",
-      onComplete: () => console.log('✅ Content faded for close')
-    });
-    
-    // Slide panel out
-    currentTween.to(menu, {
-      x: '-100%',
-      duration: 0.6,
-      ease: "power2.in",
-      force3D: true,
-      onComplete: () => console.log('✅ Panel slid out')
-    }, "-=0.1");
-  }
-  
-  // EVENT LISTENERS
-  burger.addEventListener('click', function(e) {
-    console.log('🎯 FORCE Burger clicked!');
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!isOpen) {
-      openMenu();
-    } else {
-      closeMenu();
-    }
-  });
-  
-  // Close button
-  const closeButton = menu.querySelector('.close-button-menu');
-  if (closeButton) {
-    closeButton.addEventListener('click', function(e) {
-      console.log('❌ FORCE Close clicked!');
-      e.preventDefault();
-      e.stopPropagation();
-      if (isOpen) closeMenu();
-    });
-  }
-  
-  // ESC key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && isOpen) {
-      console.log('⌨️ FORCE ESC pressed');
-      closeMenu();
-    }
-  });
-  
-  console.log('✅ FORCE menu setup complete!');
-  return true; // Success
-}
-
-// Try initializing multiple times
-const delays = [500, 1000, 2000, 3000, 5000];
-let initialized = false;
-
-delays.forEach((delay, index) => {
-  setTimeout(() => {
-    if (!initialized && tryInitMenu()) {
-      initialized = true;
-      console.log(`🎉 FORCE menu initialized on attempt ${index + 1}`);
-    }
-  }, delay);
-});
-
-console.log('🎯 FORCE initialization attempts scheduled');
-
-// ===== SECOND MIGRATION INTO GITHUB FROM WEBFLOW =====
-
-console.log('🧭 LBSTR Simple Navigation: Starting...');
-
-class LBSTRSimpleNavigation {
-  constructor() {
-    this.totalSlides   = 0;
-    this.currentSlide  = 1;
-    this.isNavigating  = false;
-    this.skipTracking  = false;
-    this.wrapper       = null;
-    this.slideMap      = {};
-    this.slideToId     = {};
-    this.init();
-  }
-
-  init() {
-    // allow other scripts (ScrollTrigger) time to initialize
-    this.setup();
-  }
-
-  setup() {
-    console.log('🔍 Setting up simple navigation...');
-    this.wrapper = document.querySelector('.wrapper');
-    if (!this.wrapper) {
-      console.error('❌ Wrapper not found');
-      return;
-    }
-    console.log('✅ Wrapper found');
-
-    // build maps from direct child slides only
-    this.buildMaps();
-
-    this.setupMenuNavigation();
-    this.setupUrlTracking();
-   this.userStartedScrolling = false;
-
-// ========== SMART INIT FLOW ==========
-let retryCount = 0;
-const maxRetries = 10;
-const nav = window.lbstrSimpleNavigation;
-
-const waitAndRunHandle = () => {
-  // Check if nav is ready
-  if (
-    !nav ||
-    !nav.wrapper ||
-    Object.keys(nav.slideMap || {}).length === 0
-  ) {
-    if (retryCount++ < maxRetries) {
-      console.warn('⏳ Waiting for nav to be ready...');
-      return setTimeout(waitAndRunHandle, 250); // Retry in 250ms
-    } else {
-      console.error('❌ Navigation never became ready – skipping handleInitialUrl');
-      return;
-    }
-  }
-
-  if (window.innerWidth < 768) {
-    console.log('📵 Mobile detected – skipping handleInitialUrl');
-    return;
-  }
-
-  console.log('✅ Desktop ready – calling handleInitialUrl');
-  if (window.lbstrSimpleNavigation?.handleInitialUrl) {   window.lbstrSimpleNavigation.handleInitialUrl(); }
-};
-
-// Kick off delayed polling
-setTimeout(waitAndRunHandle, 1500); // Wait ~1.5s after init
-
-// Detect if user has manually scrolled (blocks auto-reset)
-window.addEventListener('scroll', () => {
-  this.userStartedScrolling = true;
-}, { once: true });
-
-// Final auto-reset if needed
-setTimeout(() => {
-  if (window.scrollY < 5 && !this.userStartedScrolling) {
-    console.log('📍 No scroll detected – handling initial URL');
-    if (window.lbstrSimpleNavigation?.handleInitialUrl) {   window.lbstrSimpleNavigation.handleInitialUrl(); } // ✅ Now nav is defined here too
-  } else {
-    console.log('🟡 User already scrolled – skipping auto-reset');
-  }
-}, 100);
-console.log('🟢 Simple navigation ready!');
-  }
-
-  buildMaps() {
-    // only grab direct children of .wrapper that have an id
-    const slides = Array.from(this.wrapper.children).filter(el => el.id);
-    slides.forEach((el, idx) => {
-      const id  = el.id;
-      const num = idx + 1;
-      this.slideMap[id]     = num;
-      this.slideToId[num]   = id;
-    });
-    this.totalSlides = slides.length;
-    console.log('🔄 slideMap rebuilt:', this.slideMap);
-  }
-
- setupMenuNavigation() {
-  console.log('🔗 Setting up both desktop & mobile menu navigation…');
-
-  // target both desktop + mobile containers
-  const menus = document.querySelectorAll('.nav-menu-desktop, .nav-menu-mobile');
-  if (!menus.length) {
-    console.warn('⚠️ No menu elements found');
-    return;
-  }
-
-  menus.forEach(menu => {
-    menu.addEventListener('click', e => {
-      const link = e.target.closest('a[href*="#"], .link-block');
-      if (!link || this.isNavigating) return;
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      const href              = link.getAttribute('href') || '';
-      const rawId             = href.startsWith('#') ? href.slice(1) : href;
-      const targetSlideNumber = this.slideMap[rawId] || 1;
-
-      console.log('🎯 Menu click (mobile/desktop) → slide', targetSlideNumber);
-      this.closeMenu();
-
-      setTimeout(() => {
-        this.navigateToSlide(targetSlideNumber);
-      }, 300);
-    });
-  });
-
-  console.log('✅ Desktop & mobile menu navigation wired up');
-}
-
-  closeMenu() {
-    if (window.lbstrMenu && typeof window.lbstrMenu.close === 'function') {
-      window.lbstrMenu.close(); console.log('✅ Menu closed via lbstrMenu.close()'); return;
-    }
-    if (window.lbstrMenu && typeof window.lbstrMenu.closeMenu === 'function') {
-      window.lbstrMenu.closeMenu(); console.log('✅ Menu closed via lbstrMenu.closeMenu()'); return;
-    }
-    const closeButton = document.querySelector('.close-button-menu');
-    if (closeButton) {
-      closeButton.click(); console.log('✅ Menu closed via close-button click'); return;
-    }
-    const burger = document.querySelector('.nav-burger-icon-black');
-    if (burger) {
-      burger.click(); console.log('✅ Menu closed via burger click');
-    }
-  }
-
-  navigateToSlide(targetSlideNumber) {
-    if (this.isNavigating || targetSlideNumber < 1 || targetSlideNumber > this.totalSlides) {
-      return console.log('❌ Navigation blocked:', { isNavigating: this.isNavigating, targetSlideNumber });
-    }
-    this.isNavigating = true;
-    this.skipTracking = true;
-    console.log('🎬 scrolling to slide:', targetSlideNumber);
-
-    const scrollY = (targetSlideNumber - 1) * window.innerWidth;
-
-    gsap.to(window, {
-      scrollTo: scrollY,
-      duration: 1.2,
-      ease: "power2.inOut",
-      onStart:   () => console.log('⬆️ Scroll animation started to:', scrollY),
-      onComplete:() => {
-        this.currentSlide = targetSlideNumber;
-        this.isNavigating = false;
-        console.log('✅ scrollTo complete, now at slide:', targetSlideNumber);
-        this.updateUrlHash(this.slideToId[targetSlideNumber]);
-        setTimeout(() => this.skipTracking = false, 300);
-      }
-    });
-  }
-
-  setupUrlTracking() {
-    console.log('📊 Setting up URL tracking...');
-    setInterval(() => {
-      if (!this.isNavigating && !this.skipTracking && this.wrapper) {
-        const currentX   = gsap.getProperty(this.wrapper, "x") || 0;
-        const slideWidth = window.innerWidth;
-        const newSlide   = Math.round(Math.abs(currentX) / slideWidth) + 1;
-        if (newSlide !== this.currentSlide) {
-          this.currentSlide = newSlide;
-          console.log('📍 Now on slide:', newSlide);
-          this.updateUrlHash(this.slideToId[newSlide]);
-        }
-      }
-    }, 200);
-    console.log('✅ URL tracking ready');
-  }
-
-  handleInitialUrl() {
-  const rawHash = window.location.hash.replace('#', '');
-  const targetId = rawHash && this.slideMap[rawHash] ? rawHash : null;
-
-  // ✅ MOBILE: Use native scroll only
-  if (window.innerWidth < 768) {
-    console.log('📱 Mobile: Handling deep link via native scroll');
-
-    if (targetId) {
-      const el = document.getElementById(targetId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        console.log(`📍 Scrolled to #${targetId}`);
-      } else {
-        console.warn(`❌ No element with ID: ${targetId}`);
-      }
-    } else {
-      console.log('📍 No hash found — starting at top');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    return; // ⛔ Prevent GSAP from running on mobile
-  }
-
-  // 🖥 DESKTOP: Deep link to slide using GSAP
-  if (targetId) {
-    const slideNum = this.slideMap[targetId];
-    console.log('🎯 Deep‐link to:', targetId, '→ slideNum:', slideNum);
-
-    gsap.set(this.wrapper, { x: -(slideNum - 1) * window.innerWidth });
-    this.currentSlide = slideNum;
-
-    if (ScrollTrigger) ScrollTrigger.refresh();
-    history.replaceState(null, '', `#${targetId}`);
-  } else {
-    const firstId = this.slideToId[1];
-    history.replaceState(null, '', `#${firstId}`);
-  }
-}
-  updateUrlHash(slideId) {
-    if (!slideId) return;
-    const newHash = `#${slideId}`;
-    if (window.location.hash !== newHash) {
-      window.history.pushState(null, '', newHash);
-      console.log('🔗 Hash updated to:', newHash);
-    }
-  }
-
-  getCurrentSlide() {
-    return this.currentSlide;
-  }
-
-  goToSlide(slideNumber) {
-    this.navigateToSlide(slideNumber);
-  }
-}
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    console.log('🚀 Initializing simple navigation...');
-    window.lbstrSimpleNavigation = new LBSTRSimpleNavigation();
-  }, 3000);
-});
-
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      const burgerMobile = document.querySelector('.nav-burger-icon-black');
-      const mobileMenu   = document.querySelector('.nav-menu-mobile');
-      let isOpen         = false;
-
-      if (!burgerMobile || !mobileMenu) return;
-
-      // Toggle slide-down/up animation
-      burgerMobile.addEventListener('click', () => {
-        if (!isOpen) {
-          gsap.to(mobileMenu, {
-            height: 'auto',
-            duration: 0.5,
-            ease: 'power2.out'
-          });
-        } else {
-          gsap.to(mobileMenu, {
-            height: 0,
-            duration: 0.3,
-            ease: 'power2.in'
-          });
-        }
-        isOpen = !isOpen;
-      });
-
-      // Auto-close when any link is clicked
-      mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          gsap.to(mobileMenu, {
-            height: 0,
-            duration: 0.3,
-            ease: 'power2.in'
-          });
-          isOpen = false;
-        });
-      });
-    }, 500);
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      const burger    = document.querySelector('.nav-burger-icon-black');
-      const mobileNav = document.querySelector('.nav-menu-mobile');
-      let   open      = false;
-
-      if (!burger || !mobileNav) {
-        console.warn('Mobile nav elements not found');
-        return;
-      }
-
-      // ensure menu starts closed
-      mobileNav.style.display = 'none';
-      mobileNav.style.top     = '-100%';
-
-      burger.addEventListener('click', () => {
-        if (!open) {
-          // slide down
-          mobileNav.style.display = 'flex';
-          gsap.fromTo(mobileNav,
-            { top: '-100%' },
-            { top: '0%', duration: 0.5, ease: 'power2.out' }
-          );
-        } else {
-          // slide up
-          gsap.to(mobileNav, {
-            top: '-100%',
-            duration: 0.3,
-            ease: 'power2.in',
-            onComplete: () => {
-              mobileNav.style.display = 'none';
-            }
-          });
-        }
-        open = !open;
-      });
-
-      // auto-close when any link is clicked
-      mobileNav.querySelectorAll('a').forEach(a =>
-        a.addEventListener('click', () => {
-          gsap.to(mobileNav, {
-            top: '-100%',
-            duration: 0.3,
-            ease: 'power2.in',
-            onComplete: () => {
-              mobileNav.style.display = 'none';
-            }
-          });
-          open = false;
-        })
-      );
-    }, 500);
-  });
-
-<!-- DEVICE-AWARE NAVIGATION SYSTEM -->
-    
-console.log('🎯 Device-Aware Navigation: Starting...');
-
-document.addEventListener('DOMContentLoaded', () => {
-    const isDesktop = window.innerWidth >= 768;
-    const isMobile = window.innerWidth < 768;
-    
-    console.log(`📱 Device detected: ${isDesktop ? 'Desktop' : 'Mobile'}`);
-    
-    if (isDesktop) {
-        // DESKTOP ONLY: Navigation click handlers
-        setTimeout(() => {
-            setupDesktopNavigation();
-        }, 1000);
-    }
-    
-    if (isMobile) {
-        // MOBILE ONLY: Mobile menu functionality  
-        setTimeout(() => {
-            setupMobileMenu();
-        }, 1000);
-    }
-});
-
-// DESKTOP NAVIGATION - Only runs on desktop
-function setupDesktopNavigation() {
-    console.log('🖥️ Setting up desktop navigation...');
-    
-    // Add your desktop navigation code here
-    // This is where you put the code that handles clicking section headers
-    // to navigate to different slides on desktop
-    
-    // Example structure:
-    // const sectionHeaders = document.querySelectorAll('.section-header, .nav-link');
-    // sectionHeaders.forEach(header => {
-    //     header.addEventListener('click', function(e) {
-    //         // Your desktop navigation logic here
-    //     });
-    // });
-    
-    console.log('✅ Desktop navigation ready');
-}
-
-// MOBILE MENU - Only runs on mobile
-function setupMobileMenu() {
-    console.log('📱 Setting up mobile menu...');
-    
-    const burger = document.querySelector('.nav-burger-icon-black');
-    const mobileMenu = document.querySelector('.nav-menu-mobile');
-    
-    if (!burger || !mobileMenu) {
-        console.error('❌ Mobile menu elements not found');
-        return;
-    }
-
-    console.log('✅ Mobile menu elements found');
-
-    let isMenuOpen = false;
-
-    // Mobile burger click handler
-    burger.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        
-        console.log('📱 Mobile burger clicked');
-        
-        isMenuOpen = !isMenuOpen;
-        
-        if (isMenuOpen) {
-            mobileMenu.classList.add('active');
-            burger.classList.add('menu-open');
-            document.body.classList.add('menu-open');
-            console.log('📱 Menu opened');
-        } else {
-            mobileMenu.classList.remove('active');
-            burger.classList.remove('menu-open');
-            document.body.classList.remove('menu-open');
-            console.log('📱 Menu closed');
-        }
-    });
-
-    // Mobile menu navigation
-    const menuItems = [
-        { selector: '.the-lbstr-menu-mob', target: 'the-beginning', name: 'The LBSTR' },
-        { selector: '.strategy-menu-mob', target: 'strategy', name: 'Strategy' },
-        { selector: '.story-menu-mob', target: 'storytelling', name: 'Storytelling' },
-        { selector: '.services-menu-mob', target: 'services', name: 'Services' },
-        { selector: '.contact-menu-mob', target: 'contact', name: 'Contact' }
-    ];
-
-    menuItems.forEach(({ selector, target, name }) => {
-        const menuItem = mobileMenu.querySelector(selector);
-        if (menuItem) {
-            // Get all clickable elements within this menu item
-            const clickables = [
-                ...menuItem.querySelectorAll('a'),
-                ...menuItem.querySelectorAll('[class*="link-block"]'),
-                menuItem // Include the container itself
-            ];
-            
-            clickables.forEach((clickable, index) => {
-                clickable.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                    
-                    console.log(`📱 ${name} menu item clicked (element ${index})`);
-                    
-                    // Close menu
-                    mobileMenu.classList.remove('active');
-                    burger.classList.remove('menu-open');
-                    document.body.classList.remove('menu-open');
-                    isMenuOpen = false;
-                    console.log('📱 Menu closed');
-                    
-                    // Navigate
-                    setTimeout(() => {
-                        const section = document.getElementById(target);
-                        if (section) {
-                            section.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'start' 
-                            });
-                            history.pushState(null, '', '#' + target);
-                            console.log(`✅ Navigated to ${name}`);
-                        } else {
-                            console.error(`❌ Section not found: ${target}`);
-                        }
-                    }, 200);
-                });
-            });
-            
-            console.log(`✅ ${name} mobile menu item setup (${clickables.length} clickables)`);
-        } else {
-            console.warn(`⚠️ Menu item not found: ${selector}`);
-        }
-    });
-
-    // Close menu on outside click
-    document.addEventListener('click', function(e) {
-        if (isMenuOpen && 
-            !mobileMenu.contains(e.target) && 
-            !burger.contains(e.target)) {
-            mobileMenu.classList.remove('active');
-            burger.classList.remove('menu-open');
-            document.body.classList.remove('menu-open');
-            isMenuOpen = false;
-            console.log('📱 Menu closed by outside click');
-        }
-    });
-
-    // Close menu on escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && isMenuOpen) {
-            mobileMenu.classList.remove('active');
-            burger.classList.remove('menu-open');
-            document.body.classList.remove('menu-open');
-            isMenuOpen = false;
-            console.log('📱 Menu closed by escape key');
-        }
-    });
-
-    console.log('✅ Mobile menu setup complete');
-}
-
-// Handle window resize - switch navigation systems if needed
-window.addEventListener('resize', function() {
-    const wasDesktop = window.innerWidth >= 768;
-    
-    // You can add logic here to handle device switching if needed
-    console.log(`📱 Window resized - now: ${wasDesktop ? 'Desktop' : 'Mobile'}`);
-});
-
 // ==========================================
-// COMPLETE MOBILE/DESKTOP ISOLATION FIX
-// This stops desktop scripts from interfering with mobile
+// CLEAN MOBILE NAVIGATION SYSTEM
+// Replaces lines 1448-3089 with simple, reliable mobile menu
 // ==========================================
-
-if (window.innerWidth < 768) {
-  console.log('📱 Applying complete mobile isolation...');
-  
-  // =================================
-  // DISABLE DESKTOP NAVIGATION COMPLETELY
-  // =================================
-  
-  // Disable lbstrSimpleNavigation on mobile
-  if (window.lbstrSimpleNavigation) {
-    window.lbstrSimpleNavigation = null;
-    console.log('🚫 Disabled lbstrSimpleNavigation on mobile');
-  }
-  
-  // Prevent desktop navigation from loading
-  Object.defineProperty(window, 'lbstrSimpleNavigation', {
-    value: null,
-    writable: false,
-    configurable: false
-  });
-  
-  // Disable GSAP ScrollTrigger completely
-  if (window.ScrollTrigger) {
-    ScrollTrigger.killAll();
-    ScrollTrigger.disable();
-    console.log('🚫 Killed and disabled ScrollTrigger on mobile');
-  }
-  
-  // Prevent ScrollTrigger from reactivating
-  Object.defineProperty(window, 'ScrollTrigger', {
-    get: () => ({ 
-      killAll: () => {}, 
-      disable: () => {}, 
-      refresh: () => {} 
-    }),
-    configurable: false
-  });
-  // =================================
-  // CLEAN MOBILE BURGER
-  // =================================
-  setTimeout(() => {
-    const burger = document.querySelector('.nav-burger-icon-black');
-    const mobileMenu = document.querySelector('.nav-menu-mobile');
-    
-    if (burger && mobileMenu) {
-      console.log('🍔 Setting up clean mobile burger...');
-      
-      // Remove ALL existing click handlers by cloning
-      const newBurger = burger.cloneNode(true);
-      burger.parentNode.replaceChild(newBurger, burger);
-      
-      let isOpen = false;
-      
-      // Single, clean click handler
-      newBurger.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        
-        console.log('🍔 Clean burger click, toggling to:', !isOpen);
-        
-        isOpen = !isOpen;
-        
-        if (isOpen) {
-          newBurger.classList.add('menu-open');
-          mobileMenu.classList.add('active');
-          document.body.classList.add('menu-open');
-          mobileMenu.style.display = 'flex';
-        } else {
-          newBurger.classList.remove('menu-open');
-          mobileMenu.classList.remove('active');
-          document.body.classList.remove('menu-open');
-          mobileMenu.style.display = 'none';
-        }
-      });
-      
-      console.log('✅ Clean burger setup complete');
-    }
-  }, 1500);
-  
-  // =================================
-  // PREVENT DESKTOP SCRIPT INTERFERENCE
-  // =================================
-  
-  // Override any desktop navigation functions
-  const noOp = () => {};
-  
-  if (window.gsap) {
-    window.gsap.to = (target, vars) => {
-      // Block any GSAP animations that might interfere with mobile
-      if (typeof target === 'string' && target.includes('wrapper')) {
-        console.log('🚫 Blocked GSAP wrapper animation on mobile');
-        return;
-      }
-      return { kill: noOp };
-    };
-  }
-  
-  console.log('🛡️ Complete mobile isolation applied');
-}
-
-// ==========================================
-// MOBILE FIXES V2 - Fix Progress Bar & Burger Conflicts
-// Replace your existing mobile fixes with this
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', function() {
-  
-  // Only run on mobile
-  if (window.innerWidth < 768) {
-    console.log('📱 Mobile detected - applying targeted Webflow navigation fix');
-    
-    function hideDesktopNavigation() {
-      console.log('🎯 Targeting Webflow desktop navigation structure...');
-      
-      // Target the main desktop nav container
-      const desktopNav = document.querySelector('.nav-menu-desktop');
-      
-      if (desktopNav) {
-        console.log('✅ Found .nav-menu-desktop element');
-        
-        // Hide the entire desktop nav container
-        desktopNav.style.setProperty('display', 'none', 'important');
-        desktopNav.style.setProperty('visibility', 'hidden', 'important');
-        desktopNav.style.setProperty('opacity', '0', 'important');
-        desktopNav.style.setProperty('pointer-events', 'none', 'important');
-        desktopNav.style.setProperty('position', 'absolute', 'important');
-        desktopNav.style.setProperty('left', '-9999px', 'important');
-        desktopNav.style.setProperty('top', '-9999px', 'important');
-        desktopNav.style.setProperty('z-index', '-9999', 'important');
-        desktopNav.style.setProperty('width', '0', 'important');
-        desktopNav.style.setProperty('height', '0', 'important');
-        desktopNav.style.setProperty('overflow', 'hidden', 'important');
-        
-        console.log('✅ Desktop nav container hidden with nuclear CSS');
-        
-        // Also target child elements individually as backup
-        const childSelectors = [
-          '.menu-container-left',
-          '.menu-container-right', 
-          '.social-handles'
-        ];
-        
-        childSelectors.forEach(selector => {
-          const elements = desktopNav.querySelectorAll(selector);
-          elements.forEach(element => {
-            element.style.setProperty('display', 'none', 'important');
-            element.style.setProperty('visibility', 'hidden', 'important');
-            console.log(`✅ Hidden child element: ${selector}`);
-          });
-        });
-        
-        // Final verification
-        const computedStyle = window.getComputedStyle(desktopNav);
-        console.log('🔍 Final verification - Desktop nav display:', computedStyle.display);
-        
-        if (computedStyle.display === 'none') {
-          console.log('🎉 SUCCESS: Desktop navigation fully hidden!');
-        } else {
-          console.log('⚠️ WARNING: Desktop nav still showing, trying DOM removal...');
-          // Last resort - temporarily remove from DOM
-          desktopNav.parentNode.removeChild(desktopNav);
-          // Store reference to add back if needed
-          window.hiddenDesktopNav = desktopNav;
-        }
-        
-      } else {
-        console.log('❌ .nav-menu-desktop not found');
-      }
-      
-      // Ensure mobile nav elements are ready
-      const mobileNav = document.querySelector('.nav-menu-mobile');
-      if (mobileNav) {
-        console.log('✅ Mobile nav found and ready');
-      } else {
-        console.log('⚠️ Mobile nav not found yet');
-      }
-    }
-    
-    // Apply fix immediately and with delays
-    hideDesktopNavigation();
-    setTimeout(hideDesktopNavigation, 100);
-    setTimeout(hideDesktopNavigation, 500);
-    setTimeout(hideDesktopNavigation, 1000);
-    
-    // Create observer to catch any attempts to show desktop nav
-    const observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        if (mutation.type === 'attributes' || mutation.type === 'childList') {
-          const target = mutation.target;
-          
-          // If desktop nav tries to reappear, hide it again
-          if (target.classList && target.classList.contains('nav-menu-desktop')) {
-            console.log('🚫 Desktop nav tried to reappear - hiding again');
-            hideDesktopNavigation();
-          }
-        }
-      });
-    });
-    
-    // Observe the entire document for changes
-    observer.observe(document.body, {
-      attributes: true,
-      childList: true,
-      subtree: true,
-      attributeFilter: ['style', 'class']
-    });
-    
-    console.log('🛡️ Desktop navigation protection active with DOM monitoring');
-  }
-  
-  // Handle window resize
-  window.addEventListener('resize', function() {
-    if (window.innerWidth < 768) {
-      // Switched to mobile - apply fix
-      setTimeout(hideDesktopNavigation, 100);
-    } else if (window.innerWidth >= 768 && window.hiddenDesktopNav) {
-      // Switched to desktop - restore nav if it was removed
-      if (window.hiddenDesktopNav && !document.contains(window.hiddenDesktopNav)) {
-        document.body.appendChild(window.hiddenDesktopNav);
-        window.hiddenDesktopNav = null;
-      }
-    }
-  });
-  
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-  
-  // Only run fixes on mobile
-  if (window.innerWidth < 768) {
-    console.log('📱 Applying mobile navigation fixes...');
-    
-    // FIX 1: Remove inline styles that override Webflow design
-    function cleanMobileMenuStyles() {
-      const mobileMenu = document.querySelector('.nav-menu-mobile');
-      if (mobileMenu) {
-        // Remove problematic inline styles
-        mobileMenu.style.removeProperty('display');
-        mobileMenu.style.removeProperty('top');
-        mobileMenu.style.removeProperty('height');
-        mobileMenu.style.removeProperty('position');
-        mobileMenu.style.removeProperty('background');
-        
-        console.log('✅ Cleaned mobile menu inline styles');
-      }
-    }
-    
-    // FIX 2: Prevent navigation conflicts by adding delay
-    function fixNavigationTiming() {
-      const mobileMenu = document.querySelector('.nav-menu-mobile');
-      if (!mobileMenu) return;
-      
-      // Add single click handler that prevents conflicts
-      mobileMenu.addEventListener('click', function(e) {
-        const menuItem = e.target.closest('[class*="menu-mob"]');
-        if (!menuItem) return;
-        
-        // Prevent multiple handlers from firing
-        e.stopImmediatePropagation();
-        
-        console.log('📱 Menu item clicked:', menuItem.textContent);
-        
-        // Get the target section
-        const menuText = menuItem.textContent.trim().toLowerCase();
-        let targetSection = '';
-        
-        switch(menuText) {
-          case 'the lbstr':
-            targetSection = 'the-beginning';
-            break;
-          case 'strategy':
-            targetSection = 'strategy';
-            break;
-          case 'storytelling':
-            targetSection = 'storytelling';
-            break;
-          case 'services':
-            targetSection = 'services';
-            break;
-          case 'contact':
-            targetSection = 'contact';
-            break;
-        }
-        
-        if (targetSection) {
-          // Close mobile menu first
-          const burger = document.querySelector('.nav-burger-icon-black');
-          const body = document.body;
-          
-          if (burger && burger.classList.contains('menu-open')) {
-            burger.classList.remove('menu-open');
-            mobileMenu.classList.remove('active');
-            body.classList.remove('menu-open');
-          }
-          
-          // Wait for menu to close, then navigate
-          setTimeout(() => {
-            // Force scroll to target section
-            const targetElement = document.getElementById(targetSection);
-            if (targetElement) {
-              // Reset any GSAP scroll locks
-              if (window.ScrollTrigger) {
-                ScrollTrigger.refresh();
-              }
-              
-              // Force scroll with native scrollIntoView
-              targetElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-              
-              // Update URL hash
-              history.pushState(null, '', '#' + targetSection);
-              
-              console.log('✅ Navigated to:', targetSection);
-            }
-          }, 300);
-        }
-      }, true); // Use capture phase to intercept before other handlers
-    }
-    
-    // FIX 3: Ensure scroll is unlocked after navigation
-    function ensureScrollUnlocked() {
-      // Remove any scroll locks that might persist
-      document.body.style.removeProperty('overflow');
-      document.body.style.removeProperty('position');
-      document.body.style.removeProperty('height');
-      document.documentElement.style.removeProperty('overflow');
-      
-      // Reset GSAP if it's interfering
-      if (window.gsap) {
-        gsap.set(document.body, { clearProps: "all" });
-      }
-    }
-    
-    // Apply fixes
-    setTimeout(() => {
-      cleanMobileMenuStyles();
-      fixNavigationTiming();
-    }, 1000);
-    
-    // Clean up after any navigation
-    document.addEventListener('scroll', ensureScrollUnlocked);
-    window.addEventListener('hashchange', ensureScrollUnlocked);
-    
-    console.log('🛡️ Mobile navigation fixes applied');
-  }
-});
-
-// FIX 4: Override any GSAP scroll locking on mobile
-if (window.innerWidth < 768) {
-  // Disable ScrollTrigger on mobile completely
-  if (window.ScrollTrigger) {
-    ScrollTrigger.disable();
-  }
-  
-  // Ensure GSAP doesn't lock scrolling
-  if (window.gsap) {
-    gsap.set(document.body, { clearProps: "overflow,position,height" });
-  }
-}
-
-// ==========================================
-// BURGER CLICK FIX ONLY - Add this after your existing mobile fixes
-// ==========================================
-
-// Only fix burger timing on mobile
-if (window.innerWidth < 768) {
-  setTimeout(() => {
-    const burger = document.querySelector('.nav-burger-icon-black');
-    if (burger) {
-      console.log('🍔 Adding burger reliability fix...');
-      
-      // Add a priority click handler that fires first
-      burger.addEventListener('click', function(e) {
-        // Small delay to ensure all systems are ready
-        setTimeout(() => {
-          console.log('🍔 Burger click processed');
-        }, 50);
-      }, true); // Capture phase - fires before other handlers
-      
-      console.log('✅ Burger reliability improved');
-    }
-  }, 1500);
-}
-
-// ==========================================
-// EXACT FIXES - Based on diagnostic results
-// Add these AFTER your existing mobile fixes
-// ==========================================
-
-// Only run on mobile and after other scripts load
-if (window.innerWidth < 768) {
-  setTimeout(() => {
-    
-    // =================================
-    // FIX 2: BURGER RELIABILITY - Reduce click conflicts
-    // =================================
-    const burger = document.querySelector('.nav-burger-icon-black');
-    if (burger) {
-      console.log('🍔 Adding burger reliability fix...');
-      
-      // Add a high-priority click handler that ensures menu toggle works
-      burger.addEventListener('click', function(e) {
-        console.log('🍔 Priority burger handler triggered');
-        
-        // Small delay to let other handlers process first
-        setTimeout(() => {
-          const mobileMenu = document.querySelector('.nav-menu-mobile');
-          const isMenuCurrentlyOpen = burger.classList.contains('menu-open');
-          
-          console.log('🍔 Menu state check - currently open:', isMenuCurrentlyOpen);
-          
-          // If burger state doesn't match menu state, force correction
-          if (mobileMenu) {
-            const menuIsVisible = window.getComputedStyle(mobileMenu).display !== 'none';
-            
-            if (isMenuCurrentlyOpen !== menuIsVisible) {
-              console.log('🍔 State mismatch detected, correcting...');
-              
-              if (isMenuCurrentlyOpen && !menuIsVisible) {
-                // Burger says open but menu is hidden - show menu
-                mobileMenu.classList.add('active');
-                document.body.classList.add('menu-open');
-              } else if (!isMenuCurrentlyOpen && menuIsVisible) {
-                // Menu is visible but burger says closed - hide menu
-                mobileMenu.classList.remove('active');
-                document.body.classList.remove('menu-open');
-              }
-            }
-          }
-        }, 100);
-        
-      }, true); // Capture phase - runs first
-      
-      console.log('✅ Burger reliability fix added');
-    }
-    
-    console.log('🎯 Targeted fixes applied successfully');
-    
-  }, 2000); // Wait for all other scripts to load
-}
-
-// ==========================================
-// POST-GITHUB SCRIPTS ISOLATION
-// This runs AFTER your GitHub scripts.js loads and disables desktop functionality
-// ==========================================
-
-// Wait for GitHub scripts to fully load, then override them
-setTimeout(() => {
-  if (window.innerWidth < 768) {
-    console.log('📱 POST-GITHUB ISOLATION: Disabling desktop scripts...');
-    
-    // =================================
-    // DISABLE GITHUB SCRIPTS ON MOBILE
-    // =================================
-    
-    // Kill ScrollTrigger after it loads
-    if (window.ScrollTrigger) {
-      ScrollTrigger.killAll();
-      ScrollTrigger.disable();
-      console.log('🚫 Killed ScrollTrigger after GitHub scripts loaded');
-    }
-    
-    // Disable lbstrSimpleNavigation after it loads
-    if (window.lbstrSimpleNavigation) {
-      window.lbstrSimpleNavigation = null;
-      console.log('🚫 Disabled lbstrSimpleNavigation after GitHub scripts loaded');
-    }
-    
-    // Override GSAP to prevent animations
-    if (window.gsap) {
-      const originalTo = gsap.to;
-      gsap.to = function(target, vars) {
-        // Block wrapper animations on mobile
-        if (typeof target === 'string' && target.includes('.wrapper')) {
-          console.log('🚫 Blocked GSAP wrapper animation');
-          return { kill: () => {} };
-        }
-        if (target && target.classList && target.classList.contains('wrapper')) {
-          console.log('🚫 Blocked GSAP wrapper element animation');
-          return { kill: () => {} };
-        }
-        return originalTo.call(this, target, vars);
-      };
-      console.log('🚫 GSAP wrapper animations blocked');
-    }
-  
-    // =================================
-    // CLEAN BURGER MENU
-    // =================================
-    
-    const burger = document.querySelector('.nav-burger-icon-black');
-    const mobileMenu = document.querySelector('.nav-menu-mobile');
-    
-    if (burger && mobileMenu) {
-      console.log('🍔 Force-cleaning burger menu...');
-      
-      // Replace burger completely to remove all handlers
-      const newBurger = burger.cloneNode(true);
-      burger.parentNode.replaceChild(newBurger, burger);
-      
-      let isMenuOpen = false;
-      
-      newBurger.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        
-        isMenuOpen = !isMenuOpen;
-        console.log('🍔 Clean burger click - toggling to:', isMenuOpen);
-        
-        if (isMenuOpen) {
-          newBurger.classList.add('menu-open');
-          mobileMenu.classList.add('active');
-          document.body.classList.add('menu-open');
-        } else {
-          newBurger.classList.remove('menu-open');
-          mobileMenu.classList.remove('active');
-          document.body.classList.remove('menu-open');
-        }
-      });
-      
-      console.log('✅ Burger menu force-cleaned');
-    }
-    
-    console.log('🎉 POST-GITHUB ISOLATION COMPLETE');
-  }
-}, 3000); // Wait 3 seconds for GitHub scripts to load
-
-// ==========================================
-// TARGETED MOBILE ADDITION - Add to your existing fixes
-// This complements what you already have
-// ==========================================
-
-// Only run on mobile and after all your existing fixes
-if (window.innerWidth < 768) {
-  
-  // Wait for your existing fixes to complete (4 seconds)
-  setTimeout(() => {
-    console.log('🎯 TARGETED ADDITION: Running final mobile optimizations...');
-    
-    // =================================
-    // FINAL SCROLL UNLOCK (if still locked)
-    // =================================
-    function emergencyScrollUnlock() {
-      // More aggressive scroll unlocking than your current approach
-      const elementsToUnlock = [
-        document.documentElement,
-        document.body,
-        document.querySelector('.scroll-container'),
-        document.querySelector('.wrapper'),
-        document.querySelector('main'),
-        document.querySelector('.main-wrapper')
-      ];
-      
-      elementsToUnlock.forEach(element => {
-        if (element) {
-          element.style.setProperty('overflow', 'visible', 'important');
-          element.style.setProperty('overflow-y', 'auto', 'important');
-          element.style.setProperty('height', 'auto', 'important');
-          element.style.setProperty('position', 'static', 'important');
-          element.style.removeProperty('transform');
-          element.style.removeProperty('will-change');
-        }
-      });
-      
-      console.log('🔓 Emergency scroll unlock applied');
-    }
-    // =================================
-    // BURGER MENU FINAL STATE CHECK
-    // =================================
-    function finalBurgerCheck() {
-      const burger = document.querySelector('.nav-burger-icon-black');
-      const mobileMenu = document.querySelector('.nav-menu-mobile');
-      
-      if (!burger || !mobileMenu) {
-        console.log('❌ Burger or mobile menu not found');
-        return;
-      }
-      
-      // Add a state verification that runs every 2 seconds
-      setInterval(() => {
-        const burgerIsOpen = burger.classList.contains('menu-open');
-        const menuIsVisible = window.getComputedStyle(mobileMenu).display !== 'none';
-        const bodyHasMenuClass = document.body.classList.contains('menu-open');
-        
-        // Check for mismatched states
-        if (burgerIsOpen !== menuIsVisible || burgerIsOpen !== bodyHasMenuClass) {
-          console.log('🔧 Fixing burger state mismatch');
-          
-          // Force consistent state (closed by default)
-          burger.classList.remove('menu-open');
-          mobileMenu.classList.remove('active');
-          document.body.classList.remove('menu-open');
-          mobileMenu.style.display = 'none';
-        }
-      }, 2000);
-      
-      console.log('✅ Burger state monitoring active');
-    }
-      
-    // =================================
-    // RUN ALL FINAL FIXES
-    // =================================
-    emergencyScrollUnlock();
-    
-    setTimeout(() => {
-      finalBurgerCheck();
-    }, 400);
-    
-    console.log('🎉 TARGETED ADDITION COMPLETE - All final optimizations applied');
-    
-  }, 4000); // Wait 4 seconds for your existing fixes
-  
-} else {
-  console.log('💻 Desktop detected - skipping targeted mobile additions');
-}
-
-// === REFINED OVERRIDE FIX ===
-// Target the specific interference without breaking our own functionality
 
 (function() {
-  'use strict';
-  
-  if (window.innerWidth >= 768) return;
-  
-  console.log('🎯 REFINED OVERRIDE: Targeting specific interference...');
-  
-  setTimeout(() => {
+    'use strict';
     
-    const burger = document.querySelector('.nav-burger-icon-black');
-    const mobileMenu = document.querySelector('.nav-menu-mobile');
-    
-    if (!burger || !mobileMenu) return;
-    
-    console.log('✅ Elements found - applying refined fix...');
-    
-    // === STEP 1: BLOCK ONLY THE SPECIFIC CONFLICTING FUNCTION ===
-    // Instead of blocking all console.log, just prevent the interference
-    
-    let isOurScript = false; // Flag to identify our own operations
-    
-    // Override the specific function causing "Fixing burger state mismatch"
-    const originalClassListAdd = Element.prototype.add;
-    const originalClassListRemove = Element.prototype.remove;
-    
-    // Intercept class changes on burger/menu elements
-    Element.prototype.add = function(...classes) {
-      if ((this.classList.contains('nav-burger-icon-black') || 
-           this.classList.contains('nav-menu-mobile')) && 
-          !isOurScript) {
-        console.log('🚫 Blocked external class addition:', classes);
+    // Only run on mobile - leave desktop completely alone
+    if (window.innerWidth >= 768) {
+        console.log('💻 Desktop detected - skipping mobile navigation');
         return;
-      }
-      return originalClassListAdd.apply(this, classes);
-    };
+    }
     
-    Element.prototype.remove = function(...classes) {
-      if ((this.classList.contains('nav-burger-icon-black') || 
-           this.classList.contains('nav-menu-mobile')) && 
-          !isOurScript) {
-        console.log('🚫 Blocked external class removal:', classes);
-        return;
-      }
-      return originalClassListRemove.apply(this, classes);
-    };
+    console.log('📱 Mobile detected - initializing clean navigation');
     
-    // === STEP 2: CLEAN INITIAL STATE ===
-    isOurScript = true; // Mark our operations
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMobileNavigation);
+    } else {
+        initMobileNavigation();
+    }
     
-    burger.classList.remove('menu-open');
-    mobileMenu.classList.remove('active');
-    mobileMenu.style.setProperty('display', 'none', 'important');
-    document.body.classList.remove('menu-open');
-    document.body.style.removeProperty('overflow');
-    
-    isOurScript = false; // Reset flag
-    
-    console.log('🧹 Initial state cleaned');
-    
-    // === STEP 3: REPLACE BURGER WITH PROTECTED VERSION ===
-    const newBurger = burger.cloneNode(true);
-    burger.parentNode.replaceChild(newBurger, burger);
-    
-    console.log('🔄 Burger replaced');
-    
-    // === STEP 4: SIMPLE STATE MANAGEMENT ===
-    let menuIsOpen = false;
-    
-    // === STEP 5: PROTECTED CLICK HANDLER ===
-    newBurger.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      
-      isOurScript = true; // Mark as our operation
-      menuIsOpen = !menuIsOpen;
-      
-      console.log(`🎯 REFINED CLICK: ${menuIsOpen ? 'OPENING' : 'CLOSING'} menu`);
-      
-      if (menuIsOpen) {
-        // === OPEN MENU ===
-        console.log('📱 Opening menu...');
+    function initMobileNavigation() {
+        console.log('🚀 Starting mobile navigation setup...');
         
-        newBurger.classList.add('menu-open');
+        // Find elements
+        const burger = document.querySelector('.nav-burger-icon-black');
+        const mobileMenu = document.querySelector('.nav-menu-mobile');
         
-        mobileMenu.style.setProperty('display', 'flex', 'important');
-        mobileMenu.style.setProperty('position', 'fixed', 'important');
-        mobileMenu.style.setProperty('top', '0', 'important');
-        mobileMenu.style.setProperty('left', '0', 'important');
-        mobileMenu.style.setProperty('width', '100vw', 'important');
-        mobileMenu.style.setProperty('height', '100vh', 'important');
-        mobileMenu.style.setProperty('background-color', '#32b550', 'important');
-        mobileMenu.style.setProperty('z-index', '10001', 'important');
-        mobileMenu.style.setProperty('flex-direction', 'column', 'important');
-        mobileMenu.style.setProperty('justify-content', 'center', 'important');
-        mobileMenu.style.setProperty('align-items', 'center', 'important');
-        mobileMenu.style.setProperty('text-align', 'center', 'important');
+        if (!burger || !mobileMenu) {
+            console.error('❌ Mobile menu elements not found');
+            return;
+        }
         
-        // Style menu items
-        const menuItems = mobileMenu.querySelectorAll('[class*="menu-mob"]');
-        menuItems.forEach(item => {
-          item.style.setProperty('font-size', '3rem', 'important');
-          item.style.setProperty('color', 'black', 'important');
-          item.style.setProperty('margin', '1rem 0', 'important');
-          item.style.setProperty('line-height', '1.2', 'important');
-          item.style.setProperty('display', 'block', 'important');
-          
-          const links = item.querySelectorAll('a, [class*="link"]');
-          links.forEach(link => {
-            link.style.setProperty('color', 'black', 'important');
-            link.style.setProperty('text-decoration', 'none', 'important');
-          });
+        console.log('✅ Found burger and mobile menu elements');
+        
+        // Simple state tracking
+        let isMenuOpen = false;
+        
+        // Clean initial state
+        mobileMenu.classList.remove('active');
+        burger.classList.remove('menu-open');
+        document.body.classList.remove('menu-open');
+        
+        // Ensure menu starts hidden
+        mobileMenu.style.display = 'none';
+        
+        console.log('🧹 Initial state cleaned');
+        
+        // Burger click handler
+        burger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            isMenuOpen = !isMenuOpen;
+            console.log(`🍔 Burger clicked - ${isMenuOpen ? 'Opening' : 'Closing'} menu`);
+            
+            if (isMenuOpen) {
+                openMenu();
+            } else {
+                closeMenu();
+            }
         });
         
-        // Social handles
-        const social = mobileMenu.querySelector('.social-handles-mob');
-        if (social) {
-          social.style.setProperty('position', 'absolute', 'important');
-          social.style.setProperty('bottom', '2rem', 'important');
-          social.style.setProperty('left', '0', 'important');
-          social.style.setProperty('right', '0', 'important');
-          social.style.setProperty('display', 'flex', 'important');
-          social.style.setProperty('justify-content', 'space-around', 'important');
+        // Menu navigation setup
+        setupMenuNavigation();
+        
+        // Close on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isMenuOpen) {
+                console.log('⌨️ Escape pressed - closing menu');
+                closeMenu();
+            }
+        });
+        
+        console.log('✅ Mobile navigation initialized successfully');
+        
+        // Functions
+        function openMenu() {
+            console.log('📱 Opening mobile menu...');
+            
+            // Update states
+            isMenuOpen = true;
+            burger.classList.add('menu-open');
+            mobileMenu.classList.add('active');
+            document.body.classList.add('menu-open');
+            
+            // Show menu with your existing Webflow styling
+            mobileMenu.style.display = 'flex';
+            
+            // Lock body scroll
+            document.body.style.overflow = 'hidden';
+            
+            console.log('✅ Menu opened');
         }
         
-        mobileMenu.classList.add('active');
-        document.body.classList.add('menu-open');
-        document.body.style.setProperty('overflow', 'hidden', 'important');
-        
-        // Nav bar
-        const navBar = document.querySelector('.nav-bar');
-        if (navBar) {
-          navBar.style.setProperty('z-index', '10002', 'important');
-          navBar.style.setProperty('position', 'fixed', 'important');
-        }
-        
-        console.log('✅ Menu opened');
-        
-      } else {
-        // === CLOSE MENU ===
-        console.log('📱 Closing menu...');
-        
-        newBurger.classList.remove('menu-open');
-        mobileMenu.style.setProperty('display', 'none', 'important');
-        mobileMenu.classList.remove('active');
-        document.body.classList.remove('menu-open');
-        document.body.style.removeProperty('overflow');
-        
-        console.log('✅ Menu closed');
-      }
-      
-      isOurScript = false; // Reset flag
-      
-    }, true); // Capture phase
-    
-    // === STEP 6: MENU NAVIGATION ===
-    const menuNavigation = [
-      { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
-      { selector: '.strategy-menu-mob', target: 'strategy' },
-      { selector: '.story-menu-mob', target: 'storytelling' },
-      { selector: '.services-menu-mob', target: 'services' },
-      { selector: '.contact-menu-mob', target: 'contact' }
-    ];
-    
-    menuNavigation.forEach(({ selector, target }) => {
-      const menuItem = mobileMenu.querySelector(selector);
-      if (menuItem) {
-        const clickables = [menuItem, ...menuItem.querySelectorAll('a, [class*="link"]')];
-        
-        clickables.forEach(clickable => {
-          clickable.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+        function closeMenu() {
+            console.log('📱 Closing mobile menu...');
             
-            console.log(`🎯 Navigation: ${target}`);
-            
-            isOurScript = true;
-            menuIsOpen = false;
-            newBurger.classList.remove('menu-open');
-            mobileMenu.style.setProperty('display', 'none', 'important');
+            // Update states
+            isMenuOpen = false;
+            burger.classList.remove('menu-open');
             mobileMenu.classList.remove('active');
             document.body.classList.remove('menu-open');
-            document.body.style.removeProperty('overflow');
-            isOurScript = false;
             
-            setTimeout(() => {
-              const targetEl = document.getElementById(target);
-              if (targetEl) {
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                history.pushState(null, '', '#' + target);
-                console.log(`✅ Navigated to: ${target}`);
-              }
-            }, 200);
-          });
-        });
-      }
+            // Hide menu
+            mobileMenu.style.display = 'none';
+            
+            // Unlock body scroll
+            document.body.style.overflow = '';
+            
+            console.log('✅ Menu closed');
+        }
+        
+        function setupMenuNavigation() {
+            console.log('🔗 Setting up menu navigation...');
+            
+            // Define navigation mapping
+            const navigationMap = [
+                { selector: '.the-lbstr-menu-mob', target: 'the-beginning', name: 'The LBSTR' },
+                { selector: '.strategy-menu-mob', target: 'strategy', name: 'Strategy' },
+                { selector: '.story-menu-mob', target: 'storytelling', name: 'Storytelling' },
+                { selector: '.services-menu-mob', target: 'services', name: 'Services' },
+                { selector: '.contact-menu-mob', target: 'contact', name: 'Contact' }
+            ];
+            
+            navigationMap.forEach(({ selector, target, name }) => {
+                const menuItem = mobileMenu.querySelector(selector);
+                if (!menuItem) {
+                    console.warn(`⚠️ Menu item not found: ${selector}`);
+                    return;
+                }
+                
+                // Find all clickable elements within this menu item
+                const clickableElements = [
+                    menuItem,
+                    ...menuItem.querySelectorAll('a'),
+                    ...menuItem.querySelectorAll('[class*="link"]')
+                ];
+                
+                clickableElements.forEach(element => {
+                    element.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        console.log(`🎯 ${name} clicked - navigating to #${target}`);
+                        
+                        // Close menu first
+                        closeMenu();
+                        
+                        // Navigate after short delay
+                        setTimeout(() => {
+                            navigateToSection(target, name);
+                        }, 300);
+                    });
+                });
+                
+                console.log(`✅ ${name} navigation setup complete`);
+            });
+        }
+        
+        function navigateToSection(sectionId, sectionName) {
+            console.log(`🧭 Navigating to: ${sectionName} (#${sectionId})`);
+            
+            const targetElement = document.getElementById(sectionId);
+            if (!targetElement) {
+                console.error(`❌ Section not found: #${sectionId}`);
+                return;
+            }
+            
+            // Smooth scroll to target
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            
+            // Update URL hash
+            history.pushState(null, '', '#' + sectionId);
+            
+            console.log(`✅ Successfully navigated to: ${sectionName}`);
+        }
+    }
+    
+    // Handle window resize - reinitialize if switching to mobile
+    let wasDesktop = window.innerWidth >= 768;
+    
+    window.addEventListener('resize', function() {
+        const isDesktop = window.innerWidth >= 768;
+        
+        if (wasDesktop && !isDesktop) {
+            // Switched from desktop to mobile
+            console.log('📱 Switched to mobile - initializing navigation');
+            setTimeout(initMobileNavigation, 100);
+        } else if (!wasDesktop && isDesktop) {
+            // Switched from mobile to desktop
+            console.log('💻 Switched to desktop - cleaning up mobile navigation');
+            
+            // Clean up mobile state
+            const burger = document.querySelector('.nav-burger-icon-black');
+            const mobileMenu = document.querySelector('.nav-menu-mobile');
+            
+            if (burger) burger.classList.remove('menu-open');
+            if (mobileMenu) {
+                mobileMenu.classList.remove('active');
+                mobileMenu.style.display = '';
+            }
+            document.body.classList.remove('menu-open');
+            document.body.style.overflow = '';
+        }
+        
+        wasDesktop = isDesktop;
     });
     
-    // === STEP 7: ESCAPE KEY ===
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && menuIsOpen) {
-        isOurScript = true;
-        newBurger.click();
-        isOurScript = false;
-      }
-    });
+    console.log('🎉 Clean mobile navigation system loaded');
     
-    console.log('🎉 REFINED OVERRIDE COMPLETE!');
-    console.log('🧪 Menu should now work consistently without blocking itself');
-    
-  }, 3000);
-  
 })();
