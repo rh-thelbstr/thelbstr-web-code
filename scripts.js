@@ -1426,7 +1426,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // CLEAN MOBILE NAVIGATION SYSTEM
 // Replaces lines 1448-3089 with simple, reliable mobile menu
 // ==========================================
-
+/* 
 (function() {
     'use strict';
     
@@ -1639,7 +1639,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🎉 Clean mobile navigation system loaded');
     
 })();
-
+*/
 // ==========================================
 // DESKTOP MENU SYSTEM
 // Restores desktop burger menu functionality
