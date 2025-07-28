@@ -2276,8 +2276,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
 })();
 
-// COMPLETE MOBILE MENU SOLUTION
-// Combined: Nav positioning + External X icon (Selecta font) + All previous fixes
+// COMPLETE MOBILE MENU SOLUTION - FINAL VERSION
+// Combined: Nav positioning + Theme-aware white X + Separator line + All fixes
 (function() {
     'use strict';
     
@@ -2318,40 +2318,86 @@ document.addEventListener('DOMContentLoaded', () => {
                 navBar.style.setProperty('left', '0', 'important');
                 navBar.style.setProperty('right', '0', 'important');
                 
-                // FIX 2: External X icon in Selecta font
+                // FIX 2: Theme-aware white X icon
                 burger.style.setProperty('opacity', '0', 'important');
                 
-                // Remove any existing external X
+                // Remove existing elements
                 const existingX = document.querySelector('.external-x-icon');
+                const existingSeparator = document.querySelector('.nav-separator-line');
                 if (existingX) existingX.remove();
+                if (existingSeparator) existingSeparator.remove();
+                
+                // Check nav theme
+                const isGreenNav = navBar.classList.contains('nav-green');
                 
                 // Get burger position
                 const burgerRect = burger.getBoundingClientRect();
                 
-                // Create external X with Selecta font
+                // Create theme-appropriate white X
                 const xIcon = document.createElement('div');
                 xIcon.className = 'external-x-icon';
                 xIcon.innerHTML = '✕';
-                xIcon.style.cssText = `
-                    position: fixed !important;
-                    top: ${burgerRect.top}px !important;
-                    left: ${burgerRect.left}px !important;
-                    width: ${burgerRect.width}px !important;
-                    height: ${burgerRect.height}px !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                    font-family: 'Selecta', sans-serif !important;
-                    font-size: 2rem !important;
-                    font-weight: normal !important;
-                    color: white !important;
-                    background: rgba(0,0,0,0.7) !important;
-                    border-radius: 4px !important;
-                    z-index: 999999 !important;
-                    cursor: pointer !important;
-                    line-height: 1 !important;
-                    letter-spacing: 1px !important;
-                `;
+                
+                if (isGreenNav) {
+                    // Green nav = white X, no background + separator line
+                    xIcon.style.cssText = `
+                        position: fixed !important;
+                        top: ${burgerRect.top}px !important;
+                        left: ${burgerRect.left}px !important;
+                        width: ${burgerRect.width}px !important;
+                        height: ${burgerRect.height}px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        font-family: 'Selecta', sans-serif !important;
+                        font-size: 2rem !important;
+                        font-weight: normal !important;
+                        color: white !important;
+                        background: transparent !important;
+                        z-index: 999999 !important;
+                        cursor: pointer !important;
+                        line-height: 1 !important;
+                        letter-spacing: 1px !important;
+                    `;
+                    
+                    // Add separator line for green nav
+                    const separator = document.createElement('div');
+                    separator.className = 'nav-separator-line';
+                    separator.style.cssText = `
+                        position: fixed !important;
+                        top: ${navHeight}px !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        height: 1px !important;
+                        background: black !important;
+                        z-index: 10000 !important;
+                        pointer-events: none !important;
+                    `;
+                    document.body.appendChild(separator);
+                    
+                } else {
+                    // Black/white nav = white X with dark background
+                    xIcon.style.cssText = `
+                        position: fixed !important;
+                        top: ${burgerRect.top}px !important;
+                        left: ${burgerRect.left}px !important;
+                        width: ${burgerRect.width}px !important;
+                        height: ${burgerRect.height}px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        font-family: 'Selecta', sans-serif !important;
+                        font-size: 2rem !important;
+                        font-weight: normal !important;
+                        color: white !important;
+                        background: rgba(0,0,0,0.7) !important;
+                        border-radius: 4px !important;
+                        z-index: 999999 !important;
+                        cursor: pointer !important;
+                        line-height: 1 !important;
+                        letter-spacing: 1px !important;
+                    `;
+                }
                 
                 // Make X clickable to close menu
                 xIcon.addEventListener('click', function() {
@@ -2368,11 +2414,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Restore burger
                 burger.style.removeProperty('opacity');
                 
-                // Remove external X
+                // Remove X and separator
                 const xIcon = document.querySelector('.external-x-icon');
-                if (xIcon) {
-                    xIcon.remove();
-                }
+                const separator = document.querySelector('.nav-separator-line');
+                if (xIcon) xIcon.remove();
+                if (separator) separator.remove();
                 
                 console.log('✅ All elements restored');
             }
