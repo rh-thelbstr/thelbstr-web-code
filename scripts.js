@@ -2872,15 +2872,15 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === SEPARATE X BUTTON SOLUTION ===
-// Create a separate X button next to the burger when menu is open
+// === REFINED OVERRIDE FIX ===
+// Target the specific interference without breaking our own functionality
 
 (function() {
   'use strict';
   
   if (window.innerWidth >= 768) return;
   
-  console.log('🎯 SEPARATE X BUTTON: Creating independent X button...');
+  console.log('🎯 REFINED OVERRIDE: Targeting specific interference...');
   
   setTimeout(() => {
     
@@ -2889,198 +2889,147 @@ if (window.innerWidth < 768) {
     
     if (!burger || !mobileMenu) return;
     
-    console.log('✅ Elements found - creating separate X button...');
+    console.log('✅ Elements found - applying refined fix...');
     
-    // === CLEAN INITIAL STATE ===
+    // === STEP 1: BLOCK ONLY THE SPECIFIC CONFLICTING FUNCTION ===
+    // Instead of blocking all console.log, just prevent the interference
+    
+    let isOurScript = false; // Flag to identify our own operations
+    
+    // Override the specific function causing "Fixing burger state mismatch"
+    const originalClassListAdd = Element.prototype.add;
+    const originalClassListRemove = Element.prototype.remove;
+    
+    // Intercept class changes on burger/menu elements
+    Element.prototype.add = function(...classes) {
+      if ((this.classList.contains('nav-burger-icon-black') || 
+           this.classList.contains('nav-menu-mobile')) && 
+          !isOurScript) {
+        console.log('🚫 Blocked external class addition:', classes);
+        return;
+      }
+      return originalClassListAdd.apply(this, classes);
+    };
+    
+    Element.prototype.remove = function(...classes) {
+      if ((this.classList.contains('nav-burger-icon-black') || 
+           this.classList.contains('nav-menu-mobile')) && 
+          !isOurScript) {
+        console.log('🚫 Blocked external class removal:', classes);
+        return;
+      }
+      return originalClassListRemove.apply(this, classes);
+    };
+    
+    // === STEP 2: CLEAN INITIAL STATE ===
+    isOurScript = true; // Mark our operations
+    
     burger.classList.remove('menu-open');
     mobileMenu.classList.remove('active');
     mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    // Remove any existing X buttons
-    const existingX = document.querySelector('.mobile-x-button');
-    if (existingX) existingX.remove();
+    isOurScript = false; // Reset flag
     
-    // === REPLACE BURGER ===
+    console.log('🧹 Initial state cleaned');
+    
+    // === STEP 3: REPLACE BURGER WITH PROTECTED VERSION ===
     const newBurger = burger.cloneNode(true);
     burger.parentNode.replaceChild(newBurger, burger);
     
-    // === X BUTTON FUNCTIONS ===
+    console.log('🔄 Burger replaced');
     
-    function createXButton() {
-      console.log('✕ Creating separate X button...');
-      
-      // Remove existing X if any
-      const existingX = document.querySelector('.mobile-x-button');
-      if (existingX) existingX.remove();
-      
-      // Create X button positioned exactly where burger is
-      const xButton = document.createElement('div');
-      xButton.className = 'mobile-x-button';
-      
-      // Get burger position
-      const burgerRect = newBurger.getBoundingClientRect();
-      
-      xButton.style.cssText = `
-        position: fixed !important;
-        top: ${burgerRect.top}px !important;
-        right: ${window.innerWidth - burgerRect.right}px !important;
-        width: ${burgerRect.width}px !important;
-        height: ${burgerRect.height}px !important;
-        background: rgba(0, 0, 0, 0.8) !important;
-        color: white !important;
-        font-size: 1.5rem !important;
-        font-weight: bold !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 4px !important;
-        z-index: 10003 !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        border: 2px solid white !important;
-      `;
-      xButton.textContent = '✕';
-      
-      // Hover effect
-      xButton.addEventListener('mouseenter', function() {
-        this.style.background = 'rgba(255, 255, 255, 0.2)';
-        this.style.transform = 'scale(1.05)';
-      });
-      
-      xButton.addEventListener('mouseleave', function() {
-        this.style.background = 'rgba(0, 0, 0, 0.8)';
-        this.style.transform = 'scale(1)';
-      });
-      
-      // Click handler for X button
-      xButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        
-        console.log('❌ X button clicked - closing menu...');
-        closeMenu();
-      });
-      
-      // Add to body
-      document.body.appendChild(xButton);
-      
-      // Hide original burger
-      newBurger.style.opacity = '0.3'; // Dim it instead of hiding completely
-      
-      console.log('✅ X button created and positioned over burger');
-      return xButton;
-    }
+    // === STEP 4: SIMPLE STATE MANAGEMENT ===
+    let menuIsOpen = false;
     
-    function removeXButton() {
-      console.log('🗑️ Removing X button...');
-      
-      const xButton = document.querySelector('.mobile-x-button');
-      if (xButton) {
-        xButton.remove();
-        console.log('✅ X button removed');
-      }
-      
-      // Show original burger
-      newBurger.style.opacity = '';
-      
-      console.log('✅ Original hamburger restored');
-    }
-    
-    function openMenu() {
-      console.log('📱 Opening menu...');
-      
-      // Create X button
-      createXButton();
-      
-      // Open menu
-      mobileMenu.style.setProperty('display', 'flex', 'important');
-      mobileMenu.style.setProperty('position', 'fixed', 'important');
-      mobileMenu.style.setProperty('top', '0', 'important');
-      mobileMenu.style.setProperty('left', '0', 'important');
-      mobileMenu.style.setProperty('width', '100vw', 'important');
-      mobileMenu.style.setProperty('height', '100vh', 'important');
-      mobileMenu.style.setProperty('background-color', '#32b550', 'important');
-      mobileMenu.style.setProperty('z-index', '10001', 'important');
-      mobileMenu.style.setProperty('flex-direction', 'column', 'important');
-      mobileMenu.style.setProperty('justify-content', 'center', 'important');
-      mobileMenu.style.setProperty('align-items', 'center', 'important');
-      mobileMenu.style.setProperty('text-align', 'center', 'important');
-      
-      // Style menu items
-      const menuItems = mobileMenu.querySelectorAll('[class*="menu-mob"]');
-      menuItems.forEach(item => {
-        item.style.setProperty('font-size', '3rem', 'important');
-        item.style.setProperty('color', 'black', 'important');
-        item.style.setProperty('margin', '1rem 0', 'important');
-        item.style.setProperty('line-height', '1.2', 'important');
-        item.style.setProperty('display', 'block', 'important');
-        
-        const links = item.querySelectorAll('a, [class*="link"]');
-        links.forEach(link => {
-          link.style.setProperty('color', 'black', 'important');
-          link.style.setProperty('text-decoration', 'none', 'important');
-        });
-      });
-      
-      // Social handles
-      const social = mobileMenu.querySelector('.social-handles-mob');
-      if (social) {
-        social.style.setProperty('position', 'absolute', 'important');
-        social.style.setProperty('bottom', '2rem', 'important');
-        social.style.setProperty('left', '0', 'important');
-        social.style.setProperty('right', '0', 'important');
-        social.style.setProperty('display', 'flex', 'important');
-        social.style.setProperty('justify-content', 'space-around', 'important');
-      }
-      
-      mobileMenu.classList.add('active');
-      document.body.classList.add('menu-open');
-      document.body.style.setProperty('overflow', 'hidden', 'important');
-      
-      // Nav bar
-      const navBar = document.querySelector('.nav-bar');
-      if (navBar) {
-        navBar.style.setProperty('z-index', '10002', 'important');
-        navBar.style.setProperty('position', 'fixed', 'important');
-      }
-      
-      console.log('✅ Menu opened with X button visible');
-    }
-    
-    function closeMenu() {
-      console.log('📱 Closing menu...');
-      
-      // Remove X button
-      removeXButton();
-      
-      // Close menu
-      mobileMenu.style.setProperty('display', 'none', 'important');
-      mobileMenu.classList.remove('active');
-      document.body.classList.remove('menu-open');
-      document.body.style.removeProperty('overflow');
-      
-      console.log('✅ Menu closed - hamburger visible');
-    }
-    
-    // === BURGER CLICK HANDLER ===
+    // === STEP 5: PROTECTED CLICK HANDLER ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
       
-      // Check if X button exists
-      const xButtonExists = !!document.querySelector('.mobile-x-button');
+      isOurScript = true; // Mark as our operation
+      menuIsOpen = !menuIsOpen;
       
-      console.log(`🍔 BURGER CLICKED: ${xButtonExists ? 'X button visible (should not happen)' : 'Will open menu'}`);
+      console.log(`🎯 REFINED CLICK: ${menuIsOpen ? 'OPENING' : 'CLOSING'} menu`);
       
-      if (!xButtonExists) {
-        openMenu();
+      if (menuIsOpen) {
+        // === OPEN MENU ===
+        console.log('📱 Opening menu...');
+        
+        newBurger.classList.add('menu-open');
+        
+        mobileMenu.style.setProperty('display', 'flex', 'important');
+        mobileMenu.style.setProperty('position', 'fixed', 'important');
+        mobileMenu.style.setProperty('top', '0', 'important');
+        mobileMenu.style.setProperty('left', '0', 'important');
+        mobileMenu.style.setProperty('width', '100vw', 'important');
+        mobileMenu.style.setProperty('height', '100vh', 'important');
+        mobileMenu.style.setProperty('background-color', '#32b550', 'important');
+        mobileMenu.style.setProperty('z-index', '10001', 'important');
+        mobileMenu.style.setProperty('flex-direction', 'column', 'important');
+        mobileMenu.style.setProperty('justify-content', 'center', 'important');
+        mobileMenu.style.setProperty('align-items', 'center', 'important');
+        mobileMenu.style.setProperty('text-align', 'center', 'important');
+        
+        // Style menu items
+        const menuItems = mobileMenu.querySelectorAll('[class*="menu-mob"]');
+        menuItems.forEach(item => {
+          item.style.setProperty('font-size', '3rem', 'important');
+          item.style.setProperty('color', 'black', 'important');
+          item.style.setProperty('margin', '1rem 0', 'important');
+          item.style.setProperty('line-height', '1.2', 'important');
+          item.style.setProperty('display', 'block', 'important');
+          
+          const links = item.querySelectorAll('a, [class*="link"]');
+          links.forEach(link => {
+            link.style.setProperty('color', 'black', 'important');
+            link.style.setProperty('text-decoration', 'none', 'important');
+          });
+        });
+        
+        // Social handles
+        const social = mobileMenu.querySelector('.social-handles-mob');
+        if (social) {
+          social.style.setProperty('position', 'absolute', 'important');
+          social.style.setProperty('bottom', '2rem', 'important');
+          social.style.setProperty('left', '0', 'important');
+          social.style.setProperty('right', '0', 'important');
+          social.style.setProperty('display', 'flex', 'important');
+          social.style.setProperty('justify-content', 'space-around', 'important');
+        }
+        
+        mobileMenu.classList.add('active');
+        document.body.classList.add('menu-open');
+        document.body.style.setProperty('overflow', 'hidden', 'important');
+        
+        // Nav bar
+        const navBar = document.querySelector('.nav-bar');
+        if (navBar) {
+          navBar.style.setProperty('z-index', '10002', 'important');
+          navBar.style.setProperty('position', 'fixed', 'important');
+        }
+        
+        console.log('✅ Menu opened');
+        
+      } else {
+        // === CLOSE MENU ===
+        console.log('📱 Closing menu...');
+        
+        newBurger.classList.remove('menu-open');
+        mobileMenu.style.setProperty('display', 'none', 'important');
+        mobileMenu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        document.body.style.removeProperty('overflow');
+        
+        console.log('✅ Menu closed');
       }
       
-    }, true);
+      isOurScript = false; // Reset flag
+      
+    }, true); // Capture phase
     
-    // === MENU NAVIGATION ===
+    // === STEP 6: MENU NAVIGATION ===
     const menuNavigation = [
       { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
       { selector: '.strategy-menu-mob', target: 'strategy' },
@@ -3101,10 +3050,15 @@ if (window.innerWidth < 768) {
             
             console.log(`🎯 Navigation: ${target}`);
             
-            // Close menu
-            closeMenu();
+            isOurScript = true;
+            menuIsOpen = false;
+            newBurger.classList.remove('menu-open');
+            mobileMenu.style.setProperty('display', 'none', 'important');
+            mobileMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            document.body.style.removeProperty('overflow');
+            isOurScript = false;
             
-            // Navigate
             setTimeout(() => {
               const targetEl = document.getElementById(target);
               if (targetEl) {
@@ -3118,21 +3072,18 @@ if (window.innerWidth < 768) {
       }
     });
     
-    // === ESCAPE KEY ===
+    // === STEP 7: ESCAPE KEY ===
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const xButtonExists = !!document.querySelector('.mobile-x-button');
-        if (xButtonExists) {
-          closeMenu();
-        }
+      if (e.key === 'Escape' && menuIsOpen) {
+        isOurScript = true;
+        newBurger.click();
+        isOurScript = false;
       }
     });
     
-    console.log('🎉 SEPARATE X BUTTON SOLUTION COMPLETE!');
-    console.log('🍔 Click hamburger → X button appears over it');
-    console.log('✕ Click X button → Menu closes, hamburger returns');
-    console.log('🎯 This should be visually obvious!');
+    console.log('🎉 REFINED OVERRIDE COMPLETE!');
+    console.log('🧪 Menu should now work consistently without blocking itself');
     
-  }, 2000);
+  }, 3000);
   
 })();
