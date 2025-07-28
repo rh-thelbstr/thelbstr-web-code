@@ -2872,53 +2872,16 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === FINAL AGGRESSIVE OVERRIDE ===
-// Disable ALL conflicting burger menu scripts and take complete control
+// === REFINED OVERRIDE FIX ===
+// Target the specific interference without breaking our own functionality
 
 (function() {
   'use strict';
   
   if (window.innerWidth >= 768) return;
   
-  console.log('💥 FINAL OVERRIDE: Disabling all conflicting burger scripts...');
+  console.log('🎯 REFINED OVERRIDE: Targeting specific interference...');
   
-  // === STEP 1: DISABLE THE CONFLICTING SCRIPT ===
-  // Override the function that's causing "🔧 Fixing burger state mismatch"
-  
-  // Method 1: Kill console.log statements that contain our conflict signature
-  const originalConsoleLog = console.log;
-  console.log = function(...args) {
-    const message = args.join(' ');
-    if (message.includes('Fixing burger state mismatch')) {
-      // Block this specific log and return early to prevent the script
-      console.warn('🚫 BLOCKED conflicting burger script');
-      return;
-    }
-    return originalConsoleLog.apply(console, args);
-  };
-  
-  // Method 2: Override any global variables that might control other burger scripts
-  const conflictingVars = [
-    'burgerMenuState',
-    'mobileMenuState', 
-    'navState',
-    'menuToggleState',
-    'isMenuOpen',
-    'menuOpen'
-  ];
-  
-  conflictingVars.forEach(varName => {
-    if (window[varName] !== undefined) {
-      console.log(`🚫 Overriding conflicting variable: ${varName}`);
-      Object.defineProperty(window, varName, {
-        value: false,
-        writable: false,
-        configurable: false
-      });
-    }
-  });
-  
-  // Method 3: Prevent any other scripts from modifying our burger element
   setTimeout(() => {
     
     const burger = document.querySelector('.nav-burger-icon-black');
@@ -2926,155 +2889,147 @@ if (window.innerWidth < 768) {
     
     if (!burger || !mobileMenu) return;
     
-    console.log('🛡️ Protecting burger element from other scripts...');
+    console.log('✅ Elements found - applying refined fix...');
     
-    // === STEP 2: COMPLETE ELEMENT REPLACEMENT ===
-    // Create completely new elements that other scripts can't find
+    // === STEP 1: BLOCK ONLY THE SPECIFIC CONFLICTING FUNCTION ===
+    // Instead of blocking all console.log, just prevent the interference
     
-    const newBurger = burger.cloneNode(true);
-    newBurger.setAttribute('data-protected', 'true');
-    newBurger.id = 'protected-burger-' + Date.now(); // Unique ID
+    let isOurScript = false; // Flag to identify our own operations
     
-    const newMobileMenu = mobileMenu.cloneNode(true);
-    newMobileMenu.setAttribute('data-protected', 'true');
-    newMobileMenu.id = 'protected-menu-' + Date.now(); // Unique ID
+    // Override the specific function causing "Fixing burger state mismatch"
+    const originalClassListAdd = Element.prototype.add;
+    const originalClassListRemove = Element.prototype.remove;
     
-    // Replace elements
-    burger.parentNode.replaceChild(newBurger, burger);
-    mobileMenu.parentNode.replaceChild(newMobileMenu, mobileMenu);
+    // Intercept class changes on burger/menu elements
+    Element.prototype.add = function(...classes) {
+      if ((this.classList.contains('nav-burger-icon-black') || 
+           this.classList.contains('nav-menu-mobile')) && 
+          !isOurScript) {
+        console.log('🚫 Blocked external class addition:', classes);
+        return;
+      }
+      return originalClassListAdd.apply(this, classes);
+    };
     
-    console.log('🔄 Burger elements replaced with protected versions');
+    Element.prototype.remove = function(...classes) {
+      if ((this.classList.contains('nav-burger-icon-black') || 
+           this.classList.contains('nav-menu-mobile')) && 
+          !isOurScript) {
+        console.log('🚫 Blocked external class removal:', classes);
+        return;
+      }
+      return originalClassListRemove.apply(this, classes);
+    };
     
-    // === STEP 3: FORCE CLEAN INITIAL STATE ===
-    newBurger.classList.remove('menu-open');
-    newMobileMenu.classList.remove('active');
-    newMobileMenu.style.setProperty('display', 'none', 'important');
+    // === STEP 2: CLEAN INITIAL STATE ===
+    isOurScript = true; // Mark our operations
+    
+    burger.classList.remove('menu-open');
+    mobileMenu.classList.remove('active');
+    mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    // === STEP 4: AUTHORITATIVE STATE MANAGEMENT ===
+    isOurScript = false; // Reset flag
+    
+    console.log('🧹 Initial state cleaned');
+    
+    // === STEP 3: REPLACE BURGER WITH PROTECTED VERSION ===
+    const newBurger = burger.cloneNode(true);
+    burger.parentNode.replaceChild(newBurger, burger);
+    
+    console.log('🔄 Burger replaced');
+    
+    // === STEP 4: SIMPLE STATE MANAGEMENT ===
     let menuIsOpen = false;
-    let isLocked = false; // Prevent interference during state changes
     
     // === STEP 5: PROTECTED CLICK HANDLER ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
-      e.stopPropagation();
       e.stopImmediatePropagation();
       
-      if (isLocked) {
-        console.log('🔒 Click ignored - state change in progress');
-        return;
-      }
-      
-      isLocked = true;
+      isOurScript = true; // Mark as our operation
       menuIsOpen = !menuIsOpen;
       
-      console.log(`💥 PROTECTED CLICK: ${menuIsOpen ? 'OPENING' : 'CLOSING'} menu (no interference possible)`);
+      console.log(`🎯 REFINED CLICK: ${menuIsOpen ? 'OPENING' : 'CLOSING'} menu`);
       
       if (menuIsOpen) {
-        // === AGGRESSIVE OPEN ===
-        console.log('📱 Aggressively opening menu...');
+        // === OPEN MENU ===
+        console.log('📱 Opening menu...');
         
         newBurger.classList.add('menu-open');
         
-        // Force menu styling with highest priority
-        newMobileMenu.style.cssText = `
-          display: flex !important;
-          position: fixed !important;
-          top: 0px !important;
-          left: 0px !important;
-          width: 100vw !important;
-          height: 100vh !important;
-          background-color: rgb(50, 181, 80) !important;
-          z-index: 10001 !important;
-          flex-direction: column !important;
-          justify-content: center !important;
-          align-items: center !important;
-          text-align: center !important;
-          padding: 4rem 2rem !important;
-          margin: 0px !important;
-          box-sizing: border-box !important;
-          opacity: 1 !important;
-          visibility: visible !important;
-        `;
+        mobileMenu.style.setProperty('display', 'flex', 'important');
+        mobileMenu.style.setProperty('position', 'fixed', 'important');
+        mobileMenu.style.setProperty('top', '0', 'important');
+        mobileMenu.style.setProperty('left', '0', 'important');
+        mobileMenu.style.setProperty('width', '100vw', 'important');
+        mobileMenu.style.setProperty('height', '100vh', 'important');
+        mobileMenu.style.setProperty('background-color', '#32b550', 'important');
+        mobileMenu.style.setProperty('z-index', '10001', 'important');
+        mobileMenu.style.setProperty('flex-direction', 'column', 'important');
+        mobileMenu.style.setProperty('justify-content', 'center', 'important');
+        mobileMenu.style.setProperty('align-items', 'center', 'important');
+        mobileMenu.style.setProperty('text-align', 'center', 'important');
         
-        // Style menu items aggressively
-        const menuItems = newMobileMenu.querySelectorAll('[class*="menu-mob"]');
+        // Style menu items
+        const menuItems = mobileMenu.querySelectorAll('[class*="menu-mob"]');
         menuItems.forEach(item => {
-          item.style.cssText = `
-            display: block !important;
-            font-size: 3rem !important;
-            color: black !important;
-            margin: 1.5rem 0 !important;
-            line-height: 1.2 !important;
-            font-weight: normal !important;
-            cursor: pointer !important;
-            text-align: center !important;
-          `;
+          item.style.setProperty('font-size', '3rem', 'important');
+          item.style.setProperty('color', 'black', 'important');
+          item.style.setProperty('margin', '1rem 0', 'important');
+          item.style.setProperty('line-height', '1.2', 'important');
+          item.style.setProperty('display', 'block', 'important');
           
           const links = item.querySelectorAll('a, [class*="link"]');
           links.forEach(link => {
-            link.style.cssText = `
-              color: black !important;
-              text-decoration: none !important;
-              font-size: inherit !important;
-            `;
+            link.style.setProperty('color', 'black', 'important');
+            link.style.setProperty('text-decoration', 'none', 'important');
           });
         });
         
         // Social handles
-        const social = newMobileMenu.querySelector('.social-handles-mob');
+        const social = mobileMenu.querySelector('.social-handles-mob');
         if (social) {
-          social.style.cssText = `
-            position: absolute !important;
-            bottom: 2rem !important;
-            left: 0px !important;
-            right: 0px !important;
-            display: flex !important;
-            justify-content: space-around !important;
-            color: black !important;
-          `;
+          social.style.setProperty('position', 'absolute', 'important');
+          social.style.setProperty('bottom', '2rem', 'important');
+          social.style.setProperty('left', '0', 'important');
+          social.style.setProperty('right', '0', 'important');
+          social.style.setProperty('display', 'flex', 'important');
+          social.style.setProperty('justify-content', 'space-around', 'important');
         }
         
-        newMobileMenu.classList.add('active');
+        mobileMenu.classList.add('active');
         document.body.classList.add('menu-open');
         document.body.style.setProperty('overflow', 'hidden', 'important');
         
-        // Nav bar protection
+        // Nav bar
         const navBar = document.querySelector('.nav-bar');
         if (navBar) {
-          navBar.style.cssText += `
-            z-index: 10002 !important;
-            position: fixed !important;
-            display: flex !important;
-            visibility: visible !important;
-          `;
+          navBar.style.setProperty('z-index', '10002', 'important');
+          navBar.style.setProperty('position', 'fixed', 'important');
         }
         
-        console.log('✅ Menu opened with full protection');
+        console.log('✅ Menu opened');
         
       } else {
-        // === AGGRESSIVE CLOSE ===
-        console.log('📱 Aggressively closing menu...');
+        // === CLOSE MENU ===
+        console.log('📱 Closing menu...');
         
         newBurger.classList.remove('menu-open');
-        newMobileMenu.style.setProperty('display', 'none', 'important');
-        newMobileMenu.classList.remove('active');
+        mobileMenu.style.setProperty('display', 'none', 'important');
+        mobileMenu.classList.remove('active');
         document.body.classList.remove('menu-open');
         document.body.style.removeProperty('overflow');
         
-        console.log('✅ Menu closed with full protection');
+        console.log('✅ Menu closed');
       }
       
-      // Unlock after state change completes
-      setTimeout(() => {
-        isLocked = false;
-      }, 300);
+      isOurScript = false; // Reset flag
       
-    }, true); // Capture phase - highest priority
+    }, true); // Capture phase
     
-    // === STEP 6: MENU NAVIGATION (Protected) ===
+    // === STEP 6: MENU NAVIGATION ===
     const menuNavigation = [
       { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
       { selector: '.strategy-menu-mob', target: 'strategy' },
@@ -3084,7 +3039,7 @@ if (window.innerWidth < 768) {
     ];
     
     menuNavigation.forEach(({ selector, target }) => {
-      const menuItem = newMobileMenu.querySelector(selector);
+      const menuItem = mobileMenu.querySelector(selector);
       if (menuItem) {
         const clickables = [menuItem, ...menuItem.querySelectorAll('a, [class*="link"]')];
         
@@ -3093,48 +3048,42 @@ if (window.innerWidth < 768) {
             e.preventDefault();
             e.stopImmediatePropagation();
             
-            console.log(`🎯 Protected navigation: ${target}`);
+            console.log(`🎯 Navigation: ${target}`);
             
-            // Close menu
+            isOurScript = true;
             menuIsOpen = false;
             newBurger.classList.remove('menu-open');
-            newMobileMenu.style.setProperty('display', 'none', 'important');
-            newMobileMenu.classList.remove('active');
+            mobileMenu.style.setProperty('display', 'none', 'important');
+            mobileMenu.classList.remove('active');
             document.body.classList.remove('menu-open');
             document.body.style.removeProperty('overflow');
+            isOurScript = false;
             
-            // Navigate
             setTimeout(() => {
               const targetEl = document.getElementById(target);
               if (targetEl) {
                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 history.pushState(null, '', '#' + target);
-                console.log(`✅ Protected navigation to: ${target}`);
+                console.log(`✅ Navigated to: ${target}`);
               }
             }, 200);
-          }, true);
+          });
         });
       }
     });
     
-    // === STEP 7: DISABLE OTHER SCRIPTS FROM ACCESSING OUR ELEMENTS ===
-    const originalQuerySelector = document.querySelector;
-    const originalQuerySelectorAll = document.querySelectorAll;
-    
-    document.querySelector = function(selector) {
-      // If other scripts try to find the old burger, return null
-      if (selector === '.nav-burger-icon-black' && 
-          !this.hasAttribute || !this.hasAttribute('data-protected')) {
-        console.log('🚫 Blocked other script from accessing burger');
-        return null;
+    // === STEP 7: ESCAPE KEY ===
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && menuIsOpen) {
+        isOurScript = true;
+        newBurger.click();
+        isOurScript = false;
       }
-      return originalQuerySelector.call(this, selector);
-    };
+    });
     
-    console.log('💥 FINAL OVERRIDE COMPLETE!');
-    console.log('🛡️ Burger menu is now fully protected from interference');
-    console.log('🧪 Test: Menu should work consistently on ALL sections');
+    console.log('🎉 REFINED OVERRIDE COMPLETE!');
+    console.log('🧪 Menu should now work consistently without blocking itself');
     
-  }, 5000); // Wait 5 seconds for all other scripts to load
+  }, 3000);
   
 })();
