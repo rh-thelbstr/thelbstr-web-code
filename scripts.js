@@ -2872,18 +2872,15 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === CONFIRMED STATE SYNCHRONIZATION FIX ===
-// Fixes the confirmed state mismatch: menu visually closed but code thinks it's open
+// === STATE INITIALIZATION FIX ===
+// Simple fix: Initialize state variable to match visual reality
 
 (function() {
   'use strict';
   
-  if (window.innerWidth >= 768) {
-    console.log('💻 Desktop - skipping mobile fix');
-    return;
-  }
+  if (window.innerWidth >= 768) return;
   
-  console.log('🎯 CONFIRMED FIX: Syncing state variable with visual state...');
+  console.log('🔧 STATE FIX: Correcting initial state variable...');
   
   setTimeout(() => {
     
@@ -2899,49 +2896,46 @@ if (window.innerWidth < 768) {
     // === STEP 1: DETERMINE ACTUAL VISUAL STATE ===
     const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
     const menuHasActiveClass = mobileMenu.classList.contains('active');
-    const bodyHasMenuClass = document.body.classList.contains('menu-open');
-    const actuallyOpen = menuVisuallyOpen || menuHasActiveClass || bodyHasMenuClass;
+    const actuallyOpen = menuVisuallyOpen || menuHasActiveClass;
     
-    console.log(`📊 Current visual state: ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
+    console.log(`📊 Menu is actually: ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
     
-    // === STEP 2: FORCE CONSISTENT CLOSED STATE ===
-    // Since diagnostic showed everything is closed, ensure it stays that way
+    // === STEP 2: ENSURE CONSISTENT CLOSED STATE ===
     burger.classList.remove('menu-open');
     mobileMenu.classList.remove('active');
     mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    console.log('✅ Forced consistent closed state');
+    console.log('✅ Forced all elements to consistent CLOSED state');
     
-    // === STEP 3: REPLACE BURGER WITH CLEAN HANDLER ===
+    // === STEP 3: REPLACE BURGER TO REMOVE OLD HANDLERS ===
     const newBurger = burger.cloneNode(true);
     burger.parentNode.replaceChild(newBurger, burger);
     
-    // === STEP 4: CORRECT STATE VARIABLE INITIALIZATION ===
-    // THIS IS THE KEY FIX: Start with FALSE to match visual closed state
-    let isMenuOpen = false; // CORRECTED: was starting as true, now starts as false
+    // === STEP 4: CORRECT STATE INITIALIZATION ===
+    // THIS IS THE KEY: Start with FALSE to match visual closed state
+    let isMenuOpen = false; // FIXED: Now starts as false instead of true
     
-    console.log(`🔧 State variable initialized correctly: isMenuOpen = ${isMenuOpen}`);
+    console.log(`🎯 State variable correctly initialized: isMenuOpen = ${isMenuOpen}`);
     
-    // === STEP 5: PROPER CLICK HANDLER ===
+    // === STEP 5: SINGLE CLEAN CLICK HANDLER ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
       
-      // Toggle the state
       isMenuOpen = !isMenuOpen;
       
-      console.log(`🍔 CORRECTED CLICK: Menu should ${isMenuOpen ? 'OPEN' : 'CLOSE'} (state: ${isMenuOpen})`);
+      console.log(`🍔 CORRECTED CLICK: toggling to ${isMenuOpen} (should ${isMenuOpen ? 'OPEN' : 'CLOSE'} menu)`);
       
       if (isMenuOpen) {
         // === OPEN MENU ===
         console.log('📱 Opening menu...');
         
-        // Update burger visual state
+        // Update burger appearance
         newBurger.classList.add('menu-open');
         
-        // Show and style menu to match Webflow design
+        // Show menu with proper Webflow styling
         mobileMenu.style.setProperty('display', 'flex', 'important');
         mobileMenu.style.setProperty('position', 'fixed', 'important');
         mobileMenu.style.setProperty('top', '0', 'important');
@@ -2964,7 +2958,7 @@ if (window.innerWidth < 768) {
           item.style.setProperty('line-height', '1.2', 'important');
           item.style.setProperty('display', 'block', 'important');
           
-          // Style links inside menu items
+          // Style links
           const links = item.querySelectorAll('a, [class*="link"]');
           links.forEach(link => {
             link.style.setProperty('color', 'black', 'important');
@@ -2972,7 +2966,7 @@ if (window.innerWidth < 768) {
           });
         });
         
-        // Position social handles at bottom
+        // Position social handles
         const socialHandles = mobileMenu.querySelector('.social-handles-mob');
         if (socialHandles) {
           socialHandles.style.setProperty('position', 'absolute', 'important');
@@ -2983,12 +2977,12 @@ if (window.innerWidth < 768) {
           socialHandles.style.setProperty('justify-content', 'space-around', 'important');
         }
         
-        // Add active class and lock body scroll
+        // Add classes and lock scroll
         mobileMenu.classList.add('active');
         document.body.classList.add('menu-open');
         document.body.style.setProperty('overflow', 'hidden', 'important');
         
-        // CRITICAL: Fix nav bar z-index so it stays visible
+        // CRITICAL: Fix nav bar z-index to stay visible
         if (navBar) {
           navBar.style.setProperty('z-index', '10002', 'important');
           navBar.style.setProperty('position', 'fixed', 'important');
@@ -3013,13 +3007,12 @@ if (window.innerWidth < 768) {
     // === STEP 6: ESCAPE KEY SUPPORT ===
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && isMenuOpen) {
-        newBurger.click(); // Trigger close
+        newBurger.click();
       }
     });
     
-    console.log('🎉 STATE SYNCHRONIZATION FIX COMPLETE!');
+    console.log('🎉 STATE INITIALIZATION FIX COMPLETE!');
     console.log('🧪 TEST: First burger click should now open menu immediately');
-    console.log('🧭 Nav bar should stay visible when menu opens');
     
   }, 2000);
   
