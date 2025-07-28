@@ -1988,3 +1988,105 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🎉 Desktop menu system loaded');
     
 })();
+
+// ==========================================
+// MOBILE PROGRESS BAR FIX
+// Restores progress bar functionality on mobile
+// ==========================================
+
+(function() {
+    'use strict';
+    
+    // Only run on mobile
+    if (window.innerWidth >= 768) {
+        console.log('💻 Desktop detected - skipping mobile progress bar');
+        return;
+    }
+    
+    console.log('📱 Mobile detected - initializing progress bar');
+    
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMobileProgressBar);
+    } else {
+        initMobileProgressBar();
+    }
+    
+    function initMobileProgressBar() {
+        console.log('🚀 Setting up mobile progress bar...');
+        
+        // Find progress bar element
+        const progressFill = document.querySelector('.nav-progress-fill');
+        
+        if (!progressFill) {
+            console.warn('⚠️ Progress bar element (.nav-progress-fill) not found');
+            return;
+        }
+        
+        console.log('✅ Found progress bar element');
+        
+        // Reset any desktop styles
+        progressFill.style.removeProperty('height');
+        progressFill.style.setProperty('width', '0%', 'important');
+        
+        // Throttle function for performance
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+        
+        // Progress calculation function
+        function updateProgressBar() {
+            const scrollTop = window.scrollY;
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            
+            // Prevent division by zero
+            if (totalHeight <= 0) {
+                progressFill.style.setProperty('width', '0%', 'important');
+                return;
+            }
+            
+            const progress = Math.min(1, Math.max(0, scrollTop / totalHeight));
+            const progressPercent = progress * 100;
+            
+            progressFill.style.setProperty('width', `${progressPercent}%`, 'important');
+            
+            // Debug logging (remove if too verbose)
+            // console.log(`📊 Progress: ${Math.round(progressPercent)}%`);
+        }
+        
+        // Throttled scroll handler (60fps max)
+        const throttledUpdate = throttle(updateProgressBar, 16);
+        
+        // Add scroll listener
+        window.addEventListener('scroll', throttledUpdate, { passive: true });
+        
+        // Initial update
+        updateProgressBar();
+        
+        console.log('✅ Mobile progress bar initialized');
+        
+        // Handle window resize - cleanup if switching to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                console.log('💻 Switched to desktop - cleaning up mobile progress bar');
+                window.removeEventListener('scroll', throttledUpdate);
+                
+                // Reset to desktop format (vertical)
+                progressFill.style.removeProperty('width');
+                progressFill.style.setProperty('height', '0%', 'important');
+            }
+        });
+    }
+    
+    console.log('📊 Mobile progress bar system loaded');
+    
+})();
