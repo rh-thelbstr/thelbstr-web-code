@@ -1521,3 +1521,17 @@ a, button, .clickable, [data-cursor="pointer"] {
         display: none !important;
     }
 }
+
+/* Fix for slide 18 mobile modal - keep links green */
+@media (max-width: 767px) {
+    .slide18-modal-body a,
+    .slide18-modal-body .link-2,
+    .slide18-modal-body .link-3 {
+        color: #32b550 !important;
+    }
+    
+    /* Ensure links stay green even when inheriting white color */
+    .slide18-modal-body * a {
+        color: #32b550 !important;
+    }
+}
