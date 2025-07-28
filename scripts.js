@@ -3088,97 +3088,138 @@ if (window.innerWidth < 768) {
   
 })();
 
-// === NAVIGATION RE-SYNC FIX ===
-// Add this AFTER your existing universal fix to handle post-navigation resets
+// === SMART STATE SYNC FIX ===
+// REPLACE both Option A and Option B with this single, smarter solution
 
 (function() {
   'use strict';
   
   if (window.innerWidth >= 768) return;
   
-  console.log('🔄 NAVIGATION RE-SYNC: Adding post-navigation state fixes...');
+  console.log('🧠 SMART STATE SYNC: Adding intelligent state management...');
   
-  let menuStateRef = null; // Will store reference to menu state
-  
-  // Wait for the universal fix to complete, then add re-sync
   setTimeout(() => {
     
-    // === MONITOR FOR NAVIGATION-TRIGGERED RESETS ===
+    const burger = document.querySelector('.nav-burger-icon-black');
+    const mobileMenu = document.querySelector('.nav-menu-mobile');
     
-    // Method 1: Monitor hash changes
-    window.addEventListener('hashchange', function() {
-      console.log('🔗 Hash change detected - re-syncing menu state in 1 second...');
-      setTimeout(resyncMenuState, 1000);
-    });
+    if (!burger || !mobileMenu) return;
     
-    // Method 2: Monitor scroll position changes (section jumping)
-    let lastScrollY = window.scrollY;
+    let isProcessing = false; // Prevent infinite loops
+    let lastSyncTime = 0;
     
-    window.addEventListener('scroll', function() {
-      const currentScrollY = window.scrollY;
-      const scrollDiff = Math.abs(currentScrollY - lastScrollY);
+    // === SMART RE-SYNC FUNCTION ===
+    function smartResync(reason) {
+      const now = Date.now();
       
-      // If large scroll change (section jump), re-sync state
-      if (scrollDiff > 1000) {
-        console.log(`📜 Large scroll detected (${scrollDiff}px) - re-syncing menu state...`);
-        setTimeout(resyncMenuState, 500);
+      // Prevent rapid re-syncs (debounce)
+      if (now - lastSyncTime < 1000) {
+        console.log(`🚫 Skipping re-sync (too soon after last one)`);
+        return;
       }
       
-      lastScrollY = currentScrollY;
-    });
-    
-    // Method 3: Monitor for DOM mutations that might affect menu
-    const observer = new MutationObserver(function(mutations) {
-      let shouldResync = false;
-      
-      mutations.forEach(function(mutation) {
-        if (mutation.target.classList && 
-           (mutation.target.classList.contains('nav-burger-icon-black') ||
-            mutation.target.classList.contains('nav-menu-mobile'))) {
-          shouldResync = true;
-        }
-      });
-      
-      if (shouldResync) {
-        console.log('🔄 Menu element mutation detected - re-syncing state...');
-        setTimeout(resyncMenuState, 100);
+      // Prevent re-sync loops
+      if (isProcessing) {
+        console.log(`🚫 Skipping re-sync (already processing)`);
+        return;
       }
-    });
-    
-    observer.observe(document.body, {
-      attributes: true,
-      subtree: true,
-      attributeFilter: ['class']
-    });
-    
-    // === RE-SYNC FUNCTION ===
-    function resyncMenuState() {
-      const burger = document.querySelector('.nav-burger-icon-black');
-      const mobileMenu = document.querySelector('.nav-menu-mobile');
       
-      if (!burger || !mobileMenu) return;
+      isProcessing = true;
+      lastSyncTime = now;
       
-      // Check if menu is actually open visually
+      console.log(`🔄 Smart re-sync triggered by: ${reason}`);
+      
+      // Check actual visual state
       const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
       const menuHasActiveClass = mobileMenu.classList.contains('active');
       const actuallyOpen = menuVisuallyOpen || menuHasActiveClass;
       
-      console.log(`🔄 Re-sync check: Menu actually ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
+      console.log(`🎯 Menu should be: ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
       
       if (!actuallyOpen) {
-        // If menu should be closed, force everything to closed state
+        // Force closed state WITHOUT triggering observers
         burger.classList.remove('menu-open');
         mobileMenu.classList.remove('active');
         mobileMenu.style.setProperty('display', 'none', 'important');
         document.body.classList.remove('menu-open');
         document.body.style.removeProperty('overflow');
         
-        console.log('✅ Menu state re-synced to CLOSED');
+        console.log('✅ State corrected to CLOSED');
       }
+      
+      // Reset processing flag after delay
+      setTimeout(() => {
+        isProcessing = false;
+      }, 500);
     }
     
-    console.log('✅ Navigation re-sync monitoring active');
+    // === SMART TRIGGERS (with debouncing) ===
     
-  }, 4000); // Wait for universal fix to complete
+    // 1. Hash changes (section navigation)
+    let hashChangeTimeout;
+    window.addEventListener('hashchange', function() {
+      clearTimeout(hashChangeTimeout);
+      hashChangeTimeout = setTimeout(() => {
+        smartResync('hash change');
+      }, 1500); // Wait for navigation to complete
+    });
+    
+    // 2. Large scroll changes (section jumps)
+    let lastScrollY = window.scrollY;
+    let scrollTimeout;
+    
+    window.addEventListener('scroll', function() {
+      const currentScrollY = window.scrollY;
+      const scrollDiff = Math.abs(currentScrollY - lastScrollY);
+      
+      if (scrollDiff > 1000) {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          smartResync(`large scroll (${scrollDiff}px)`);
+        }, 1000); // Wait for scroll to settle
+      }
+      
+      lastScrollY = currentScrollY;
+    });
+    
+    // 3. Focus events (user interaction)
+    document.addEventListener('focus', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        smartResync('focus event');
+      }, 500);
+    }, true);
+    
+    // === EMERGENCY BACKUP: Single State Check ===
+    // Only runs once every 10 seconds as emergency backup
+    let emergencyCheckCount = 0;
+    
+    const emergencyCheck = setInterval(() => {
+      emergencyCheckCount++;
+      
+      // Stop after 50 checks (about 8 minutes)
+      if (emergencyCheckCount > 50) {
+        clearInterval(emergencyCheck);
+        console.log('🔍 Emergency state checks stopped after 8 minutes');
+        return;
+      }
+      
+      // Only check if not recently synced
+      const timeSinceLastSync = Date.now() - lastSyncTime;
+      if (timeSinceLastSync > 5000 && !isProcessing) {
+        const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
+        const burgerHasOpenClass = burger.classList.contains('menu-open');
+        
+        // Only sync if there's a clear mismatch
+        if (!menuVisuallyOpen && burgerHasOpenClass) {
+          smartResync('emergency check - state mismatch detected');
+        }
+      }
+      
+    }, 10000); // Check every 10 seconds
+    
+    console.log('✅ Smart state sync active (no infinite loops)');
+    
+  }, 4000);
   
 })();
