@@ -2276,8 +2276,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
 })();
 
-// COMPLETE MOBILE MENU SOLUTION - FINAL VERSION
-// Combined: Nav positioning + Theme-aware white X + Separator line + All fixes
+// COMPLETE MOBILE MENU SOLUTION - FINAL VERSION WITH NAVIGATION FIX
+// Combined: Nav positioning + Theme-aware white X + Separator line + Clean navigation
 (function() {
     'use strict';
     
@@ -2295,7 +2295,32 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // Combined click handler for all fixes
+    // Function to properly close menu and clean up everything
+    function cleanCloseMenu() {
+        console.log('🧹 Clean closing menu...');
+        
+        // Update all menu states
+        burger.classList.remove('menu-open');
+        mobileMenu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        mobileMenu.style.display = 'none';
+        
+        // Restore burger visibility
+        burger.style.removeProperty('opacity');
+        
+        // Remove external X and separator
+        const xIcon = document.querySelector('.external-x-icon');
+        const separator = document.querySelector('.nav-separator-line');
+        if (xIcon) xIcon.remove();
+        if (separator) separator.remove();
+        
+        // Unlock scroll
+        document.body.style.overflow = '';
+        
+        console.log('✅ Menu cleanly closed');
+    }
+    
+    // Main burger click handler for opening/closing menu
     burger.addEventListener('click', function() {
         setTimeout(() => {
             const isMenuOpen = mobileMenu.classList.contains('active') || 
@@ -2410,19 +2435,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             } else {
                 console.log('📱 Menu closed - restoring elements...');
-                
-                // Restore burger
-                burger.style.removeProperty('opacity');
-                
-                // Remove X and separator
-                const xIcon = document.querySelector('.external-x-icon');
-                const separator = document.querySelector('.nav-separator-line');
-                if (xIcon) xIcon.remove();
-                if (separator) separator.remove();
-                
-                console.log('✅ All elements restored');
+                cleanCloseMenu();
             }
         }, 50);
+    });
+    
+    // FIX 3: Add clean close handlers to all menu items
+    const menuItems = [
+        '.the-lbstr-menu-mob',
+        '.strategy-menu-mob', 
+        '.story-menu-mob',
+        '.services-menu-mob',
+        '.contact-menu-mob'
+    ];
+    
+    menuItems.forEach(selector => {
+        const menuItem = mobileMenu.querySelector(selector);
+        if (menuItem) {
+            // Get all clickable elements
+            const clickables = [
+                menuItem,
+                ...menuItem.querySelectorAll('a'),
+                ...menuItem.querySelectorAll('[class*="link"]')
+            ];
+            
+            clickables.forEach(element => {
+                element.addEventListener('click', function(e) {
+                    console.log(`🎯 Menu item clicked: ${selector}`);
+                    cleanCloseMenu();
+                });
+            });
+        }
     });
     
     console.log('✅ Complete mobile menu solution loaded');
