@@ -2108,3 +2108,170 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('📊 Mobile progress bar system loaded');
     
 })();
+
+// PERMANENT MOBILE SCROLL FIX + PROGRESS BAR
+// Add this to your scripts.js to permanently fix mobile scrolling
+(function() {
+    'use strict';
+    
+    // Only run on mobile
+    if (window.innerWidth >= 768) return;
+    
+    console.log('🔧 Applying permanent mobile scroll fix...');
+    
+    function fixMobileScrolling() {
+        // Force reset all scroll-blocking elements
+        const elements = [
+            document.documentElement, 
+            document.body,
+            document.querySelector('.scroll-container'),
+            document.querySelector('.wrapper'),
+            document.querySelector('.smooth-wrapper'),
+            document.querySelector('.smooth-content')
+        ];
+        
+        elements.forEach(el => {
+            if (el) {
+                el.style.setProperty('overflow', 'visible', 'important');
+                el.style.setProperty('overflow-y', 'auto', 'important');
+                el.style.setProperty('position', 'static', 'important');
+                el.style.setProperty('height', 'auto', 'important');
+                el.style.setProperty('transform', 'none', 'important');
+            }
+        });
+        
+        // Specific body/html fixes
+        document.body.style.setProperty('overflow-y', 'auto', 'important');
+        document.body.style.setProperty('min-height', '100vh', 'important');
+        document.documentElement.style.setProperty('overflow-y', 'auto', 'important');
+        
+        console.log('✅ Mobile scroll fix applied');
+    }
+    
+    function setupProgressBar() {
+        const fill = document.querySelector('.nav-progress-fill');
+        if (!fill) return;
+        
+        // Apply proper positioning
+        fill.style.setProperty('position', 'fixed', 'important');
+        fill.style.setProperty('top', '60px', 'important');
+        fill.style.setProperty('left', '0', 'important');
+        fill.style.setProperty('right', '0', 'important');
+        fill.style.setProperty('width', '0%', 'important');
+        fill.style.setProperty('height', '3px', 'important');
+        fill.style.setProperty('background-color', '#32b550', 'important');
+        fill.style.setProperty('z-index', '99999', 'important');
+        
+        // Progress update function
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = totalHeight > 0 ? (scrollTop / totalHeight) : 0;
+            fill.style.setProperty('width', (progress * 100) + '%', 'important');
+        }
+        
+        // Add scroll listener
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+        
+        console.log('✅ Mobile progress bar setup complete');
+    }
+    
+    // Apply fixes when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            fixMobileScrolling();
+            setupProgressBar();
+        });
+    } else {
+        fixMobileScrolling();
+        setupProgressBar();
+    }
+    
+    // Reapply fixes if something tries to override them
+    setInterval(fixMobileScrolling, 5000);
+    
+    console.log('🎉 Permanent mobile scroll fix loaded');
+    
+})();
+
+// MOBILE PROGRESS BAR HEIGHT FIX
+// Add this after your existing script
+(function() {
+    if (window.innerWidth >= 768) return;
+    
+    setTimeout(() => {
+        const fill = document.querySelector('.nav-progress-fill');
+        if (fill) {
+            console.log('🔧 Fixing progress bar height...');
+            
+            // More aggressive height setting
+            fill.style.setProperty('height', '3px', 'important');
+            fill.style.setProperty('max-height', '3px', 'important');
+            fill.style.setProperty('min-height', '3px', 'important');
+            fill.style.setProperty('flex', 'none', 'important');
+            fill.style.setProperty('flex-shrink', '0', 'important');
+            fill.style.setProperty('flex-grow', '0', 'important');
+            
+            console.log('✅ Height fix applied - should now be 3px tall');
+        }
+    }, 1000);
+})();
+
+// MOBILE PROGRESS BAR COLOR THEME SYNC
+// Add this after your height fix script
+(function() {
+    if (window.innerWidth >= 768) return;
+    
+    console.log('🎨 Setting up progress bar color theme sync...');
+    
+    function updateProgressBarColor() {
+        const fill = document.querySelector('.nav-progress-fill');
+        const navBar = document.querySelector('.nav-bar');
+        
+        if (!fill || !navBar) return;
+        
+        // Check nav bar theme classes
+        if (navBar.classList.contains('nav-green')) {
+            // Green nav = white progress bar
+            fill.style.setProperty('background-color', 'white', 'important');
+            console.log('🟢 Nav is green → Progress bar set to white');
+        } else if (navBar.classList.contains('nav-black')) {
+            // Black nav = green progress bar
+            fill.style.setProperty('background-color', '#32b550', 'important');
+            console.log('⚫ Nav is black → Progress bar set to green');
+        } else if (navBar.classList.contains('nav-white')) {
+            // White nav = green progress bar
+            fill.style.setProperty('background-color', '#32b550', 'important');
+            console.log('⚪ Nav is white → Progress bar set to green');
+        } else {
+            // Default fallback
+            fill.style.setProperty('background-color', '#32b550', 'important');
+            console.log('🔄 Nav theme unknown → Progress bar set to green (default)');
+        }
+    }
+    
+    // Update color immediately
+    updateProgressBarColor();
+    
+    // Watch for nav theme changes using MutationObserver
+    const navBar = document.querySelector('.nav-bar');
+    if (navBar) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    console.log('🔄 Nav theme changed, updating progress bar color');
+                    updateProgressBarColor();
+                }
+            });
+        });
+        
+        observer.observe(navBar, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+        
+        console.log('✅ Progress bar color theme sync active');
+    }
+    
+})();
