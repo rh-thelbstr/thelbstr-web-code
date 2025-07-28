@@ -2025,9 +2025,20 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log('✅ Found progress bar element');
         
-        // Reset any desktop styles
+        // Reset any desktop styles and ensure proper mobile styling
         progressFill.style.removeProperty('height');
         progressFill.style.setProperty('width', '0%', 'important');
+        
+        // Force proper mobile progress bar styling
+        progressFill.style.setProperty('display', 'block', 'important');
+        progressFill.style.setProperty('height', '3px', 'important');
+        progressFill.style.setProperty('background-color', '#32b550', 'important');
+        progressFill.style.setProperty('position', 'absolute', 'important');
+        progressFill.style.setProperty('bottom', '0', 'important');
+        progressFill.style.setProperty('left', '0', 'important');
+        progressFill.style.setProperty('transition', 'width 0.1s ease', 'important');
+        
+        console.log('🎨 Applied mobile progress bar styling');
         
         // Throttle function for performance
         function throttle(func, limit) {
@@ -2080,8 +2091,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('💻 Switched to desktop - cleaning up mobile progress bar');
                 window.removeEventListener('scroll', throttledUpdate);
                 
-                // Reset to desktop format (vertical)
+                // Reset to desktop format (vertical) and remove mobile styling
                 progressFill.style.removeProperty('width');
+                progressFill.style.removeProperty('display');
+                progressFill.style.removeProperty('height');
+                progressFill.style.removeProperty('background-color');
+                progressFill.style.removeProperty('position');
+                progressFill.style.removeProperty('bottom');
+                progressFill.style.removeProperty('left');
+                progressFill.style.removeProperty('transition');
                 progressFill.style.setProperty('height', '0%', 'important');
             }
         });
