@@ -2872,15 +2872,15 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === COMPLETE JAVASCRIPT X ICON SOLUTION ===
-// Replace your entire visual state fix with this
+// === OVERLAY X SOLUTION (FINAL FIX) ===
+// Create an overlay that completely covers the burger
 
 (function() {
   'use strict';
   
   if (window.innerWidth >= 768) return;
   
-  console.log('👁️ JAVASCRIPT X ICON: Creating X icon with JavaScript...');
+  console.log('🎯 OVERLAY SOLUTION: Creating burger overlay...');
   
   setTimeout(() => {
     
@@ -2889,121 +2889,110 @@ if (window.innerWidth < 768) {
     
     if (!burger || !mobileMenu) return;
     
-    console.log('✅ Elements found - applying JavaScript X icon solution...');
+    console.log('✅ Elements found - applying overlay solution...');
     
-    // === STEP 1: CLEAN INITIAL STATE ===
+    // === CLEAN INITIAL STATE ===
     burger.classList.remove('menu-open');
     mobileMenu.classList.remove('active');
     mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    // Remove any existing X icons
-    const existingX = burger.querySelector('.js-x-icon');
-    if (existingX) existingX.remove();
+    // Remove any existing overlays
+    const existingOverlay = burger.querySelector('.burger-overlay');
+    if (existingOverlay) existingOverlay.remove();
     
-    console.log('🧹 Initial state cleaned');
-    
-    // === STEP 2: REPLACE BURGER ===
+    // === REPLACE BURGER ===
     const newBurger = burger.cloneNode(true);
     burger.parentNode.replaceChild(newBurger, burger);
     
-    // === STEP 3: JAVASCRIPT X ICON FUNCTIONS ===
+    // === OVERLAY FUNCTIONS ===
     
-    function showXIcon() {
-      console.log('✕ Creating X icon...');
+    function showXOverlay() {
+      console.log('✕ Creating X overlay...');
       
-      // Remove existing X first
-      const existingX = newBurger.querySelector('.js-x-icon');
-      if (existingX) existingX.remove();
+      // Remove any existing overlay
+      const existingOverlay = newBurger.querySelector('.burger-overlay');
+      if (existingOverlay) existingOverlay.remove();
       
-      // Create X icon element
-      const xIcon = document.createElement('div');
-      xIcon.className = 'js-x-icon';
-      xIcon.style.cssText = `
+      // Create overlay that completely covers the burger
+      const overlay = document.createElement('div');
+      overlay.className = 'burger-overlay';
+      overlay.style.cssText = `
         position: absolute !important;
         top: 0 !important;
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(0, 0, 0, 0.8) !important;
         color: white !important;
-        font-size: 2rem !important;
-        font-weight: normal !important;
+        font-size: 1.5rem !important;
+        font-weight: bold !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        background: rgba(0, 0, 0, 0.1) !important;
         border-radius: 4px !important;
-        z-index: 1000 !important;
+        z-index: 10000000 !important;
         cursor: pointer !important;
         transition: all 0.3s ease !important;
         pointer-events: auto !important;
+        box-sizing: border-box !important;
       `;
-      xIcon.textContent = '✕';
+      overlay.textContent = '✕';
       
-      // Add hover effects
-      xIcon.addEventListener('mouseenter', function() {
-        this.style.background = 'rgba(255, 255, 255, 0.1)';
+      // Hover effect
+      overlay.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
         this.style.transform = 'scale(1.05)';
       });
       
-      xIcon.addEventListener('mouseleave', function() {
-        this.style.background = 'rgba(0, 0, 0, 0.1)';
+      overlay.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
         this.style.transform = 'scale(1)';
       });
       
-      // Hide original burger content
-      const originalContent = newBurger.querySelectorAll(':not(.js-x-icon)');
-      originalContent.forEach(el => {
-        el.style.opacity = '0';
-        el.style.visibility = 'hidden';
-      });
+      // Ensure burger can contain the overlay
+      newBurger.style.position = 'relative';
+      newBurger.style.overflow = 'visible';
       
-      // Add X to burger
-      newBurger.appendChild(xIcon);
+      // Add overlay to burger
+      newBurger.appendChild(overlay);
       newBurger.classList.add('menu-open');
       
-      console.log('✅ X icon created and visible');
-      return xIcon;
+      console.log('✅ X overlay created and should be visible');
+      return overlay;
     }
     
-    function showHamburgerIcon() {
-      console.log('🍔 Showing hamburger icon...');
+    function removeXOverlay() {
+      console.log('🍔 Removing X overlay...');
       
-      // Remove X icon
-      const xIcon = newBurger.querySelector('.js-x-icon');
-      if (xIcon) {
-        xIcon.remove();
-        console.log('🗑️ X icon removed');
+      const overlay = newBurger.querySelector('.burger-overlay');
+      if (overlay) {
+        overlay.remove();
+        console.log('🗑️ X overlay removed');
       }
       
-      // Show original burger content
-      const originalContent = newBurger.querySelectorAll(':not(.js-x-icon)');
-      originalContent.forEach(el => {
-        el.style.opacity = '';
-        el.style.visibility = '';
-      });
-      
       newBurger.classList.remove('menu-open');
-      console.log('✅ Hamburger icon visible');
+      console.log('✅ Hamburger should now be visible');
     }
     
-    // === STEP 4: CLICK HANDLER WITH JAVASCRIPT ICONS ===
+    // === CLICK HANDLER ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
       
-      // Check current state by looking for X icon
-      const hasXIcon = newBurger.querySelector('.js-x-icon');
-      const isCurrentlyOpen = !!hasXIcon;
+      // Check if overlay exists
+      const hasOverlay = !!newBurger.querySelector('.burger-overlay');
       
-      console.log(`👁️ JAVASCRIPT STATE: Menu is ${isCurrentlyOpen ? 'OPEN (X visible)' : 'CLOSED (hamburger visible)'}`);
+      console.log(`👁️ OVERLAY STATE: ${hasOverlay ? 'X OVERLAY VISIBLE' : 'HAMBURGER VISIBLE'}`);
       
-      if (isCurrentlyOpen) {
+      if (hasOverlay) {
         // === CLOSE MENU ===
-        console.log('❌ Closing menu...');
+        console.log('❌ Closing menu (removing X overlay)...');
         
-        showHamburgerIcon();
+        removeXOverlay();
         
         // Close menu
         mobileMenu.style.setProperty('display', 'none', 'important');
@@ -3015,11 +3004,11 @@ if (window.innerWidth < 768) {
         
       } else {
         // === OPEN MENU ===
-        console.log('🍔 Opening menu...');
+        console.log('🍔 Opening menu (showing X overlay)...');
         
-        showXIcon();
+        showXOverlay();
         
-        // Open menu with your design
+        // Open menu
         mobileMenu.style.setProperty('display', 'flex', 'important');
         mobileMenu.style.setProperty('position', 'fixed', 'important');
         mobileMenu.style.setProperty('top', '0', 'important');
@@ -3071,12 +3060,12 @@ if (window.innerWidth < 768) {
           navBar.style.setProperty('position', 'fixed', 'important');
         }
         
-        console.log('✅ Menu opened - X visible');
+        console.log('✅ Menu opened - X overlay visible');
       }
       
     }, true);
     
-    // === STEP 5: MENU NAVIGATION WITH ICON RESET ===
+    // === MENU NAVIGATION ===
     const menuNavigation = [
       { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
       { selector: '.strategy-menu-mob', target: 'strategy' },
@@ -3097,8 +3086,8 @@ if (window.innerWidth < 768) {
             
             console.log(`🎯 Navigation: ${target}`);
             
-            // Close menu and show hamburger
-            showHamburgerIcon();
+            // Close menu and remove overlay
+            removeXOverlay();
             mobileMenu.style.setProperty('display', 'none', 'important');
             mobileMenu.classList.remove('active');
             document.body.classList.remove('menu-open');
@@ -3120,34 +3109,20 @@ if (window.innerWidth < 768) {
       }
     });
     
-    // === STEP 6: ESCAPE KEY ===
+    // === ESCAPE KEY ===
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        const hasXIcon = newBurger.querySelector('.js-x-icon');
-        if (hasXIcon) {
+        const hasOverlay = !!newBurger.querySelector('.burger-overlay');
+        if (hasOverlay) {
           newBurger.click();
         }
       }
     });
     
-    // === STEP 7: EMERGENCY SYNC (Updated for JavaScript Icons) ===
-    setInterval(() => {
-      const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
-      const hasXIcon = !!newBurger.querySelector('.js-x-icon');
-      
-      if (menuVisuallyOpen && !hasXIcon) {
-        console.log('🔧 Emergency sync: Menu open but no X icon - adding X...');
-        showXIcon();
-      } else if (!menuVisuallyOpen && hasXIcon) {
-        console.log('🔧 Emergency sync: Menu closed but X icon visible - showing hamburger...');
-        showHamburgerIcon();
-      }
-    }, 3000);
-    
-    console.log('🎉 JAVASCRIPT X ICON SOLUTION COMPLETE!');
-    console.log('🍔 Hamburger = click to open menu');
-    console.log('✕ X = click to close menu'); 
-    console.log('🔄 Icons created purely with JavaScript - no CSS conflicts!');
+    console.log('🎉 OVERLAY SOLUTION COMPLETE!');
+    console.log('🍔 Hamburger visible = click to open menu');
+    console.log('✕ Dark X overlay = click to close menu');
+    console.log('🔥 Overlay should be impossible to miss!');
     
   }, 2000);
   
