@@ -1639,3 +1639,352 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🎉 Clean mobile navigation system loaded');
     
 })();
+
+// ==========================================
+// DESKTOP MENU SYSTEM
+// Restores desktop burger menu functionality
+// ==========================================
+
+(function() {
+    'use strict';
+    
+    // Only run on desktop - leave mobile to the clean mobile system
+    if (window.innerWidth < 768) {
+        console.log('📱 Mobile detected - skipping desktop menu');
+        return;
+    }
+    
+    console.log('💻 Desktop detected - initializing desktop menu');
+    
+    // Wait for DOM and GSAP to be ready
+    function initDesktopMenu() {
+        console.log('🚀 Starting desktop menu setup...');
+        
+        // Find elements
+        const burger = document.querySelector('.nav-burger-icon-black');
+        const desktopMenu = document.querySelector('.nav-menu-desktop');
+        
+        if (!burger || !desktopMenu) {
+            console.error('❌ Desktop menu elements not found');
+            return;
+        }
+        
+        console.log('✅ Found burger and desktop menu elements');
+        
+        // Setup menu positioning and initial state
+        setupMenuStyles();
+        
+        // State tracking
+        let isMenuOpen = false;
+        let currentAnimation = null;
+        
+        // Burger click handler
+        burger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log(`🍔 Desktop burger clicked - ${isMenuOpen ? 'Closing' : 'Opening'} menu`);
+            
+            if (isMenuOpen) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+        
+        // Close button handler
+        const closeButton = desktopMenu.querySelector('.close-button-menu');
+        if (closeButton) {
+            closeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('❌ Close button clicked');
+                closeMenu();
+            });
+        }
+        
+        // Setup menu navigation
+        setupDesktopMenuNavigation();
+        
+        // Escape key handler
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isMenuOpen) {
+                console.log('⌨️ Escape pressed - closing menu');
+                closeMenu();
+            }
+        });
+        
+        console.log('✅ Desktop menu initialized successfully');
+        
+        function setupMenuStyles() {
+            // Ensure menu is properly positioned and initially hidden
+            desktopMenu.style.position = 'fixed';
+            desktopMenu.style.top = '0';
+            desktopMenu.style.left = '0';
+            desktopMenu.style.width = '100vw';
+            desktopMenu.style.height = '100vh';
+            desktopMenu.style.zIndex = '9999';
+            desktopMenu.style.background = '#32b550';
+            desktopMenu.style.display = 'flex';
+            desktopMenu.style.transform = 'translateX(-100%)';
+            desktopMenu.style.transition = 'none';
+            
+            console.log('🎨 Menu styles configured');
+        }
+        
+        function openMenu() {
+            if (currentAnimation) {
+                currentAnimation.kill();
+            }
+            
+            isMenuOpen = true;
+            document.body.style.overflow = 'hidden';
+            
+            console.log('🎬 Opening desktop menu with GSAP...');
+            
+            // Get elements for stagger animation
+            const navLinks = desktopMenu.querySelectorAll('a, .link-block');
+            const closeButton = desktopMenu.querySelector('.close-button-menu');
+            const socialHandles = desktopMenu.querySelector('.social-handles');
+            
+            // Reset all elements
+            gsap.set(navLinks, { opacity: 0, y: 20 });
+            if (closeButton) gsap.set(closeButton, { opacity: 0, y: 20 });
+            if (socialHandles) gsap.set(socialHandles, { opacity: 0, y: 20 });
+            
+            // Create timeline
+            currentAnimation = gsap.timeline({
+                onComplete: () => {
+                    console.log('✅ Desktop menu open animation complete');
+                    currentAnimation = null;
+                }
+            });
+            
+            // Slide panel in
+            currentAnimation.to(desktopMenu, {
+                x: '0%',
+                duration: 0.8,
+                ease: "power2.out"
+            });
+            
+            // Stagger in links
+            if (navLinks.length > 0) {
+                currentAnimation.to(navLinks, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    stagger: 0.08,
+                    ease: "power3.out"
+                }, "-=0.5");
+            }
+            
+            // Fade in close button
+            if (closeButton) {
+                currentAnimation.to(closeButton, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: "power2.out"
+                }, "-=0.3");
+            }
+            
+            // Fade in social handles
+            if (socialHandles) {
+                currentAnimation.to(socialHandles, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: "power2.out"
+                }, "-=0.2");
+            }
+        }
+        
+        function closeMenu() {
+            if (currentAnimation) {
+                currentAnimation.kill();
+            }
+            
+            isMenuOpen = false;
+            
+            console.log('🚪 Closing desktop menu...');
+            
+            // Get all content elements
+            const allContent = desktopMenu.querySelectorAll('a, .link-block, .close-button-menu, .social-handles');
+            
+            currentAnimation = gsap.timeline({
+                onComplete: () => {
+                    document.body.style.overflow = '';
+                    console.log('✅ Desktop menu closed');
+                    currentAnimation = null;
+                }
+            });
+            
+            // Quick fade out content
+            currentAnimation.to(allContent, {
+                opacity: 0,
+                y: 20,
+                duration: 0.2,
+                ease: "power2.in"
+            });
+            
+            // Slide panel out
+            currentAnimation.to(desktopMenu, {
+                x: '-100%',
+                duration: 0.6,
+                ease: "power2.in"
+            }, "-=0.1");
+        }
+        
+        function setupDesktopMenuNavigation() {
+            console.log('🔗 Setting up desktop menu navigation...');
+            
+            // Define navigation mapping (same targets as mobile for consistency)
+            const navigationMap = [
+                { selector: 'a[href="#the-beginning"], [href*="the-beginning"]', target: 'the-beginning', name: 'The LBSTR' },
+                { selector: 'a[href="#strategy"], [href*="strategy"]', target: 'strategy', name: 'Strategy' },
+                { selector: 'a[href="#storytelling"], [href*="storytelling"]', target: 'storytelling', name: 'Storytelling' },
+                { selector: 'a[href="#services"], [href*="services"]', target: 'services', name: 'Services' },
+                { selector: 'a[href="#contact"], [href*="contact"]', target: 'contact', name: 'Contact' }
+            ];
+            
+            navigationMap.forEach(({ selector, target, name }) => {
+                const menuItems = desktopMenu.querySelectorAll(selector);
+                
+                menuItems.forEach(menuItem => {
+                    menuItem.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        console.log(`🎯 Desktop: ${name} clicked - navigating to slide`);
+                        
+                        // Close menu first
+                        closeMenu();
+                        
+                        // Navigate to slide after menu closes
+                        setTimeout(() => {
+                            navigateToSlide(target, name);
+                        }, 700); // Wait for close animation
+                    });
+                });
+                
+                if (menuItems.length > 0) {
+                    console.log(`✅ ${name} desktop navigation setup (${menuItems.length} items)`);
+                } else {
+                    console.warn(`⚠️ No menu items found for: ${selector}`);
+                }
+            });
+        }
+        
+        function navigateToSlide(slideId, slideName) {
+            console.log(`🧭 Desktop: Navigating to ${slideName} (#${slideId})`);
+            
+            // Find the target slide
+            const targetSlide = document.getElementById(slideId);
+            if (!targetSlide) {
+                console.error(`❌ Slide not found: #${slideId}`);
+                return;
+            }
+            
+            // Check if we have the slide navigation system available
+            if (window.lbstrSimpleNavigation && typeof window.lbstrSimpleNavigation.goToSlide === 'function') {
+                // Use the existing slide navigation system
+                const slideNumber = window.lbstrSimpleNavigation.slideMap[slideId];
+                if (slideNumber) {
+                    console.log(`🎬 Using slide navigation to go to slide ${slideNumber}`);
+                    window.lbstrSimpleNavigation.goToSlide(slideNumber);
+                } else {
+                    console.warn(`⚠️ Slide number not found for ${slideId}, using GSAP scroll`);
+                    useGSAPScroll(slideId, slideName);
+                }
+            } else {
+                // Fallback to manual GSAP scroll
+                console.log(`🎬 Using manual GSAP scroll to ${slideName}`);
+                useGSAPScroll(slideId, slideName);
+            }
+        }
+        
+        function useGSAPScroll(slideId, slideName) {
+            // Calculate slide position (assuming horizontal layout)
+            const wrapper = document.querySelector('.wrapper');
+            const slide = document.getElementById(slideId);
+            
+            if (!wrapper || !slide) {
+                console.error(`❌ Wrapper or slide not found for ${slideId}`);
+                return;
+            }
+            
+            // Get slide index
+            const slides = Array.from(wrapper.children);
+            const slideIndex = slides.findIndex(s => s.id === slideId);
+            
+            if (slideIndex === -1) {
+                console.error(`❌ Slide index not found for ${slideId}`);
+                return;
+            }
+            
+            // Calculate scroll position
+            const slideWidth = window.innerWidth;
+            const targetScroll = slideIndex * slideWidth;
+            
+            console.log(`🎬 Scrolling to slide ${slideIndex + 1} at position ${targetScroll}`);
+            
+            // Smooth scroll with GSAP
+            gsap.to(window, {
+                scrollTo: targetScroll,
+                duration: 1.2,
+                ease: "power2.inOut",
+                onStart: () => console.log(`⬆️ Desktop: Scroll animation started to ${slideName}`),
+                onComplete: () => {
+                    console.log(`✅ Desktop: Successfully navigated to ${slideName}`);
+                    // Update URL hash
+                    history.pushState(null, '', '#' + slideId);
+                }
+            });
+        }
+    }
+    
+    // Initialize based on readiness
+    if (typeof gsap !== 'undefined' && gsap.registerPlugin) {
+        initDesktopMenu();
+    } else {
+        // Wait for GSAP to load
+        const checkGSAP = setInterval(() => {
+            if (typeof gsap !== 'undefined' && gsap.registerPlugin) {
+                clearInterval(checkGSAP);
+                initDesktopMenu();
+            }
+        }, 100);
+        
+        // Timeout after 5 seconds
+        setTimeout(() => {
+            clearInterval(checkGSAP);
+            console.warn('⚠️ GSAP not found - desktop menu may not work properly');
+        }, 5000);
+    }
+    
+    // Handle window resize
+    let wasDesktop = true;
+    
+    window.addEventListener('resize', function() {
+        const isDesktop = window.innerWidth >= 768;
+        
+        if (wasDesktop && !isDesktop) {
+            // Switched to mobile - clean up desktop menu
+            console.log('📱 Switched to mobile - cleaning desktop menu');
+            const desktopMenu = document.querySelector('.nav-menu-desktop');
+            if (desktopMenu) {
+                gsap.set(desktopMenu, { x: '-100%' });
+                document.body.style.overflow = '';
+            }
+        } else if (!wasDesktop && isDesktop) {
+            // Switched to desktop - reinitialize
+            console.log('💻 Switched to desktop - reinitializing menu');
+            setTimeout(initDesktopMenu, 100);
+        }
+        
+        wasDesktop = isDesktop;
+    });
+    
+    console.log('🎉 Desktop menu system loaded');
+    
+})();
