@@ -1522,21 +1522,19 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 }
 
-/* === BURGER TO X TRANSFORMATION ===
-   Add this to your styles.css file */
+/* === CORRECTED BURGER TO X TRANSFORMATION ===
+   Replace your previous burger CSS with this */
 
 @media screen and (max-width: 767px) {
   
-  /* Hide hamburger icon when menu is open */
-  .nav-burger-icon-black.menu-open img {
-    opacity: 0 !important;
-    transition: opacity 0.3s ease !important;
+  /* Hide the burger background image when menu is open */
+  .nav-burger-icon-black.menu-open {
+    background-image: none !important;
   }
   
-  /* Show X icon when menu is open */
+  /* Base styling for ::after pseudo-element */
   .nav-burger-icon-black::after {
     content: '' !important;
-    opacity: 0 !important;
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
@@ -1546,8 +1544,6 @@ a, button, .clickable, [data-cursor="pointer"] {
     color: white !important;
     font-size: 2rem !important;
     font-weight: normal !important;
-    cursor: pointer !important;
-    padding: 0 !important;
     width: 40px !important;
     height: 40px !important;
     display: flex !important;
@@ -1555,41 +1551,45 @@ a, button, .clickable, [data-cursor="pointer"] {
     justify-content: center !important;
     border-radius: 0 !important;
     line-height: 1 !important;
+    opacity: 0 !important;
     transition: all 0.3s ease !important;
     pointer-events: none !important;
+    z-index: 10 !important;
   }
   
+  /* Show X when menu is open */
   .nav-burger-icon-black.menu-open::after {
     content: '✕' !important;
     opacity: 1 !important;
     pointer-events: auto !important;
   }
   
-  /* Hover effect for X icon */
+  /* Hover effect for X */
   .nav-burger-icon-black.menu-open:hover::after {
     background: rgba(255, 255, 255, 0.1) !important;
     border-radius: 4px !important;
     transform: translate(-50%, -50%) scale(1.05) !important;
   }
   
-  /* Ensure burger container can handle the overlay */
+  /* Ensure burger container can handle the pseudo-element */
   .nav-burger-icon-black {
     position: relative !important;
     overflow: visible !important;
   }
   
-  /* Optional: Rotation animation for smooth transition */
-  .nav-burger-icon-black img {
-    transition: opacity 0.3s ease, transform 0.3s ease !important;
+  /* Alternative approach: Hide all content when menu is open */
+  .nav-burger-icon-black.menu-open > * {
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
   }
   
-  .nav-burger-icon-black.menu-open img {
-    transform: rotate(90deg) !important;
-    opacity: 0 !important;
+  /* Make sure the X appears above everything */
+  .nav-burger-icon-black.menu-open::after {
+    z-index: 100 !important;
   }
 }
 
-/* Desktop - no changes needed */
+/* Desktop - no changes */
 @media screen and (min-width: 768px) {
   .nav-burger-icon-black::after {
     display: none !important;
