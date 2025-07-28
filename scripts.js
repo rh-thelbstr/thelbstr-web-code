@@ -2872,16 +2872,22 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === STATE INITIALIZATION FIX ===
-// Simple fix: Initialize state variable to match visual reality
+// === UNIVERSAL MOBILE MENU FIX ===
+// Works on all hash URLs, fixes the confirmed double-click issue
 
 (function() {
   'use strict';
   
-  if (window.innerWidth >= 768) return;
+  if (window.innerWidth >= 768) {
+    console.log('💻 Desktop detected - skipping mobile menu fix');
+    return;
+  }
   
-  console.log('🔧 STATE FIX: Correcting initial state variable...');
+  console.log('🎯 UNIVERSAL FIX: Applying mobile menu fix for all hash URLs...');
+  console.log(`📍 Current URL: ${window.location.href}`);
+  console.log(`📍 Current hash: "${window.location.hash}"`);
   
+  // Wait for page to fully stabilize
   setTimeout(() => {
     
     const burger = document.querySelector('.nav-burger-icon-black');
@@ -2893,49 +2899,47 @@ if (window.innerWidth < 768) {
       return;
     }
     
-    // === STEP 1: DETERMINE ACTUAL VISUAL STATE ===
-    const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
-    const menuHasActiveClass = mobileMenu.classList.contains('active');
-    const actuallyOpen = menuVisuallyOpen || menuHasActiveClass;
+    console.log('✅ Elements found - applying fix...');
     
-    console.log(`📊 Menu is actually: ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
-    
-    // === STEP 2: ENSURE CONSISTENT CLOSED STATE ===
+    // === STEP 1: FORCE CONSISTENT INITIAL STATE ===
+    // Ensure everything starts in closed state regardless of hash
     burger.classList.remove('menu-open');
     mobileMenu.classList.remove('active');
     mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    console.log('✅ Forced all elements to consistent CLOSED state');
+    console.log('🧹 Forced consistent closed state');
     
-    // === STEP 3: REPLACE BURGER TO REMOVE OLD HANDLERS ===
+    // === STEP 2: REPLACE BURGER TO REMOVE ALL EXISTING HANDLERS ===
     const newBurger = burger.cloneNode(true);
     burger.parentNode.replaceChild(newBurger, burger);
     
-    // === STEP 4: CORRECT STATE INITIALIZATION ===
-    // THIS IS THE KEY: Start with FALSE to match visual closed state
-    let isMenuOpen = false; // FIXED: Now starts as false instead of true
+    console.log('🔄 Burger element replaced - old handlers removed');
     
-    console.log(`🎯 State variable correctly initialized: isMenuOpen = ${isMenuOpen}`);
+    // === STEP 3: CORRECT STATE INITIALIZATION ===
+    // KEY FIX: Start with FALSE to match visual closed state
+    let isMenuOpen = false;
     
-    // === STEP 5: SINGLE CLEAN CLICK HANDLER ===
+    console.log(`🎯 Menu state initialized correctly: isMenuOpen = ${isMenuOpen}`);
+    
+    // === STEP 4: SINGLE AUTHORITATIVE CLICK HANDLER ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
       
       isMenuOpen = !isMenuOpen;
       
-      console.log(`🍔 CORRECTED CLICK: toggling to ${isMenuOpen} (should ${isMenuOpen ? 'OPEN' : 'CLOSE'} menu)`);
+      console.log(`🍔 UNIVERSAL CLICK: toggling to ${isMenuOpen} (should ${isMenuOpen ? 'OPEN' : 'CLOSE'} menu)`);
       
       if (isMenuOpen) {
         // === OPEN MENU ===
-        console.log('📱 Opening menu...');
+        console.log('📱 Opening menu with proper design...');
         
-        // Update burger appearance
+        // Update burger appearance (X icon)
         newBurger.classList.add('menu-open');
         
-        // Show menu with proper Webflow styling
+        // Force menu display with Webflow design styling
         mobileMenu.style.setProperty('display', 'flex', 'important');
         mobileMenu.style.setProperty('position', 'fixed', 'important');
         mobileMenu.style.setProperty('top', '0', 'important');
@@ -2948,25 +2952,31 @@ if (window.innerWidth < 768) {
         mobileMenu.style.setProperty('justify-content', 'center', 'important');
         mobileMenu.style.setProperty('align-items', 'center', 'important');
         mobileMenu.style.setProperty('text-align', 'center', 'important');
+        mobileMenu.style.setProperty('padding', '4rem 2rem', 'important');
         
-        // Style menu items to match your design
+        // Style menu items to match your Webflow design
         const menuItems = mobileMenu.querySelectorAll('[class*="menu-mob"]');
+        console.log(`🎨 Styling ${menuItems.length} menu items...`);
+        
         menuItems.forEach(item => {
+          item.style.setProperty('display', 'block', 'important');
           item.style.setProperty('font-size', '3rem', 'important');
           item.style.setProperty('color', 'black', 'important');
-          item.style.setProperty('margin', '1rem 0', 'important');
+          item.style.setProperty('margin', '1.5rem 0', 'important');
           item.style.setProperty('line-height', '1.2', 'important');
-          item.style.setProperty('display', 'block', 'important');
+          item.style.setProperty('font-weight', 'normal', 'important');
+          item.style.setProperty('cursor', 'pointer', 'important');
           
-          // Style links
+          // Style links inside menu items
           const links = item.querySelectorAll('a, [class*="link"]');
           links.forEach(link => {
             link.style.setProperty('color', 'black', 'important');
             link.style.setProperty('text-decoration', 'none', 'important');
+            link.style.setProperty('font-size', 'inherit', 'important');
           });
         });
         
-        // Position social handles
+        // Position social handles at bottom (matching your design)
         const socialHandles = mobileMenu.querySelector('.social-handles-mob');
         if (socialHandles) {
           socialHandles.style.setProperty('position', 'absolute', 'important');
@@ -2975,17 +2985,28 @@ if (window.innerWidth < 768) {
           socialHandles.style.setProperty('right', '0', 'important');
           socialHandles.style.setProperty('display', 'flex', 'important');
           socialHandles.style.setProperty('justify-content', 'space-around', 'important');
+          socialHandles.style.setProperty('padding', '0 2rem', 'important');
+          
+          const socialItems = socialHandles.querySelectorAll('*');
+          socialItems.forEach(item => {
+            item.style.setProperty('color', 'black', 'important');
+          });
         }
         
-        // Add classes and lock scroll
+        // Add compatibility classes
         mobileMenu.classList.add('active');
         document.body.classList.add('menu-open');
         document.body.style.setProperty('overflow', 'hidden', 'important');
         
-        // CRITICAL: Fix nav bar z-index to stay visible
+        // CRITICAL: Keep nav bar visible above menu
         if (navBar) {
           navBar.style.setProperty('z-index', '10002', 'important');
           navBar.style.setProperty('position', 'fixed', 'important');
+          navBar.style.setProperty('top', '0', 'important');
+          navBar.style.setProperty('left', '0', 'important');
+          navBar.style.setProperty('right', '0', 'important');
+          navBar.style.setProperty('display', 'flex', 'important');
+          navBar.style.setProperty('visibility', 'visible', 'important');
         }
         
         console.log('✅ Menu opened on FIRST click with nav bar visible!');
@@ -3004,6 +3025,53 @@ if (window.innerWidth < 768) {
       }
     });
     
+    // === STEP 5: MENU ITEM NAVIGATION (Preserve existing functionality) ===
+    const menuNavigation = [
+      { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
+      { selector: '.strategy-menu-mob', target: 'strategy' },
+      { selector: '.story-menu-mob', target: 'storytelling' },
+      { selector: '.services-menu-mob', target: 'services' },
+      { selector: '.contact-menu-mob', target: 'contact' }
+    ];
+    
+    menuNavigation.forEach(({ selector, target }) => {
+      const menuItem = mobileMenu.querySelector(selector);
+      if (menuItem) {
+        const clickables = [
+          menuItem,
+          ...menuItem.querySelectorAll('a'),
+          ...menuItem.querySelectorAll('[class*="link"]')
+        ];
+        
+        clickables.forEach(clickable => {
+          clickable.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            console.log(`🎯 Menu navigation: ${target}`);
+            
+            // Close menu first
+            isMenuOpen = false;
+            newBurger.classList.remove('menu-open');
+            mobileMenu.style.setProperty('display', 'none', 'important');
+            mobileMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            document.body.style.removeProperty('overflow');
+            
+            // Navigate after brief delay
+            setTimeout(() => {
+              const targetEl = document.getElementById(target);
+              if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.pushState(null, '', '#' + target);
+                console.log(`✅ Navigated to: ${target}`);
+              }
+            }, 200);
+          });
+        });
+      }
+    });
+    
     // === STEP 6: ESCAPE KEY SUPPORT ===
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && isMenuOpen) {
@@ -3011,9 +3079,11 @@ if (window.innerWidth < 768) {
       }
     });
     
-    console.log('🎉 STATE INITIALIZATION FIX COMPLETE!');
-    console.log('🧪 TEST: First burger click should now open menu immediately');
+    console.log('🎉 UNIVERSAL MOBILE MENU FIX COMPLETE!');
+    console.log('🧪 Works on all hash URLs: #home, #strategy, #services, etc.');
+    console.log('✅ First burger click should now open menu immediately');
+    console.log('🧭 Nav bar will stay visible when menu opens');
     
-  }, 2000);
+  }, 3000); // Wait 3 seconds for page to fully stabilize
   
 })();
