@@ -1521,3 +1521,77 @@ a, button, .clickable, [data-cursor="pointer"] {
         display: none !important;
     }
 }
+
+/* === BURGER TO X TRANSFORMATION ===
+   Add this to your styles.css file */
+
+@media screen and (max-width: 767px) {
+  
+  /* Hide hamburger icon when menu is open */
+  .nav-burger-icon-black.menu-open img {
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+  }
+  
+  /* Show X icon when menu is open */
+  .nav-burger-icon-black::after {
+    content: '' !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    font-size: 2rem !important;
+    font-weight: normal !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0 !important;
+    line-height: 1 !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+  }
+  
+  .nav-burger-icon-black.menu-open::after {
+    content: '✕' !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  
+  /* Hover effect for X icon */
+  .nav-burger-icon-black.menu-open:hover::after {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+    transform: translate(-50%, -50%) scale(1.05) !important;
+  }
+  
+  /* Ensure burger container can handle the overlay */
+  .nav-burger-icon-black {
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  /* Optional: Rotation animation for smooth transition */
+  .nav-burger-icon-black img {
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
+  }
+  
+  .nav-burger-icon-black.menu-open img {
+    transform: rotate(90deg) !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Desktop - no changes needed */
+@media screen and (min-width: 768px) {
+  .nav-burger-icon-black::after {
+    display: none !important;
+  }
+}
