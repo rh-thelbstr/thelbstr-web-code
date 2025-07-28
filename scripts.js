@@ -2872,15 +2872,15 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === REFINED OVERRIDE FIX ===
-// Target the specific interference without breaking our own functionality
+// === NAVIGATION STATE SYNC FIX ===
+// Sync menu state after navigation closes the menu
 
 (function() {
   'use strict';
   
   if (window.innerWidth >= 768) return;
   
-  console.log('🎯 REFINED OVERRIDE: Targeting specific interference...');
+  console.log('🔄 NAVIGATION STATE SYNC: Fixing state after menu navigation...');
   
   setTimeout(() => {
     
@@ -2889,69 +2889,48 @@ if (window.innerWidth < 768) {
     
     if (!burger || !mobileMenu) return;
     
-    console.log('✅ Elements found - applying refined fix...');
+    console.log('✅ Elements found - applying navigation state sync...');
     
-    // === STEP 1: BLOCK ONLY THE SPECIFIC CONFLICTING FUNCTION ===
-    // Instead of blocking all console.log, just prevent the interference
-    
-    let isOurScript = false; // Flag to identify our own operations
-    
-    // Override the specific function causing "Fixing burger state mismatch"
-    const originalClassListAdd = Element.prototype.add;
-    const originalClassListRemove = Element.prototype.remove;
-    
-    // Intercept class changes on burger/menu elements
-    Element.prototype.add = function(...classes) {
-      if ((this.classList.contains('nav-burger-icon-black') || 
-           this.classList.contains('nav-menu-mobile')) && 
-          !isOurScript) {
-        console.log('🚫 Blocked external class addition:', classes);
-        return;
-      }
-      return originalClassListAdd.apply(this, classes);
-    };
-    
-    Element.prototype.remove = function(...classes) {
-      if ((this.classList.contains('nav-burger-icon-black') || 
-           this.classList.contains('nav-menu-mobile')) && 
-          !isOurScript) {
-        console.log('🚫 Blocked external class removal:', classes);
-        return;
-      }
-      return originalClassListRemove.apply(this, classes);
-    };
-    
-    // === STEP 2: CLEAN INITIAL STATE ===
-    isOurScript = true; // Mark our operations
-    
+    // === STEP 1: CLEAN INITIAL STATE ===
     burger.classList.remove('menu-open');
     mobileMenu.classList.remove('active');
     mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    isOurScript = false; // Reset flag
-    
     console.log('🧹 Initial state cleaned');
     
-    // === STEP 3: REPLACE BURGER WITH PROTECTED VERSION ===
+    // === STEP 2: REPLACE BURGER ===
     const newBurger = burger.cloneNode(true);
     burger.parentNode.replaceChild(newBurger, burger);
     
-    console.log('🔄 Burger replaced');
-    
-    // === STEP 4: SIMPLE STATE MANAGEMENT ===
+    // === STEP 3: STATE MANAGEMENT WITH SYNC FUNCTION ===
     let menuIsOpen = false;
     
-    // === STEP 5: PROTECTED CLICK HANDLER ===
+    // KEY FIX: Function to sync state with visual reality
+    function syncStateWithVisual() {
+      const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
+      const menuHasActiveClass = mobileMenu.classList.contains('active');
+      const actuallyOpen = menuVisuallyOpen || menuHasActiveClass;
+      
+      if (menuIsOpen !== actuallyOpen) {
+        console.log(`🔄 STATE SYNC: Code thinks menu is ${menuIsOpen ? 'OPEN' : 'CLOSED'}, but it's actually ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
+        menuIsOpen = actuallyOpen; // Sync with reality
+        console.log(`✅ State corrected to: ${menuIsOpen ? 'OPEN' : 'CLOSED'}`);
+      }
+    }
+    
+    // === STEP 4: CLICK HANDLER WITH STATE SYNC ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
       
-      isOurScript = true; // Mark as our operation
+      // CRITICAL: Sync state before processing click
+      syncStateWithVisual();
+      
       menuIsOpen = !menuIsOpen;
       
-      console.log(`🎯 REFINED CLICK: ${menuIsOpen ? 'OPENING' : 'CLOSING'} menu`);
+      console.log(`🎯 SYNCED CLICK: ${menuIsOpen ? 'OPENING' : 'CLOSING'} menu (state synced with reality)`);
       
       if (menuIsOpen) {
         // === OPEN MENU ===
@@ -3010,7 +2989,7 @@ if (window.innerWidth < 768) {
           navBar.style.setProperty('position', 'fixed', 'important');
         }
         
-        console.log('✅ Menu opened');
+        console.log('✅ Menu opened with state sync');
         
       } else {
         // === CLOSE MENU ===
@@ -3022,14 +3001,12 @@ if (window.innerWidth < 768) {
         document.body.classList.remove('menu-open');
         document.body.style.removeProperty('overflow');
         
-        console.log('✅ Menu closed');
+        console.log('✅ Menu closed with state sync');
       }
       
-      isOurScript = false; // Reset flag
-      
-    }, true); // Capture phase
+    }, true);
     
-    // === STEP 6: MENU NAVIGATION ===
+    // === STEP 5: ENHANCED MENU NAVIGATION WITH STATE RESET ===
     const menuNavigation = [
       { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
       { selector: '.strategy-menu-mob', target: 'strategy' },
@@ -3048,23 +3025,26 @@ if (window.innerWidth < 768) {
             e.preventDefault();
             e.stopImmediatePropagation();
             
-            console.log(`🎯 Navigation: ${target}`);
+            console.log(`🎯 Navigation clicked: ${target}`);
             
-            isOurScript = true;
-            menuIsOpen = false;
+            // Close menu visually
             newBurger.classList.remove('menu-open');
             mobileMenu.style.setProperty('display', 'none', 'important');
             mobileMenu.classList.remove('active');
             document.body.classList.remove('menu-open');
             document.body.style.removeProperty('overflow');
-            isOurScript = false;
             
+            // CRITICAL: Reset state variable to match visual state
+            menuIsOpen = false;
+            console.log('🔄 State reset to CLOSED after navigation');
+            
+            // Navigate
             setTimeout(() => {
               const targetEl = document.getElementById(target);
               if (targetEl) {
                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 history.pushState(null, '', '#' + target);
-                console.log(`✅ Navigated to: ${target}`);
+                console.log(`✅ Navigated to: ${target} (state synced)`);
               }
             }, 200);
           });
@@ -3072,18 +3052,42 @@ if (window.innerWidth < 768) {
       }
     });
     
+    // === STEP 6: AUTOMATIC STATE SYNC ON NAVIGATION EVENTS ===
+    // Sync state when hash changes (in case menu closes via other means)
+    window.addEventListener('hashchange', function() {
+      setTimeout(() => {
+        console.log('🔗 Hash changed - syncing menu state...');
+        syncStateWithVisual();
+      }, 500);
+    });
+    
+    // Sync state on large scroll changes (section jumps)
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', function() {
+      const currentScrollY = window.scrollY;
+      const scrollDiff = Math.abs(currentScrollY - lastScrollY);
+      
+      if (scrollDiff > 1000) {
+        setTimeout(() => {
+          console.log(`📜 Large scroll (${scrollDiff}px) - syncing menu state...`);
+          syncStateWithVisual();
+        }, 300);
+      }
+      
+      lastScrollY = currentScrollY;
+    });
+    
     // === STEP 7: ESCAPE KEY ===
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && menuIsOpen) {
-        isOurScript = true;
         newBurger.click();
-        isOurScript = false;
       }
     });
     
-    console.log('🎉 REFINED OVERRIDE COMPLETE!');
-    console.log('🧪 Menu should now work consistently without blocking itself');
+    console.log('🎉 NAVIGATION STATE SYNC COMPLETE!');
+    console.log('🔄 Menu state will stay synced with visual reality after navigation');
+    console.log('✅ First burger click should always work correctly');
     
-  }, 3000);
+  }, 2000);
   
 })();
