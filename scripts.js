@@ -3087,3 +3087,98 @@ if (window.innerWidth < 768) {
   }, 3000); // Wait 3 seconds for page to fully stabilize
   
 })();
+
+// === NAVIGATION RE-SYNC FIX ===
+// Add this AFTER your existing universal fix to handle post-navigation resets
+
+(function() {
+  'use strict';
+  
+  if (window.innerWidth >= 768) return;
+  
+  console.log('🔄 NAVIGATION RE-SYNC: Adding post-navigation state fixes...');
+  
+  let menuStateRef = null; // Will store reference to menu state
+  
+  // Wait for the universal fix to complete, then add re-sync
+  setTimeout(() => {
+    
+    // === MONITOR FOR NAVIGATION-TRIGGERED RESETS ===
+    
+    // Method 1: Monitor hash changes
+    window.addEventListener('hashchange', function() {
+      console.log('🔗 Hash change detected - re-syncing menu state in 1 second...');
+      setTimeout(resyncMenuState, 1000);
+    });
+    
+    // Method 2: Monitor scroll position changes (section jumping)
+    let lastScrollY = window.scrollY;
+    
+    window.addEventListener('scroll', function() {
+      const currentScrollY = window.scrollY;
+      const scrollDiff = Math.abs(currentScrollY - lastScrollY);
+      
+      // If large scroll change (section jump), re-sync state
+      if (scrollDiff > 1000) {
+        console.log(`📜 Large scroll detected (${scrollDiff}px) - re-syncing menu state...`);
+        setTimeout(resyncMenuState, 500);
+      }
+      
+      lastScrollY = currentScrollY;
+    });
+    
+    // Method 3: Monitor for DOM mutations that might affect menu
+    const observer = new MutationObserver(function(mutations) {
+      let shouldResync = false;
+      
+      mutations.forEach(function(mutation) {
+        if (mutation.target.classList && 
+           (mutation.target.classList.contains('nav-burger-icon-black') ||
+            mutation.target.classList.contains('nav-menu-mobile'))) {
+          shouldResync = true;
+        }
+      });
+      
+      if (shouldResync) {
+        console.log('🔄 Menu element mutation detected - re-syncing state...');
+        setTimeout(resyncMenuState, 100);
+      }
+    });
+    
+    observer.observe(document.body, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['class']
+    });
+    
+    // === RE-SYNC FUNCTION ===
+    function resyncMenuState() {
+      const burger = document.querySelector('.nav-burger-icon-black');
+      const mobileMenu = document.querySelector('.nav-menu-mobile');
+      
+      if (!burger || !mobileMenu) return;
+      
+      // Check if menu is actually open visually
+      const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
+      const menuHasActiveClass = mobileMenu.classList.contains('active');
+      const actuallyOpen = menuVisuallyOpen || menuHasActiveClass;
+      
+      console.log(`🔄 Re-sync check: Menu actually ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
+      
+      if (!actuallyOpen) {
+        // If menu should be closed, force everything to closed state
+        burger.classList.remove('menu-open');
+        mobileMenu.classList.remove('active');
+        mobileMenu.style.setProperty('display', 'none', 'important');
+        document.body.classList.remove('menu-open');
+        document.body.style.removeProperty('overflow');
+        
+        console.log('✅ Menu state re-synced to CLOSED');
+      }
+    }
+    
+    console.log('✅ Navigation re-sync monitoring active');
+    
+  }, 4000); // Wait for universal fix to complete
+  
+})();
