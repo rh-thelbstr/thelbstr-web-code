@@ -2872,15 +2872,15 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === VISUAL STATE-BASED MENU FIX ===
-// Use burger icon visual state (hamburger vs X) as source of truth
+// === COMPLETE JAVASCRIPT X ICON SOLUTION ===
+// Replace your entire visual state fix with this
 
 (function() {
   'use strict';
   
   if (window.innerWidth >= 768) return;
   
-  console.log('👁️ VISUAL STATE FIX: Using burger icon state as source of truth...');
+  console.log('👁️ JAVASCRIPT X ICON: Creating X icon with JavaScript...');
   
   setTimeout(() => {
     
@@ -2889,50 +2889,137 @@ if (window.innerWidth < 768) {
     
     if (!burger || !mobileMenu) return;
     
-    console.log('✅ Elements found - applying visual state fix...');
+    console.log('✅ Elements found - applying JavaScript X icon solution...');
     
-    // === STEP 1: ENSURE CLEAN INITIAL STATE ===
-    // Force everything to closed state initially
+    // === STEP 1: CLEAN INITIAL STATE ===
     burger.classList.remove('menu-open');
     mobileMenu.classList.remove('active');
     mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    console.log('🧹 Forced initial state: CLOSED (hamburger icon visible)');
+    // Remove any existing X icons
+    const existingX = burger.querySelector('.js-x-icon');
+    if (existingX) existingX.remove();
     
-    // === STEP 2: REPLACE BURGER FOR CLEAN HANDLERS ===
+    console.log('🧹 Initial state cleaned');
+    
+    // === STEP 2: REPLACE BURGER ===
     const newBurger = burger.cloneNode(true);
     burger.parentNode.replaceChild(newBurger, burger);
     
-    // === STEP 3: VISUAL STATE-BASED CLICK HANDLER ===
+    // === STEP 3: JAVASCRIPT X ICON FUNCTIONS ===
+    
+    function showXIcon() {
+      console.log('✕ Creating X icon...');
+      
+      // Remove existing X first
+      const existingX = newBurger.querySelector('.js-x-icon');
+      if (existingX) existingX.remove();
+      
+      // Create X icon element
+      const xIcon = document.createElement('div');
+      xIcon.className = 'js-x-icon';
+      xIcon.style.cssText = `
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        color: white !important;
+        font-size: 2rem !important;
+        font-weight: normal !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(0, 0, 0, 0.1) !important;
+        border-radius: 4px !important;
+        z-index: 1000 !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        pointer-events: auto !important;
+      `;
+      xIcon.textContent = '✕';
+      
+      // Add hover effects
+      xIcon.addEventListener('mouseenter', function() {
+        this.style.background = 'rgba(255, 255, 255, 0.1)';
+        this.style.transform = 'scale(1.05)';
+      });
+      
+      xIcon.addEventListener('mouseleave', function() {
+        this.style.background = 'rgba(0, 0, 0, 0.1)';
+        this.style.transform = 'scale(1)';
+      });
+      
+      // Hide original burger content
+      const originalContent = newBurger.querySelectorAll(':not(.js-x-icon)');
+      originalContent.forEach(el => {
+        el.style.opacity = '0';
+        el.style.visibility = 'hidden';
+      });
+      
+      // Add X to burger
+      newBurger.appendChild(xIcon);
+      newBurger.classList.add('menu-open');
+      
+      console.log('✅ X icon created and visible');
+      return xIcon;
+    }
+    
+    function showHamburgerIcon() {
+      console.log('🍔 Showing hamburger icon...');
+      
+      // Remove X icon
+      const xIcon = newBurger.querySelector('.js-x-icon');
+      if (xIcon) {
+        xIcon.remove();
+        console.log('🗑️ X icon removed');
+      }
+      
+      // Show original burger content
+      const originalContent = newBurger.querySelectorAll(':not(.js-x-icon)');
+      originalContent.forEach(el => {
+        el.style.opacity = '';
+        el.style.visibility = '';
+      });
+      
+      newBurger.classList.remove('menu-open');
+      console.log('✅ Hamburger icon visible');
+    }
+    
+    // === STEP 4: CLICK HANDLER WITH JAVASCRIPT ICONS ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
       
-      // KEY: Use visual state as source of truth
-      const isCurrentlyShowing_X = newBurger.classList.contains('menu-open');
+      // Check current state by looking for X icon
+      const hasXIcon = newBurger.querySelector('.js-x-icon');
+      const isCurrentlyOpen = !!hasXIcon;
       
-      console.log(`👁️ VISUAL STATE CHECK: Burger shows ${isCurrentlyShowing_X ? 'X (close)' : 'HAMBURGER (open)'}`);
+      console.log(`👁️ JAVASCRIPT STATE: Menu is ${isCurrentlyOpen ? 'OPEN (X visible)' : 'CLOSED (hamburger visible)'}`);
       
-      if (isCurrentlyShowing_X) {
-        // === CLOSE MENU (X → Hamburger) ===
-        console.log('❌ Closing menu (X → hamburger)...');
+      if (isCurrentlyOpen) {
+        // === CLOSE MENU ===
+        console.log('❌ Closing menu...');
         
-        newBurger.classList.remove('menu-open');
+        showHamburgerIcon();
+        
+        // Close menu
         mobileMenu.style.setProperty('display', 'none', 'important');
         mobileMenu.classList.remove('active');
         document.body.classList.remove('menu-open');
         document.body.style.removeProperty('overflow');
         
-        console.log('✅ Menu closed - burger now shows hamburger icon');
+        console.log('✅ Menu closed - hamburger visible');
         
       } else {
-        // === OPEN MENU (Hamburger → X) ===
-        console.log('🍔 Opening menu (hamburger → X)...');
+        // === OPEN MENU ===
+        console.log('🍔 Opening menu...');
         
-        newBurger.classList.add('menu-open');
+        showXIcon();
         
+        // Open menu with your design
         mobileMenu.style.setProperty('display', 'flex', 'important');
         mobileMenu.style.setProperty('position', 'fixed', 'important');
         mobileMenu.style.setProperty('top', '0', 'important');
@@ -2946,7 +3033,7 @@ if (window.innerWidth < 768) {
         mobileMenu.style.setProperty('align-items', 'center', 'important');
         mobileMenu.style.setProperty('text-align', 'center', 'important');
         
-        // Style menu items to match Webflow design
+        // Style menu items
         const menuItems = mobileMenu.querySelectorAll('[class*="menu-mob"]');
         menuItems.forEach(item => {
           item.style.setProperty('font-size', '3rem', 'important');
@@ -2962,7 +3049,7 @@ if (window.innerWidth < 768) {
           });
         });
         
-        // Position social handles at bottom
+        // Social handles
         const social = mobileMenu.querySelector('.social-handles-mob');
         if (social) {
           social.style.setProperty('position', 'absolute', 'important');
@@ -2977,19 +3064,19 @@ if (window.innerWidth < 768) {
         document.body.classList.add('menu-open');
         document.body.style.setProperty('overflow', 'hidden', 'important');
         
-        // Keep nav bar visible
+        // Nav bar
         const navBar = document.querySelector('.nav-bar');
         if (navBar) {
           navBar.style.setProperty('z-index', '10002', 'important');
           navBar.style.setProperty('position', 'fixed', 'important');
         }
         
-        console.log('✅ Menu opened - burger now shows X icon');
+        console.log('✅ Menu opened - X visible');
       }
       
     }, true);
     
-    // === STEP 4: MENU NAVIGATION WITH VISUAL STATE RESET ===
+    // === STEP 5: MENU NAVIGATION WITH ICON RESET ===
     const menuNavigation = [
       { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
       { selector: '.strategy-menu-mob', target: 'strategy' },
@@ -3008,17 +3095,16 @@ if (window.innerWidth < 768) {
             e.preventDefault();
             e.stopImmediatePropagation();
             
-            console.log(`🎯 Navigation clicked: ${target}`);
+            console.log(`🎯 Navigation: ${target}`);
             
-            // Close menu visually
+            // Close menu and show hamburger
+            showHamburgerIcon();
             mobileMenu.style.setProperty('display', 'none', 'important');
             mobileMenu.classList.remove('active');
             document.body.classList.remove('menu-open');
             document.body.style.removeProperty('overflow');
             
-            // CRITICAL: Reset burger to hamburger icon (visual state)
-            newBurger.classList.remove('menu-open');
-            console.log('🔄 Burger reset to HAMBURGER after navigation');
+            console.log('🔄 Menu closed via navigation - hamburger now visible');
             
             // Navigate
             setTimeout(() => {
@@ -3026,7 +3112,7 @@ if (window.innerWidth < 768) {
               if (targetEl) {
                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 history.pushState(null, '', '#' + target);
-                console.log(`✅ Navigated to: ${target} (burger shows hamburger)`);
+                console.log(`✅ Navigated to: ${target}`);
               }
             }, 200);
           });
@@ -3034,43 +3120,34 @@ if (window.innerWidth < 768) {
       }
     });
     
-    // === STEP 5: EMERGENCY VISUAL STATE SYNC ===
-    // Occasionally check that visual state matches reality
-    setInterval(() => {
-      const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
-      const burgerShowsX = newBurger.classList.contains('menu-open');
-      
-      // If menu is closed but burger shows X, reset burger
-      if (!menuVisuallyOpen && burgerShowsX) {
-        console.log('🔧 Emergency sync: Menu closed but burger shows X - fixing...');
-        newBurger.classList.remove('menu-open');
-        console.log('✅ Burger reset to hamburger icon');
-      }
-      
-      // If menu is open but burger shows hamburger, fix burger
-      if (menuVisuallyOpen && !burgerShowsX) {
-        console.log('🔧 Emergency sync: Menu open but burger shows hamburger - fixing...');
-        newBurger.classList.add('menu-open');
-        console.log('✅ Burger set to X icon');
-      }
-      
-    }, 3000); // Check every 3 seconds
-    
     // === STEP 6: ESCAPE KEY ===
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        const burgerShowsX = newBurger.classList.contains('menu-open');
-        if (burgerShowsX) {
-          newBurger.click(); // Close menu
+        const hasXIcon = newBurger.querySelector('.js-x-icon');
+        if (hasXIcon) {
+          newBurger.click();
         }
       }
     });
     
-    console.log('🎉 VISUAL STATE FIX COMPLETE!');
-    console.log('👁️ Burger icon visual state is now the source of truth');
-    console.log('🍔 Hamburger = will open menu');
-    console.log('❌ X = will close menu');
-    console.log('✅ Should work consistently across all sections');
+    // === STEP 7: EMERGENCY SYNC (Updated for JavaScript Icons) ===
+    setInterval(() => {
+      const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
+      const hasXIcon = !!newBurger.querySelector('.js-x-icon');
+      
+      if (menuVisuallyOpen && !hasXIcon) {
+        console.log('🔧 Emergency sync: Menu open but no X icon - adding X...');
+        showXIcon();
+      } else if (!menuVisuallyOpen && hasXIcon) {
+        console.log('🔧 Emergency sync: Menu closed but X icon visible - showing hamburger...');
+        showHamburgerIcon();
+      }
+    }, 3000);
+    
+    console.log('🎉 JAVASCRIPT X ICON SOLUTION COMPLETE!');
+    console.log('🍔 Hamburger = click to open menu');
+    console.log('✕ X = click to close menu'); 
+    console.log('🔄 Icons created purely with JavaScript - no CSS conflicts!');
     
   }, 2000);
   
