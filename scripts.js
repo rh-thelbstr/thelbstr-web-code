@@ -2872,15 +2872,15 @@ if (window.innerWidth < 768) {
   console.log('💻 Desktop detected - skipping targeted mobile additions');
 }
 
-// === NAVIGATION STATE SYNC FIX ===
-// Sync menu state after navigation closes the menu
+// === VISUAL STATE-BASED MENU FIX ===
+// Use burger icon visual state (hamburger vs X) as source of truth
 
 (function() {
   'use strict';
   
   if (window.innerWidth >= 768) return;
   
-  console.log('🔄 NAVIGATION STATE SYNC: Fixing state after menu navigation...');
+  console.log('👁️ VISUAL STATE FIX: Using burger icon state as source of truth...');
   
   setTimeout(() => {
     
@@ -2889,52 +2889,47 @@ if (window.innerWidth < 768) {
     
     if (!burger || !mobileMenu) return;
     
-    console.log('✅ Elements found - applying navigation state sync...');
+    console.log('✅ Elements found - applying visual state fix...');
     
-    // === STEP 1: CLEAN INITIAL STATE ===
+    // === STEP 1: ENSURE CLEAN INITIAL STATE ===
+    // Force everything to closed state initially
     burger.classList.remove('menu-open');
     mobileMenu.classList.remove('active');
     mobileMenu.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('menu-open');
     document.body.style.removeProperty('overflow');
     
-    console.log('🧹 Initial state cleaned');
+    console.log('🧹 Forced initial state: CLOSED (hamburger icon visible)');
     
-    // === STEP 2: REPLACE BURGER ===
+    // === STEP 2: REPLACE BURGER FOR CLEAN HANDLERS ===
     const newBurger = burger.cloneNode(true);
     burger.parentNode.replaceChild(newBurger, burger);
     
-    // === STEP 3: STATE MANAGEMENT WITH SYNC FUNCTION ===
-    let menuIsOpen = false;
-    
-    // KEY FIX: Function to sync state with visual reality
-    function syncStateWithVisual() {
-      const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
-      const menuHasActiveClass = mobileMenu.classList.contains('active');
-      const actuallyOpen = menuVisuallyOpen || menuHasActiveClass;
-      
-      if (menuIsOpen !== actuallyOpen) {
-        console.log(`🔄 STATE SYNC: Code thinks menu is ${menuIsOpen ? 'OPEN' : 'CLOSED'}, but it's actually ${actuallyOpen ? 'OPEN' : 'CLOSED'}`);
-        menuIsOpen = actuallyOpen; // Sync with reality
-        console.log(`✅ State corrected to: ${menuIsOpen ? 'OPEN' : 'CLOSED'}`);
-      }
-    }
-    
-    // === STEP 4: CLICK HANDLER WITH STATE SYNC ===
+    // === STEP 3: VISUAL STATE-BASED CLICK HANDLER ===
     newBurger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
       
-      // CRITICAL: Sync state before processing click
-      syncStateWithVisual();
+      // KEY: Use visual state as source of truth
+      const isCurrentlyShowing_X = newBurger.classList.contains('menu-open');
       
-      menuIsOpen = !menuIsOpen;
+      console.log(`👁️ VISUAL STATE CHECK: Burger shows ${isCurrentlyShowing_X ? 'X (close)' : 'HAMBURGER (open)'}`);
       
-      console.log(`🎯 SYNCED CLICK: ${menuIsOpen ? 'OPENING' : 'CLOSING'} menu (state synced with reality)`);
-      
-      if (menuIsOpen) {
-        // === OPEN MENU ===
-        console.log('📱 Opening menu...');
+      if (isCurrentlyShowing_X) {
+        // === CLOSE MENU (X → Hamburger) ===
+        console.log('❌ Closing menu (X → hamburger)...');
+        
+        newBurger.classList.remove('menu-open');
+        mobileMenu.style.setProperty('display', 'none', 'important');
+        mobileMenu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        document.body.style.removeProperty('overflow');
+        
+        console.log('✅ Menu closed - burger now shows hamburger icon');
+        
+      } else {
+        // === OPEN MENU (Hamburger → X) ===
+        console.log('🍔 Opening menu (hamburger → X)...');
         
         newBurger.classList.add('menu-open');
         
@@ -2951,7 +2946,7 @@ if (window.innerWidth < 768) {
         mobileMenu.style.setProperty('align-items', 'center', 'important');
         mobileMenu.style.setProperty('text-align', 'center', 'important');
         
-        // Style menu items
+        // Style menu items to match Webflow design
         const menuItems = mobileMenu.querySelectorAll('[class*="menu-mob"]');
         menuItems.forEach(item => {
           item.style.setProperty('font-size', '3rem', 'important');
@@ -2967,7 +2962,7 @@ if (window.innerWidth < 768) {
           });
         });
         
-        // Social handles
+        // Position social handles at bottom
         const social = mobileMenu.querySelector('.social-handles-mob');
         if (social) {
           social.style.setProperty('position', 'absolute', 'important');
@@ -2982,31 +2977,19 @@ if (window.innerWidth < 768) {
         document.body.classList.add('menu-open');
         document.body.style.setProperty('overflow', 'hidden', 'important');
         
-        // Nav bar
+        // Keep nav bar visible
         const navBar = document.querySelector('.nav-bar');
         if (navBar) {
           navBar.style.setProperty('z-index', '10002', 'important');
           navBar.style.setProperty('position', 'fixed', 'important');
         }
         
-        console.log('✅ Menu opened with state sync');
-        
-      } else {
-        // === CLOSE MENU ===
-        console.log('📱 Closing menu...');
-        
-        newBurger.classList.remove('menu-open');
-        mobileMenu.style.setProperty('display', 'none', 'important');
-        mobileMenu.classList.remove('active');
-        document.body.classList.remove('menu-open');
-        document.body.style.removeProperty('overflow');
-        
-        console.log('✅ Menu closed with state sync');
+        console.log('✅ Menu opened - burger now shows X icon');
       }
       
     }, true);
     
-    // === STEP 5: ENHANCED MENU NAVIGATION WITH STATE RESET ===
+    // === STEP 4: MENU NAVIGATION WITH VISUAL STATE RESET ===
     const menuNavigation = [
       { selector: '.the-lbstr-menu-mob', target: 'the-beginning' },
       { selector: '.strategy-menu-mob', target: 'strategy' },
@@ -3028,15 +3011,14 @@ if (window.innerWidth < 768) {
             console.log(`🎯 Navigation clicked: ${target}`);
             
             // Close menu visually
-            newBurger.classList.remove('menu-open');
             mobileMenu.style.setProperty('display', 'none', 'important');
             mobileMenu.classList.remove('active');
             document.body.classList.remove('menu-open');
             document.body.style.removeProperty('overflow');
             
-            // CRITICAL: Reset state variable to match visual state
-            menuIsOpen = false;
-            console.log('🔄 State reset to CLOSED after navigation');
+            // CRITICAL: Reset burger to hamburger icon (visual state)
+            newBurger.classList.remove('menu-open');
+            console.log('🔄 Burger reset to HAMBURGER after navigation');
             
             // Navigate
             setTimeout(() => {
@@ -3044,7 +3026,7 @@ if (window.innerWidth < 768) {
               if (targetEl) {
                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 history.pushState(null, '', '#' + target);
-                console.log(`✅ Navigated to: ${target} (state synced)`);
+                console.log(`✅ Navigated to: ${target} (burger shows hamburger)`);
               }
             }, 200);
           });
@@ -3052,41 +3034,43 @@ if (window.innerWidth < 768) {
       }
     });
     
-    // === STEP 6: AUTOMATIC STATE SYNC ON NAVIGATION EVENTS ===
-    // Sync state when hash changes (in case menu closes via other means)
-    window.addEventListener('hashchange', function() {
-      setTimeout(() => {
-        console.log('🔗 Hash changed - syncing menu state...');
-        syncStateWithVisual();
-      }, 500);
-    });
-    
-    // Sync state on large scroll changes (section jumps)
-    let lastScrollY = window.scrollY;
-    window.addEventListener('scroll', function() {
-      const currentScrollY = window.scrollY;
-      const scrollDiff = Math.abs(currentScrollY - lastScrollY);
+    // === STEP 5: EMERGENCY VISUAL STATE SYNC ===
+    // Occasionally check that visual state matches reality
+    setInterval(() => {
+      const menuVisuallyOpen = window.getComputedStyle(mobileMenu).display !== 'none';
+      const burgerShowsX = newBurger.classList.contains('menu-open');
       
-      if (scrollDiff > 1000) {
-        setTimeout(() => {
-          console.log(`📜 Large scroll (${scrollDiff}px) - syncing menu state...`);
-          syncStateWithVisual();
-        }, 300);
+      // If menu is closed but burger shows X, reset burger
+      if (!menuVisuallyOpen && burgerShowsX) {
+        console.log('🔧 Emergency sync: Menu closed but burger shows X - fixing...');
+        newBurger.classList.remove('menu-open');
+        console.log('✅ Burger reset to hamburger icon');
       }
       
-      lastScrollY = currentScrollY;
-    });
+      // If menu is open but burger shows hamburger, fix burger
+      if (menuVisuallyOpen && !burgerShowsX) {
+        console.log('🔧 Emergency sync: Menu open but burger shows hamburger - fixing...');
+        newBurger.classList.add('menu-open');
+        console.log('✅ Burger set to X icon');
+      }
+      
+    }, 3000); // Check every 3 seconds
     
-    // === STEP 7: ESCAPE KEY ===
+    // === STEP 6: ESCAPE KEY ===
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && menuIsOpen) {
-        newBurger.click();
+      if (e.key === 'Escape') {
+        const burgerShowsX = newBurger.classList.contains('menu-open');
+        if (burgerShowsX) {
+          newBurger.click(); // Close menu
+        }
       }
     });
     
-    console.log('🎉 NAVIGATION STATE SYNC COMPLETE!');
-    console.log('🔄 Menu state will stay synced with visual reality after navigation');
-    console.log('✅ First burger click should always work correctly');
+    console.log('🎉 VISUAL STATE FIX COMPLETE!');
+    console.log('👁️ Burger icon visual state is now the source of truth');
+    console.log('🍔 Hamburger = will open menu');
+    console.log('❌ X = will close menu');
+    console.log('✅ Should work consistently across all sections');
     
   }, 2000);
   
