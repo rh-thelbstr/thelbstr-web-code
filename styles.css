@@ -1535,3 +1535,39 @@ a, button, .clickable, [data-cursor="pointer"] {
         color: #32b550 !important;
     }
 }
+
+/* Force consistent mobile nav spacing */
+@media (max-width: 767px) {
+    .nav-bar .nav-lbstr-logo {
+        margin-left: 1.5rem !important;
+        margin-right: 0 !important;
+    }
+    
+    .nav-bar .nav-burger-icon-black {
+        margin-right: 1.5rem !important;
+        margin-left: 0 !important;
+    }
+    
+    /* Ensure it applies to all nav themes */
+    .nav-bar.nav-green .nav-lbstr-logo,
+    .nav-bar.nav-black .nav-lbstr-logo,
+    .nav-bar.nav-white .nav-lbstr-logo {
+        margin-left: 1.5rem !important;
+        margin-right: 0 !important;
+    }
+    
+    .nav-bar.nav-green .nav-burger-icon-black,
+    .nav-bar.nav-black .nav-burger-icon-black,
+    .nav-bar.nav-white .nav-burger-icon-black {
+        margin-right: 1.5rem !important;
+        margin-left: 0 !important;
+    }
+    
+    /* Also ensure proper flex positioning */
+    .nav-bar {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0 !important; /* Remove any conflicting padding */
+    }
+}
