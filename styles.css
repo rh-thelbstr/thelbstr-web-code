@@ -826,6 +826,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
     }
 
     .services-modal-body * {
@@ -834,6 +835,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
@@ -942,6 +944,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
         max-height: calc(100vh - 60px) !important;
         overflow-y: auto !important;
         background: #000000 !important;
@@ -954,6 +957,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
@@ -1071,6 +1075,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
     }
 
     .slide14-modal-body * {
@@ -1079,6 +1084,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
@@ -1187,6 +1193,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
     }
 
     .slide18-modal-body * {
@@ -1195,6 +1202,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         font-size: 18px !important;
         line-height: 22px !important;
         font-weight: normal !important;
+        letter-spacing: 0 !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
