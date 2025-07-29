@@ -784,17 +784,17 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
-    /* CONSISTENT CLOSE BUTTON */
+    /* CONSISTENT CLOSE BUTTON - LARGER SIZE */
     .services-modal-close {
         background: transparent !important;
         border: none !important;
         color: white !important;
-        font-size: 2rem !important;
+        font-size: 2.5rem !important;
         font-weight: normal !important;
         cursor: pointer !important;
         padding: 0 !important;
-        width: 40px !important;
-        height: 40px !important;
+        width: 50px !important;
+        height: 50px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -906,21 +906,21 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
-    /* CONSISTENT CLOSE BUTTON - Fixed for Slide 11 */
+    /* CONSISTENT CLOSE BUTTON - LARGER SIZE */
     .mobile-modal-close {
         background: transparent !important;
         border: none !important;
         color: white !important;
-        font-size: 2rem !important;
+        font-size: 2.5rem !important;
         font-weight: normal !important;
         cursor: pointer !important;
         padding: 0 !important;
-        width: 40px !important;
-        height: 40px !important;
-        min-width: 40px !important;
-        min-height: 40px !important;
-        max-width: 40px !important;
-        max-height: 40px !important;
+        width: 50px !important;
+        height: 50px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+        max-width: 50px !important;
+        max-height: 50px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -1038,17 +1038,17 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
-    /* CONSISTENT CLOSE BUTTON */
+    /* CONSISTENT CLOSE BUTTON - LARGER SIZE */
     .slide14-modal-close {
         background: transparent !important;
         border: none !important;
         color: white !important;
-        font-size: 2rem !important;
+        font-size: 2.5rem !important;
         font-weight: normal !important;
         cursor: pointer !important;
         padding: 0 !important;
-        width: 40px !important;
-        height: 40px !important;
+        width: 50px !important;
+        height: 50px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -1156,17 +1156,17 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
-    /* CONSISTENT CLOSE BUTTON */
+    /* CONSISTENT CLOSE BUTTON - LARGER SIZE */
     .slide18-modal-close {
         background: transparent !important;
         border: none !important;
         color: white !important;
-        font-size: 2rem !important;
+        font-size: 2.5rem !important;
         font-weight: normal !important;
         cursor: pointer !important;
         padding: 0 !important;
-        width: 40px !important;
-        height: 40px !important;
+        width: 50px !important;
+        height: 50px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
