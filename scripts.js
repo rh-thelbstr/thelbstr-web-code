@@ -356,7 +356,7 @@ openMobileModal(title, contentElement) {
     modalOverlay.innerHTML = `
         <div>
             <h2>${title}</h2>
-            <button class="mobile-modal-close">✕</button>
+            <button class="mobile-modal-close">×</button>
         </div>
         <div>${contentText}</div>
     `;
