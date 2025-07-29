@@ -717,7 +717,11 @@ a, button, .clickable, [data-cursor="pointer"] {
     color: #32b550 !important;
 }
 
-/* SLIDE 21 MOBILE MODAL STYLES - FULL SCREEN VERSION */
+/* =========================================
+   CONSISTENT MOBILE MODAL STYLES
+   ========================================= */
+
+/* SLIDE 21 SERVICES MODAL */
 @media (max-width: 767px) {
     .services-modal-overlay {
         position: fixed !important;
@@ -780,6 +784,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
+    /* CONSISTENT CLOSE BUTTON */
     .services-modal-close {
         background: transparent !important;
         border: none !important;
@@ -795,20 +800,21 @@ a, button, .clickable, [data-cursor="pointer"] {
         justify-content: center !important;
         border-radius: 0 !important;
         line-height: 1 !important;
-        transition: all 0.5s ease !important;
+        transition: all 0.3s ease !important;
         transform: rotate(0deg) !important;
     }
 
     .services-modal-close:hover {
         background: rgba(255, 255, 255, 0.1) !important;
         border-radius: 4px !important;
-        transform: scale(1.05) rotate(0deg) !important;
+        transform: scale(1.05) !important;
     }
 
     .services-modal-close:active {
-        transform: scale(1.05) rotate(360deg) !important;
+        transform: scale(1.05) rotate(90deg) !important;
     }
 
+    /* CONSISTENT BODY STYLING */
     .services-modal-body {
         padding: 1.5rem !important;
         background: #000000 !important;
@@ -816,15 +822,18 @@ a, button, .clickable, [data-cursor="pointer"] {
         overflow-y: auto !important;
         max-height: calc(100vh - 60px) !important;
         color: #FFFFFF !important;
-        font-size: 18px !important;
-        line-height: 1.5 !important;
         font-family: 'Selecta', sans-serif !important;
+        font-size: 18px !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
     }
 
     .services-modal-body * {
         color: #FFFFFF !important;
+        font-family: 'Selecta', sans-serif !important;
         font-size: 18px !important;
-        line-height: 1.5 !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
@@ -834,27 +843,22 @@ a, button, .clickable, [data-cursor="pointer"] {
         color: #32b550 !important; /* Keep green numbers */
     }
 
-    /* Keep your existing service text fixes */
-    .brand, .creative, .imc, .scriptwriting, .film-conceptualisation, .directing {
-        font-size: inherit !important;
-        font-weight: inherit !important;
+    /* Service text fixes */
+    .services-modal-body .brand, 
+    .services-modal-body .creative, 
+    .services-modal-body .imc, 
+    .services-modal-body .scriptwriting, 
+    .services-modal-body .film-conceptualisation, 
+    .services-modal-body .directing {
+        font-size: 18px !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
         transform: none !important;
         transition: none !important;
     }
-
-    .brand:not([data-service-active="true"]),
-    .creative:not([data-service-active="true"]),
-    .imc:not([data-service-active="true"]),
-    .solve4:not([data-service-active="true"]),
-    .scriptwriting:not([data-service-active="true"]),
-    .film-conceptualisation:not([data-service-active="true"]),
-    .directing:not([data-service-active="true"]) {
-        font-size: inherit !important;
-        font-weight: inherit !important;
-        transform: scale(1) !important;
-    }
 }
-/* SLIDE 11 MOBILE MODAL STYLES */
+
+/* SLIDE 11 VALUES MODAL (Disciplined, etc.) */
 @media (max-width: 767px) {
     .mobile-modal-overlay {
         position: fixed !important;
@@ -877,9 +881,8 @@ a, button, .clickable, [data-cursor="pointer"] {
         opacity: 1 !important;
     }
 
-    /* Override inline styles with proper modal structure */
+    /* Header section */
     .mobile-modal-overlay > div:first-child {
-        /* Header section */
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
@@ -901,6 +904,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
+    /* CONSISTENT CLOSE BUTTON */
     .mobile-modal-close {
         background: transparent !important;
         border: none !important;
@@ -916,62 +920,47 @@ a, button, .clickable, [data-cursor="pointer"] {
         justify-content: center !important;
         border-radius: 0 !important;
         line-height: 1 !important;
-        transition: all 0.5s ease !important;
+        transition: all 0.3s ease !important;
         transform: rotate(0deg) !important;
     }
 
     .mobile-modal-close:hover {
         background: rgba(255, 255, 255, 0.1) !important;
         border-radius: 4px !important;
-        transform: scale(1.05) rotate(0deg) !important;
+        transform: scale(1.05) !important;
     }
 
-    /* Content section */
+    .mobile-modal-close:active {
+        transform: scale(1.05) rotate(90deg) !important;
+    }
+
+    /* CONSISTENT BODY STYLING */
     .mobile-modal-overlay > div:last-child {
         padding: 1.5rem !important;
         color: #FFFFFF !important;
+        font-family: 'Selecta', sans-serif !important;
         font-size: 18px !important;
-        line-height: 1.5 !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
         max-height: calc(100vh - 60px) !important;
         overflow-y: auto !important;
         background: #000000 !important;
         flex: 1 !important;
-        font-family: 'Selecta', sans-serif !important;
     }
 
-    /* Content text styling */
     .mobile-modal-overlay > div:last-child * {
         color: #FFFFFF !important;
+        font-family: 'Selecta', sans-serif !important;
         font-size: 18px !important;
-        line-height: 1.5 !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
     }
 }
-/* SLIDE 11 DESKTOP BRACKET FIX */
-@media (min-width: 768px) {
-    .expand-trigger {
-        white-space: nowrap !important;
-        display: inline-block !important;
-        min-width: auto !important;
-        width: auto !important;
-    }
-    
-    /* Ensure the trigger text doesn't wrap */
-    #expand-trigger-1,
-    #expand-trigger-2, 
-    #expand-trigger-3 {
-        white-space: nowrap !important;
-        overflow: visible !important;
-        text-overflow: clip !important;
-        display: inline-block !important;
-        width: auto !important;
-        min-width: 50px !important;
-    }
-}
 
-/* SLIDE 14 MOBILE MODAL STYLES */
+/* SLIDE 14 MODAL (Biography, Brands, Recognition) */
 @media (max-width: 767px) {
     .slide14-modal-overlay {
         position: fixed !important;
@@ -995,7 +984,6 @@ a, button, .clickable, [data-cursor="pointer"] {
        opacity: 1 !important;
     }
 
-    /* SLIDE 14 SINGLE COMPLETE MODAL CONTENT DEFINITION */
     .slide14-modal-content {
         background: #000000 !important;
         border-radius: 0 !important;
@@ -1008,20 +996,17 @@ a, button, .clickable, [data-cursor="pointer"] {
         overflow: hidden !important;
         display: flex !important;
         flex-direction: column !important;
-        /* ANIMATION PROPERTIES (from first block) */
         opacity: 0 !important;
         transform: scale(0.95) !important;
         transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                     transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
     }
 
-    /* When modal is active, animate content in */
-.modal-active .slide14-modal-content {
-    opacity: 1 !important;
-    transform: scale(1) !important;
-   }
+    .modal-active .slide14-modal-content {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
 
-    /* Header section */
     .slide14-modal-header {
         display: flex !important;
         justify-content: space-between !important;
@@ -1044,7 +1029,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
-    /* Close button */
+    /* CONSISTENT CLOSE BUTTON */
     .slide14-modal-close {
         background: transparent !important;
         border: none !important;
@@ -1060,17 +1045,21 @@ a, button, .clickable, [data-cursor="pointer"] {
         justify-content: center !important;
         border-radius: 0 !important;
         line-height: 1 !important;
-        transition: all 0.5s ease !important;
+        transition: all 0.3s ease !important;
         transform: rotate(0deg) !important;
     }
 
     .slide14-modal-close:hover {
         background: rgba(255, 255, 255, 0.1) !important;
         border-radius: 4px !important;
-        transform: scale(1.05) rotate(0deg) !important;
+        transform: scale(1.05) !important;
     }
 
-    /* Content/body section */
+    .slide14-modal-close:active {
+        transform: scale(1.05) rotate(90deg) !important;
+    }
+
+    /* CONSISTENT BODY STYLING */
     .slide14-modal-body {
         padding: 1.5rem !important;
         background: #000000 !important;
@@ -1078,23 +1067,25 @@ a, button, .clickable, [data-cursor="pointer"] {
         overflow-y: auto !important;
         max-height: calc(100vh - 60px) !important;
         color: #FFFFFF !important;
-        font-size: 18px !important;
-        line-height: 1.5 !important;
         font-family: 'Selecta', sans-serif !important;
+        font-size: 18px !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
     }
 
-    /* Inner text styling */
     .slide14-modal-body * {
         color: #FFFFFF !important;
+        font-family: 'Selecta', sans-serif !important;
         font-size: 18px !important;
-        line-height: 1.5 !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
     }
 }
- 
-/* SLIDE 18 MOBILE MODAL STYLES */
+
+/* SLIDE 18 MODAL (Ekta Bio) */
 @media (max-width: 767px) {
     .slide18-modal-overlay {
         position: fixed !important;
@@ -1154,6 +1145,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
+    /* CONSISTENT CLOSE BUTTON */
     .slide18-modal-close {
         background: transparent !important;
         border: none !important;
@@ -1169,20 +1161,21 @@ a, button, .clickable, [data-cursor="pointer"] {
         justify-content: center !important;
         border-radius: 0 !important;
         line-height: 1 !important;
-        transition: all 0.5s ease !important;
+        transition: all 0.3s ease !important;
         transform: rotate(0deg) !important;
     }
 
     .slide18-modal-close:hover {
         background: rgba(255, 255, 255, 0.1) !important;
         border-radius: 4px !important;
-        transform: scale(1.05) rotate(0deg) !important;
+        transform: scale(1.05) !important;
     }
 
     .slide18-modal-close:active {
-        transform: scale(1.05) rotate(360deg) !important;
+        transform: scale(1.05) rotate(90deg) !important;
     }
 
+    /* CONSISTENT BODY STYLING */
     .slide18-modal-body {
         padding: 1.5rem !important;
         background: #000000 !important;
@@ -1190,18 +1183,53 @@ a, button, .clickable, [data-cursor="pointer"] {
         overflow-y: auto !important;
         max-height: calc(100vh - 60px) !important;
         color: #FFFFFF !important;
-        font-size: 18px !important;
-        line-height: 1.5 !important;
         font-family: 'Selecta', sans-serif !important;
+        font-size: 18px !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
     }
 
     .slide18-modal-body * {
         color: #FFFFFF !important;
+        font-family: 'Selecta', sans-serif !important;
         font-size: 18px !important;
-        line-height: 1.5 !important;
+        line-height: 22px !important;
+        font-weight: normal !important;
         margin-bottom: 0.75rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
+    }
+
+    /* Keep links green in slide 18 */
+    .slide18-modal-body a,
+    .slide18-modal-body .link-2,
+    .slide18-modal-body .link-3 {
+        color: #32b550 !important;
+    }
+
+    .slide18-modal-body * a {
+        color: #32b550 !important;
+    }
+}
+
+/* DESKTOP BRACKET FIX - Keep this unchanged */
+@media (min-width: 768px) {
+    .expand-trigger {
+        white-space: nowrap !important;
+        display: inline-block !important;
+        min-width: auto !important;
+        width: auto !important;
+    }
+    
+    #expand-trigger-1,
+    #expand-trigger-2, 
+    #expand-trigger-3 {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        display: inline-block !important;
+        width: auto !important;
+        min-width: 50px !important;
     }
 }
 
