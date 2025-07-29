@@ -2471,3 +2471,51 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('✅ Complete mobile menu solution loaded');
     
 })();
+
+// Desktop logo click navigation - add this to your scripts.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run on desktop
+    if (window.innerWidth >= 768) {
+        const navBar = document.querySelector('.nav-bar');
+        
+        if (navBar) {
+            navBar.addEventListener('click', function(e) {
+                // Only respond to clicks on the left side (logo area)
+                const rect = navBar.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                
+                if (clickX < 150) { // Left 150px of nav bar = logo area
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('🏠 Logo clicked - navigating to home');
+                    
+                    // Calculate home slide position
+                    const homeSlide = document.getElementById('home');
+                    const wrapper = document.querySelector('.wrapper');
+                    
+                    if (homeSlide && wrapper) {
+                        const slides = Array.from(wrapper.children);
+                        const slideIndex = slides.findIndex(s => s.id === 'home');
+                        const slideWidth = window.innerWidth;
+                        const targetScroll = slideIndex * slideWidth;
+                        
+                        // Use GSAP to scroll to home
+                        if (typeof gsap !== 'undefined') {
+                            gsap.to(window, {
+                                scrollTo: targetScroll,
+                                duration: 1.2,
+                                ease: "power2.inOut"
+                            });
+                        }
+                        
+                        // Update URL
+                        history.pushState(null, '', '#home');
+                    }
+                }
+            });
+            
+            console.log('✅ Desktop logo navigation initialized');
+        }
+    }
+});
