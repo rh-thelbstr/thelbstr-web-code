@@ -906,7 +906,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         letter-spacing: -1px !important;
     }
 
-    /* CONSISTENT CLOSE BUTTON */
+    /* CONSISTENT CLOSE BUTTON - Fixed for Slide 11 */
     .mobile-modal-close {
         background: transparent !important;
         border: none !important;
@@ -917,6 +917,10 @@ a, button, .clickable, [data-cursor="pointer"] {
         padding: 0 !important;
         width: 40px !important;
         height: 40px !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
+        max-width: 40px !important;
+        max-height: 40px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -924,6 +928,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         line-height: 1 !important;
         transition: all 0.3s ease !important;
         transform: rotate(0deg) !important;
+        flex-shrink: 0 !important;
     }
 
     .mobile-modal-close:hover {
