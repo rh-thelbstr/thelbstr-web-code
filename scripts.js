@@ -452,7 +452,7 @@ class Slide14ModalSystem {
   constructor() {
     if (window.innerWidth >= 768) return; // desktop: keep existing layout
     this.triggers = [
-      { triggerClass: "bio-expand-trigger-4",    contentClass: "rh-bio-description", title: "Biography" },
+      { triggerClass: "bio-expand-trigger-4",    contentClass: "rh-bio-description", title: "Bio" },
       { triggerClass: "brands-expand-trigger-5", contentClass: "brands-list-mobile",  title: "Brands"    },
       { triggerClass: "recog-expand-trigger-6",  contentClass: "recog-list-mobile",   title: "Recognition" }
     ];
