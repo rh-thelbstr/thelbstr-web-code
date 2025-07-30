@@ -2536,3 +2536,267 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// All Films Thumbnail Animation - Random Frame Selection
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth < 768) return;
+    
+    console.log('🎬 All Films animation with random frame selection...');
+    
+    let attempts = 0;
+    const maxAttempts = 10;
+    let commercialAnimationTriggered = false;
+    let personalAnimationTriggered = false;
+    
+    // Define all film frame configurations
+    const filmConfigs = {
+        commercial: {
+            slideId: 'commercial-stories',
+            films: [
+                { prefix: 'mini-frame', name: 'Mini Cooper' },
+                { prefix: 'him-frame', name: 'Himalaya' },
+                { prefix: 'braun-frame', name: 'Braun' },
+                { prefix: 'adnoc-frame', name: 'ADNOC' },
+                { prefix: 'aldar-frame', name: 'Aldar' }
+            ]
+        },
+        personal: {
+            slideId: 'personal-stories',
+            films: [
+                { prefix: 'laundro-frame', name: 'Laundromat' },
+                { prefix: 'datsun-frame', name: 'Datsun' },
+                { prefix: 'karama-frame', name: 'Karama' },
+                { prefix: 'cbd-frame', name: 'CBD Part 1' },
+                { prefix: 'cbd2-frame', name: 'CBD Part 2' }
+            ]
+        }
+    };
+    
+    // Function to randomly select frames from each film
+    function getRandomFramesFromFilm(filmPrefix, totalFrames = 10, selectCount = 5) {
+        const availableNumbers = Array.from({length: totalFrames}, (_, i) => i + 1);
+        const selectedNumbers = [];
+        
+        // Randomly select frames
+        for (let i = 0; i < selectCount && availableNumbers.length > 0; i++) {
+            const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+            const selectedNumber = availableNumbers.splice(randomIndex, 1)[0];
+            selectedNumbers.push(selectedNumber);
+        }
+        
+        // Sort the selected numbers for cleaner logging
+        selectedNumbers.sort((a, b) => a - b);
+        
+        return selectedNumbers.map(num => 
+            document.querySelector(`.${filmPrefix}-${num}`)
+        ).filter(frame => frame !== null);
+    }
+    
+    function waitForElementsAndInit() {
+        attempts++;
+        console.log(`🔍 Attempt ${attempts}: Checking for film frames...`);
+        
+        // Test if any frames exist
+        const testFrames = [
+            document.querySelector('.mini-frame-1'),
+            document.querySelector('.him-frame-1'),
+            document.querySelector('.laundro-frame-1')
+        ];
+        
+        const foundFrames = testFrames.filter(frame => frame !== null);
+        
+        if (foundFrames.length === 0) {
+            console.log(`⏳ Elements not ready yet (attempt ${attempts}/${maxAttempts})`);
+            
+            if (attempts < maxAttempts) {
+                setTimeout(waitForElementsAndInit, 1000);
+                return;
+            } else {
+                console.log('❌ Gave up waiting for elements');
+                return;
+            }
+        }
+        
+        console.log('✅ Elements found! Initializing all film animations...');
+        initAllFilmAnimations();
+    }
+    
+    function initAllFilmAnimations() {
+        if (typeof gsap === 'undefined') {
+            console.log('⏳ GSAP not ready, waiting...');
+            setTimeout(initAllFilmAnimations, 500);
+            return;
+        }
+        
+        console.log('✅ GSAP ready, setting up all film animations...');
+        
+        // Setup each slide
+        setupSlideAnimation('commercial', filmConfigs.commercial);
+        setupSlideAnimation('personal', filmConfigs.personal);
+        
+        // Setup hover effects for all films
+        setupAllHoverEffects();
+        
+        console.log('✅ All film animations setup complete!');
+    }
+    
+    function setupSlideAnimation(slideType, config) {
+        console.log(`🎬 Setting up ${slideType} stories animation...`);
+        
+        // Find random frames for this slide
+        const allRandomFrames = [];
+        
+        config.films.forEach(film => {
+            const randomFrames = getRandomFramesFromFilm(film.prefix, 10, 5);
+            
+            // Log which frames were selected
+            const frameNumbers = randomFrames.map(frame => {
+                const className = frame.className.split(' ').find(cls => cls.includes(film.prefix));
+                return className ? className.split('-').pop() : '?';
+            });
+            
+            console.log(`  🎲 ${film.name}: Random frames ${frameNumbers.join(', ')}`);
+            allRandomFrames.push(...randomFrames);
+        });
+        
+        if (allRandomFrames.length === 0) {
+            console.log(`❌ No random frames found for ${slideType} stories`);
+            return;
+        }
+        
+        // Shuffle the frames so they don't animate in film order
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+        
+        const shuffledFrames = shuffleArray(allRandomFrames);
+        
+        console.log(`✅ Total ${slideType} random frames: ${allRandomFrames.length} (shuffled sequence)`);
+        
+        // Hide random frames initially
+        console.log(`🎯 Hiding random frames initially for ${slideType}...`);
+        gsap.set(allRandomFrames, { opacity: 0 });
+        
+        // Animation function
+        function animateRandomFrames() {
+            const animationFlag = slideType === 'commercial' ? 'commercialAnimationTriggered' : 'personalAnimationTriggered';
+            
+            if (window[animationFlag]) {
+                console.log(`🔄 ${slideType} animation already triggered, skipping`);
+                return;
+            }
+            
+            window[animationFlag] = true;
+            console.log(`🎬 Animating ${slideType} random frames in shuffled order...`);
+            
+            gsap.to(shuffledFrames, {
+                opacity: 1,
+                duration: 3.2,
+                stagger: 0.4,
+                ease: "power2.out",
+                onComplete: () => console.log(`✅ ${slideType} animation completed`)
+            });
+        }
+        
+        // Set up visibility detection
+        const slideElement = document.getElementById(config.slideId);
+        if (slideElement) {
+            console.log(`📱 Setting up Intersection Observer for ${slideType}...`);
+            
+            // Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    console.log(`👁️ ${slideType} slide visible: ${entry.isIntersecting} (ratio: ${entry.intersectionRatio})`);
+                    
+                    if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                        console.log(`🎯 ${slideType} slide is significantly visible!`);
+                        animateRandomFrames();
+                    }
+                });
+            }, {
+                threshold: [0, 0.5, 1.0]
+            });
+            
+            observer.observe(slideElement);
+            
+            // Manual polling as backup
+            function checkVisibility() {
+                const animationFlag = slideType === 'commercial' ? commercialAnimationTriggered : personalAnimationTriggered;
+                if (animationFlag) return;
+                
+                const rect = slideElement.getBoundingClientRect();
+                const isVisible = rect.left < window.innerWidth * 0.8 && rect.right > window.innerWidth * 0.2;
+                
+                if (isVisible) {
+                    console.log(`🎯 Polling detected ${slideType} slide is visible!`);
+                    animateRandomFrames();
+                }
+            }
+            
+            // Check every 500ms
+            const pollInterval = setInterval(() => {
+                checkVisibility();
+                const animationFlag = slideType === 'commercial' ? commercialAnimationTriggered : personalAnimationTriggered;
+                if (animationFlag) {
+                    clearInterval(pollInterval);
+                }
+            }, 500);
+            
+            // Check immediately if already visible
+            setTimeout(() => {
+                checkVisibility();
+            }, 100);
+        }
+    }
+    
+    function setupAllHoverEffects() {
+        console.log('🖱️ Setting up hover effects for all films...');
+        
+        // Get all film prefixes
+        const allFilms = [
+            ...filmConfigs.commercial.films,
+            ...filmConfigs.personal.films
+        ];
+        
+        allFilms.forEach(film => {
+            for (let i = 1; i <= 10; i++) {
+                const frame = document.querySelector(`.${film.prefix}-${i}`);
+                if (frame) {
+                    frame.addEventListener('mouseenter', function() {
+                        console.log(`🎯 Hovering ${film.prefix}-${i}`);
+                        gsap.to(frame, {
+                            scale: 1.05,
+                            filter: "brightness(1.1)",
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                    });
+                    
+                    frame.addEventListener('mouseleave', function() {
+                        gsap.to(frame, {
+                            scale: 1,
+                            filter: "brightness(1)",
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                    });
+                }
+            }
+        });
+        
+        console.log('✅ Hover effects setup complete for all films');
+    }
+    
+    // Global variables for animation flags
+    window.commercialAnimationTriggered = false;
+    window.personalAnimationTriggered = false;
+    
+    waitForElementsAndInit();
+});
+
+console.log('🎬 All Films random animation system loaded');
