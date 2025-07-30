@@ -1612,3 +1612,52 @@ a, button, .clickable, [data-cursor="pointer"] {
         padding: 0 !important; /* Remove any conflicting padding */
     }
 }
+
+/* Floating Lobsters CSS - Add this to your styles.css */
+
+.floating-lobster {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 100;
+    opacity: 0.8;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform, opacity;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    /* Make lobsters white using CSS filter */
+    filter: brightness(0) invert(1);
+}
+
+.floating-lobster img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+/* Home page logo hover effect - white logo on hover */
+#home .hero-logo-lockup-desktop:hover {
+    filter: brightness(0) invert(1) !important;
+    transition: filter 0.3s ease !important;
+}
+
+.floating-lobster:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.floating-lobster:active {
+    transform: scale(0.95);
+}
+
+/* Hide on mobile */
+@media (max-width: 767px) {
+    .floating-lobster {
+        display: none !important;
+    }
+}
