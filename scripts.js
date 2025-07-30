@@ -2800,3 +2800,213 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log('🎬 All Films random animation system loaded');
+
+// Floating Lobsters Animation - Home Slide Only
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run on desktop
+    if (window.innerWidth < 768) {
+        console.log('📱 Mobile detected - skipping floating lobsters');
+        return;
+    }
+    
+    console.log('🦞 Initializing floating lobsters for home slide...');
+    
+    let lobstersCreated = false;
+    const interactedLobsters = [];
+    const totalLobsters = 15;
+    
+    function createFloatingLobsters() {
+        if (lobstersCreated) return;
+        
+        const homeSlide = document.getElementById('home');
+        if (!homeSlide) {
+            console.log('❌ Home slide not found');
+            return;
+        }
+        
+        console.log('🦞 Creating floating lobsters...');
+        lobstersCreated = true;
+        
+        // Define zones for better distribution across the home slide
+        const zones = [
+            { x: [0.05, 0.25], y: [0.1, 0.3] },   // Top left
+            { x: [0.75, 0.95], y: [0.1, 0.3] },   // Top right
+            { x: [0.05, 0.25], y: [0.7, 0.9] },   // Bottom left
+            { x: [0.75, 0.95], y: [0.7, 0.9] },   // Bottom right
+            { x: [0.3, 0.7], y: [0.05, 0.25] },   // Top center
+            { x: [0.05, 0.25], y: [0.4, 0.6] },   // Left center
+            { x: [0.75, 0.95], y: [0.4, 0.6] },   // Right center
+            { x: [0.3, 0.7], y: [0.75, 0.95] },   // Bottom center
+            { x: [0.25, 0.5], y: [0.3, 0.7] },    // Center left
+            { x: [0.5, 0.75], y: [0.3, 0.7] },    // Center right
+            { x: [0.15, 0.35], y: [0.5, 0.7] },   // Mid left
+            { x: [0.65, 0.85], y: [0.5, 0.7] },   // Mid right
+            { x: [0.4, 0.6], y: [0.15, 0.35] },   // Upper center
+            { x: [0.4, 0.6], y: [0.65, 0.85] },   // Lower center
+            { x: [0.25, 0.75], y: [0.4, 0.6] }    // Wide center
+        ];
+        
+        // Create lobsters
+        for (let i = 0; i < totalLobsters; i++) {
+            createSingleLobster(homeSlide, i, zones[i % zones.length]);
+        }
+        
+        console.log(`✅ Created ${totalLobsters} floating lobsters`);
+    }
+    
+    function createSingleLobster(container, lobsterId, zone) {
+        const lobster = document.createElement('div');
+        lobster.className = 'floating-lobster';
+        lobster.setAttribute('data-lobster-id', lobsterId);
+        
+        // Use your lobster image
+        lobster.innerHTML = `<img src="https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/67fe690c37d314763d659826_lbstr-black-cursor.png" alt="Floating Lobster" style="width: 100%; height: 100%; object-fit: contain;">`;
+        
+        // Style the lobster
+        const randomSize = 25 + Math.random() * 20; // 25-45px
+        lobster.style.cssText = `
+            position: absolute;
+            width: ${randomSize}px;
+            height: ${randomSize}px;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 0.8;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform, opacity;
+        `;
+        
+        // Position within the zone
+        const containerRect = container.getBoundingClientRect();
+        const xRange = zone.x;
+        const yRange = zone.y;
+        const randomX = (xRange[0] + Math.random() * (xRange[1] - xRange[0])) * containerRect.width;
+        const randomY = (yRange[0] + Math.random() * (yRange[1] - yRange[0])) * containerRect.height;
+        
+        lobster.style.left = randomX + 'px';
+        lobster.style.top = randomY + 'px';
+        
+        // Add to container
+        container.appendChild(lobster);
+        
+        // Setup floating animation
+        setupLobsterAnimation(lobster, lobsterId);
+        
+        // Setup interaction
+        setupLobsterInteraction(lobster, lobsterId);
+    }
+    
+    function setupLobsterAnimation(lobster, lobsterId) {
+        const startTime = Date.now() + (lobsterId * 200); // Stagger start times
+        const duration = 8000 + Math.random() * 6000; // 8-14 seconds
+        
+        // Movement properties
+        const amplitudeX = 30 + Math.random() * 80; // 30-110px horizontal
+        const amplitudeY = 20 + Math.random() * 60; // 20-80px vertical
+        const useHorizontal = Math.random() > 0.2; // 80% use both directions
+        
+        function animateLobster() {
+            // Stop if lobster was removed
+            if (!lobster.isConnected || !document.getElementById('home')) return;
+            
+            const now = Date.now();
+            const elapsed = now - startTime;
+            const progress = (elapsed % duration) / duration; // 0 to 1, repeating
+            
+            // Calculate smooth floating movement
+            const xOffset = useHorizontal ? 
+                Math.sin(progress * Math.PI * 2) * amplitudeX : 
+                Math.sin(progress * Math.PI * 2 + Math.PI/4) * (amplitudeX * 0.3);
+                
+            const yOffset = Math.sin(progress * Math.PI * 2 + Math.PI/3) * amplitudeY;
+            
+            // Apply smooth transformation
+            lobster.style.transform = `translate(${xOffset}px, ${yOffset}px) rotate(${xOffset * 0.05}deg)`;
+            
+            // Continue animation
+            requestAnimationFrame(animateLobster);
+        }
+        
+        // Start animation
+        animateLobster();
+    }
+    
+    function setupLobsterInteraction(lobster, lobsterId) {
+        // Add hover listener for removal (instead of click)
+        lobster.addEventListener('mouseenter', handleHover);
+        
+        function handleHover() {
+            // Prevent multiple interactions
+            if (interactedLobsters.includes(lobsterId)) return;
+            
+            console.log(`🦞 Lobster ${lobsterId} hovered - removing!`);
+            
+            // Add to interacted list
+            interactedLobsters.push(lobsterId);
+            
+            // Disappear animation
+            lobster.style.opacity = '0';
+            lobster.style.transform = 'scale(0.8) rotate(45deg) translate(0px, -20px)';
+            lobster.style.pointerEvents = 'none';
+            
+            // Remove after animation
+            setTimeout(() => {
+                if (lobster.parentNode) {
+                    lobster.parentNode.removeChild(lobster);
+                }
+            }, 500);
+        }
+    }
+    
+    // Setup visibility detection for home slide
+    function setupHomeSlideDetection() {
+        const homeSlide = document.getElementById('home');
+        if (!homeSlide) {
+            setTimeout(setupHomeSlideDetection, 1000);
+            return;
+        }
+        
+        // Create intersection observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                    console.log('🏠 Home slide is visible - creating lobsters');
+                    createFloatingLobsters();
+                }
+            });
+        }, {
+            threshold: [0.5, 1.0]
+        });
+        
+        observer.observe(homeSlide);
+        
+        // Also check immediately if already on home
+        setTimeout(() => {
+            const rect = homeSlide.getBoundingClientRect();
+            const isVisible = rect.left < window.innerWidth * 0.8 && rect.right > window.innerWidth * 0.2;
+            if (isVisible) {
+                console.log('🏠 Already on home slide - creating lobsters');
+                createFloatingLobsters();
+            }
+        }, 1000);
+    }
+    
+    // Wait for elements to load
+    setTimeout(setupHomeSlideDetection, 2000);
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth < 768) {
+            // Remove all lobsters on mobile
+            const lobsters = document.querySelectorAll('.floating-lobster');
+            lobsters.forEach(lobster => {
+                if (lobster.parentNode) {
+                    lobster.parentNode.removeChild(lobster);
+                }
+            });
+            lobstersCreated = false;
+        }
+    });
+});
+
+console.log('🦞 Floating lobsters script loaded for home slide');
