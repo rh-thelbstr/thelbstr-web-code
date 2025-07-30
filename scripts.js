@@ -2519,3 +2519,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// Fix Image Nation link interference with video modal
+document.addEventListener('DOMContentLoaded', () => {
+    // Find the Image Nation link specifically
+    const imageNationLink = document.querySelector('a[href*="image-nation"], a[href*="imagenation"]');
+    
+    if (imageNationLink) {
+        imageNationLink.addEventListener('click', function(e) {
+            // Stop the event from bubbling up to any parent elements
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            // Let the link work normally (open in new tab)
+            console.log('🔗 Image Nation link clicked - preventing modal interference');
+        });
+    }
+});
