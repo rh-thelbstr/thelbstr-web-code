@@ -3011,7 +3011,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 console.log('🦞 Floating lobsters script loaded for home slide');
 
-<script>
 // Slide 2 Text Animation - Film Festival Cinematic Style
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on desktop
@@ -3168,9 +3167,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log('🎬 Slide 2 text animation system loaded');
-</script>
 
-<script>
 // Slide 4 Screenplay Typewriter Animation - Right Side Dialogue Only
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on desktop
@@ -3377,9 +3374,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log('📝 Slide 4 right-side typewriter animation system loaded');
-</script>
 
-<script>
 // Slide 6 Ekta Animation - WORKING VERSION
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on desktop
