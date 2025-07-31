@@ -1661,3 +1661,113 @@ a, button, .clickable, [data-cursor="pointer"] {
         display: none !important;
     }
 }
+
+/* Global FOUC Prevention for Animated Slides - Add to styles.css */
+
+/* Hide elements initially to prevent flash before animations */
+@media (min-width: 768px) {
+    /* Slide 2 - The Beginning */
+    #the-beginning .date-column,
+    #the-beginning .headline-block,
+    #the-beginning .body-text-block-may2015 {
+        opacity: 0;
+    }
+    
+    /* Slide 4 - Screenplay */
+    #screenplay .dialogue-right * {
+        opacity: 0;
+
+    }
+    
+    /* Slide 6 – Ekta FOUC prevention */
+  #ekta #heading-3,
+  #ekta .slide-6-content *,
+  #ekta [class*="content"] * {
+    opacity: 0;
+  }
+  
+  /* Slide 7 – Stranger: hide all dialogue lines + the note */
+  #stranger .slide-7-dialogue > * ,
+  #stranger .slide-7-note {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  /* Slide 9 – FOUC prevention */
+  #partners .slide-9-hero-image {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  #partners .slide-9-date-column,
+  #partners .slide-9-text {
+    opacity: 0;
+  }
+  
+  /* Slide 10 – FOUC prevention */
+  #the-lbstr .slide-10-credits-ekta,
+  #the-lbstr .slide-10-credits-robert,
+  #the-lbstr .slide-10-copy {
+    opacity: 0;
+}
+  
+   /* Slide 13 – FOUC prevention */
+  #strategy .slide-13-headline,
+  #strategy .slide-13-note,
+  #strategy .slide-13-bodycopy {
+    opacity: 0;
+    
+}
+
+ /* Slide 15 – FOUC prevention */
+  #problem-solving .slide-15-headline, 
+  #problem-solving #challenge-1,
+  #problem-solving #challenge-2,
+  #problem-solving #challenge-3,
+  #problem-solving #challenge-4,
+  #problem-solving #challenge-5,
+  #problem-solving #challenge-6,
+  #problem-solving #challenge-7,
+  #problem-solving #challenge-8,
+  #problem-solving #challenge-9,
+  #problem-solving #challenge-10,
+  #problem-solving #challenge-11,
+  #problem-solving #challenge-12,
+  #problem-solving #challenge-13,
+  #problem-solving #challenge-14,
+  #problem-solving #challenge-note {
+    opacity: 0;
+    
+}
+
+/* Slide 16 – FOUC prevention */
+#storytelling #story-heading-1,
+#storytelling #story-heading-2,
+#storytelling .slide-16-note {
+  opacity: 0;
+
+}
+
+/* Slide 17 – FOUC prevention */
+#ideas .slide-17-copy,
+#ideas .slide-17-note {
+  opacity: 0;
+}
+
+/* Slide 18 – FOUC prevention */
+#the-storyteller .slide-18-copy {
+  opacity: 0;
+}
+
+/* Mobile - show everything normally (no animations) */
+@media (max-width: 767px) {
+    #the-beginning .date-column,
+    #the-beginning .headline-block,
+    #the-beginning .body-text-block-may2015,
+    #screenplay .dialogue-right *,
+    #ekta #heading-3,
+    #ekta .slide-6-content,
+    #ekta .slide-6-content *,
+    #ekta [class*="content"] * {
+        opacity: 1 !important;
+    }
+}
