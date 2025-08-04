@@ -3010,3 +3010,56 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log('🦞 Floating lobsters script loaded for home slide');
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run on mobile
+    if (window.innerWidth >= 768) return;
+    const burger = document.querySelector('.nav-burger-icon-black');
+    if (!burger) return;
+
+    burger.addEventListener('click', function(e) {
+      // look for any active modal overlay
+      const svc21 = document.querySelector('.services-modal-overlay.modal-active');
+      const val11 = document.querySelector('.mobile-modal-overlay.modal-active');          // slide-11 values
+      const s14  = document.querySelector('#slide14-modal-overlay.modal-active');          // slide-14 bio/brands/recog
+      const s18  = document.querySelector('.slide18-modal-overlay.modal-active');          // slide-18 Ekta bio
+
+      if (svc21 || val11 || s14 || s18) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        // close the right one
+        if (svc21) {
+          window.servicesToggleSystem?.closeActiveService();
+        }
+        else if (val11) {
+          document.querySelector('.mobile-modal-close')?.click();
+        }
+        else if (s14) {
+          document.querySelector('.slide14-modal-close')?.click();
+        }
+        else if (s18) {
+          document.querySelector('.slide18-modal-close')?.click();
+        }
+
+        console.log('✔️ Closed active modal instead of toggling menu');
+      }
+    }, true);
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    // only on mobile
+    if (window.innerWidth >= 768) return;
+
+    const burger = document.querySelector('.nav-burger-icon-black');
+    if (!burger) return;
+
+    // reuse your proven selector
+    function syncBurger() {
+      const anyOpen = !!document.querySelector('[class*="-modal-overlay"].modal-active');
+      burger.classList.toggle('menu-open', anyOpen);
+    }
+
+    // run once immediately, then every 100ms
+    syncBurger();
+    setInterval(syncBurger, 100);
+  });
