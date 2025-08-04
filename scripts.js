@@ -3139,27 +3139,31 @@ document.addEventListener('DOMContentLoaded', function() {
             touch-action: manipulation;
         `;
         
-        // Position within the zone (ensure stays within viewport)
+        // Position within the zone (ensure stays within viewport - FIXED)
         const containerRect = container.getBoundingClientRect();
         const xRange = zone.x;
         const yRange = zone.y;
         
         // Calculate position but ensure lobster stays within bounds
         const lobsterSize = randomSize;
-        const maxX = Math.min(containerRect.width - lobsterSize, window.innerWidth - lobsterSize);
-        const maxY = Math.min(containerRect.height - lobsterSize, window.innerHeight - lobsterSize);
+        const safeMargin = 10; // Extra safety margin
         
-        const randomX = Math.min(
-            (xRange[0] + Math.random() * (xRange[1] - xRange[0])) * containerRect.width,
-            maxX
-        );
-        const randomY = Math.min(
-            (yRange[0] + Math.random() * (yRange[1] - yRange[0])) * containerRect.height,
-            maxY
-        );
+        // Use viewport width instead of container width to prevent overflow
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
         
-        lobster.style.left = Math.max(0, randomX) + 'px';
-        lobster.style.top = Math.max(0, randomY) + 'px';
+        const maxX = viewportWidth - lobsterSize - safeMargin;
+        const maxY = viewportHeight - lobsterSize - safeMargin;
+        
+        // Calculate position within zone but constrain to safe bounds
+        const targetX = (xRange[0] + Math.random() * (xRange[1] - xRange[0])) * viewportWidth;
+        const targetY = (yRange[0] + Math.random() * (yRange[1] - yRange[0])) * viewportHeight;
+        
+        const safeX = Math.max(safeMargin, Math.min(targetX, maxX));
+        const safeY = Math.max(safeMargin, Math.min(targetY, maxY));
+        
+        lobster.style.left = safeX + 'px';
+        lobster.style.top = safeY + 'px';
         
         // Add to container
         container.appendChild(lobster);
@@ -3175,9 +3179,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const startTime = Date.now() + (lobsterId * 150); // Stagger start times
         const duration = 6000 + Math.random() * 4000; // 6-10 seconds (faster than desktop)
         
-        // Smaller movement for mobile
-        const amplitudeX = 20 + Math.random() * 40; // 20-60px horizontal
-        const amplitudeY = 15 + Math.random() * 35; // 15-50px vertical
+        // Much smaller movement for mobile to prevent overflow
+        const amplitudeX = 10 + Math.random() * 20; // 10-30px horizontal (REDUCED)
+        const amplitudeY = 8 + Math.random() * 15; // 8-23px vertical (REDUCED)
         const useHorizontal = Math.random() > 0.3; // 70% use both directions
         
         function animateMobileLobster() {
@@ -3188,15 +3192,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const elapsed = now - startTime;
             const progress = (elapsed % duration) / duration; // 0 to 1, repeating
             
-            // Calculate smooth floating movement (gentler for mobile)
+            // Get current position
+            const currentLeft = parseFloat(lobster.style.left) || 0;
+            const currentTop = parseFloat(lobster.style.top) || 0;
+            
+            // Calculate smooth floating movement (much gentler for mobile)
             const xOffset = useHorizontal ? 
                 Math.sin(progress * Math.PI * 2) * amplitudeX : 
                 Math.sin(progress * Math.PI * 2 + Math.PI/4) * (amplitudeX * 0.4);
                 
             const yOffset = Math.sin(progress * Math.PI * 2 + Math.PI/3) * amplitudeY;
             
-            // Apply smooth transformation (less rotation for mobile)
-            lobster.style.transform = `translate(${xOffset}px, ${yOffset}px) rotate(${xOffset * 0.02}deg)`;
+            // Ensure animation doesn't push lobster outside bounds
+            const finalX = currentLeft + xOffset;
+            const finalY = currentTop + yOffset;
+            const lobsterSize = parseFloat(lobster.style.width) || 25;
+            const safeMargin = 10;
+            
+            const constrainedX = Math.max(safeMargin, Math.min(finalX, window.innerWidth - lobsterSize - safeMargin));
+            const constrainedY = Math.max(safeMargin, Math.min(finalY, window.innerHeight - lobsterSize - safeMargin));
+            
+            // Apply constrained transformation
+            lobster.style.transform = `translate(${constrainedX - currentLeft}px, ${constrainedY - currentTop}px) rotate(${xOffset * 0.01}deg)`;
             
             // Continue animation
             requestAnimationFrame(animateMobileLobster);
