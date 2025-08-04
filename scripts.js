@@ -3074,6 +3074,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('📱🦞 Initializing mobile floating lobsters for home slide...');
     
+    // Fix mobile viewport overflow immediately
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
+    
     let lobstersCreated = false;
     const interactedLobsters = [];
     const totalLobsters = 10; // Slightly fewer for mobile
@@ -3117,8 +3121,8 @@ document.addEventListener('DOMContentLoaded', function() {
         lobster.className = 'mobile-floating-lobster';
         lobster.setAttribute('data-lobster-id', lobsterId);
         
-        // Use your lobster image
-        lobster.innerHTML = `<img src="https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/67fe690c37d314763d659826_lbstr-black-cursor.png" alt="Floating Lobster" style="width: 100%; height: 100%; object-fit: contain;">`;
+        // Use white lobster image
+        lobster.innerHTML = `<img src="https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/6848235c72d6106a5f898c68_LTR25_Icons_Final__Lobster2.png" alt="Floating Lobster" style="width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1);">`;
         
         // Style the lobster - smaller for mobile
         const randomSize = 20 + Math.random() * 15; // 20-35px (smaller than desktop)
@@ -3135,15 +3139,27 @@ document.addEventListener('DOMContentLoaded', function() {
             touch-action: manipulation;
         `;
         
-        // Position within the zone
+        // Position within the zone (ensure stays within viewport)
         const containerRect = container.getBoundingClientRect();
         const xRange = zone.x;
         const yRange = zone.y;
-        const randomX = (xRange[0] + Math.random() * (xRange[1] - xRange[0])) * containerRect.width;
-        const randomY = (yRange[0] + Math.random() * (yRange[1] - yRange[0])) * containerRect.height;
         
-        lobster.style.left = randomX + 'px';
-        lobster.style.top = randomY + 'px';
+        // Calculate position but ensure lobster stays within bounds
+        const lobsterSize = randomSize;
+        const maxX = Math.min(containerRect.width - lobsterSize, window.innerWidth - lobsterSize);
+        const maxY = Math.min(containerRect.height - lobsterSize, window.innerHeight - lobsterSize);
+        
+        const randomX = Math.min(
+            (xRange[0] + Math.random() * (xRange[1] - xRange[0])) * containerRect.width,
+            maxX
+        );
+        const randomY = Math.min(
+            (yRange[0] + Math.random() * (yRange[1] - yRange[0])) * containerRect.height,
+            maxY
+        );
+        
+        lobster.style.left = Math.max(0, randomX) + 'px';
+        lobster.style.top = Math.max(0, randomY) + 'px';
         
         // Add to container
         container.appendChild(lobster);
