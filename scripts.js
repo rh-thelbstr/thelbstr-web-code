@@ -3063,3 +3063,222 @@ document.addEventListener('DOMContentLoaded', function() {
     syncBurger();
     setInterval(syncBurger, 100);
   });
+
+// Mobile Floating Lobsters Animation - Home Slide Only
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run on mobile
+    if (window.innerWidth >= 768) {
+        console.log('💻 Desktop detected - skipping mobile floating lobsters');
+        return;
+    }
+    
+    console.log('📱🦞 Initializing mobile floating lobsters for home slide...');
+    
+    let lobstersCreated = false;
+    const interactedLobsters = [];
+    const totalLobsters = 10; // Slightly fewer for mobile
+    
+    function createMobileFloatingLobsters() {
+        if (lobstersCreated) return;
+        
+        const homeSlide = document.getElementById('home');
+        if (!homeSlide) {
+            console.log('❌ Home slide not found');
+            return;
+        }
+        
+        console.log('📱🦞 Creating mobile floating lobsters...');
+        lobstersCreated = true;
+        
+        // Mobile-optimized zones for portrait layout
+        const mobileZones = [
+            { x: [0.05, 0.3], y: [0.1, 0.25] },   // Top left
+            { x: [0.7, 0.95], y: [0.1, 0.25] },   // Top right
+            { x: [0.05, 0.3], y: [0.75, 0.9] },   // Bottom left
+            { x: [0.7, 0.95], y: [0.75, 0.9] },   // Bottom right
+            { x: [0.35, 0.65], y: [0.05, 0.2] },  // Top center
+            { x: [0.05, 0.3], y: [0.4, 0.6] },    // Left center
+            { x: [0.7, 0.95], y: [0.4, 0.6] },    // Right center
+            { x: [0.35, 0.65], y: [0.8, 0.95] },  // Bottom center
+            { x: [0.15, 0.45], y: [0.3, 0.5] },   // Mid left
+            { x: [0.55, 0.85], y: [0.3, 0.5] }    // Mid right
+        ];
+        
+        // Create lobsters
+        for (let i = 0; i < totalLobsters; i++) {
+            createSingleMobileLobster(homeSlide, i, mobileZones[i % mobileZones.length]);
+        }
+        
+        console.log(`✅ Created ${totalLobsters} mobile floating lobsters`);
+    }
+    
+    function createSingleMobileLobster(container, lobsterId, zone) {
+        const lobster = document.createElement('div');
+        lobster.className = 'mobile-floating-lobster';
+        lobster.setAttribute('data-lobster-id', lobsterId);
+        
+        // Use your lobster image
+        lobster.innerHTML = `<img src="https://cdn.prod.website-files.com/67f68e2e70bcb6b026fb5829/67fe690c37d314763d659826_lbstr-black-cursor.png" alt="Floating Lobster" style="width: 100%; height: 100%; object-fit: contain;">`;
+        
+        // Style the lobster - smaller for mobile
+        const randomSize = 20 + Math.random() * 15; // 20-35px (smaller than desktop)
+        lobster.style.cssText = `
+            position: absolute;
+            width: ${randomSize}px;
+            height: ${randomSize}px;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 0.7;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform, opacity;
+            touch-action: manipulation;
+        `;
+        
+        // Position within the zone
+        const containerRect = container.getBoundingClientRect();
+        const xRange = zone.x;
+        const yRange = zone.y;
+        const randomX = (xRange[0] + Math.random() * (xRange[1] - xRange[0])) * containerRect.width;
+        const randomY = (yRange[0] + Math.random() * (yRange[1] - yRange[0])) * containerRect.height;
+        
+        lobster.style.left = randomX + 'px';
+        lobster.style.top = randomY + 'px';
+        
+        // Add to container
+        container.appendChild(lobster);
+        
+        // Setup floating animation
+        setupMobileLobsterAnimation(lobster, lobsterId);
+        
+        // Setup interaction
+        setupMobileLobsterInteraction(lobster, lobsterId);
+    }
+    
+    function setupMobileLobsterAnimation(lobster, lobsterId) {
+        const startTime = Date.now() + (lobsterId * 150); // Stagger start times
+        const duration = 6000 + Math.random() * 4000; // 6-10 seconds (faster than desktop)
+        
+        // Smaller movement for mobile
+        const amplitudeX = 20 + Math.random() * 40; // 20-60px horizontal
+        const amplitudeY = 15 + Math.random() * 35; // 15-50px vertical
+        const useHorizontal = Math.random() > 0.3; // 70% use both directions
+        
+        function animateMobileLobster() {
+            // Stop if lobster was removed
+            if (!lobster.isConnected || !document.getElementById('home')) return;
+            
+            const now = Date.now();
+            const elapsed = now - startTime;
+            const progress = (elapsed % duration) / duration; // 0 to 1, repeating
+            
+            // Calculate smooth floating movement (gentler for mobile)
+            const xOffset = useHorizontal ? 
+                Math.sin(progress * Math.PI * 2) * amplitudeX : 
+                Math.sin(progress * Math.PI * 2 + Math.PI/4) * (amplitudeX * 0.4);
+                
+            const yOffset = Math.sin(progress * Math.PI * 2 + Math.PI/3) * amplitudeY;
+            
+            // Apply smooth transformation (less rotation for mobile)
+            lobster.style.transform = `translate(${xOffset}px, ${yOffset}px) rotate(${xOffset * 0.02}deg)`;
+            
+            // Continue animation
+            requestAnimationFrame(animateMobileLobster);
+        }
+        
+        // Start animation
+        animateMobileLobster();
+    }
+    
+    function setupMobileLobsterInteraction(lobster, lobsterId) {
+        // Add touch/tap listener for removal
+        lobster.addEventListener('touchstart', handleTouch, { passive: false });
+        lobster.addEventListener('click', handleTouch); // Fallback for non-touch
+        
+        function handleTouch(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Prevent multiple interactions
+            if (interactedLobsters.includes(lobsterId)) return;
+            
+            console.log(`📱🦞 Mobile lobster ${lobsterId} tapped - removing!`);
+            
+            // Add to interacted list
+            interactedLobsters.push(lobsterId);
+            
+            // Mobile-friendly disappear animation
+            lobster.style.opacity = '0';
+            lobster.style.transform = 'scale(0.6) rotate(30deg) translate(0px, -15px)';
+            lobster.style.pointerEvents = 'none';
+            
+            // Add a little vibration feedback if available
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+            
+            // Remove after animation
+            setTimeout(() => {
+                if (lobster.parentNode) {
+                    lobster.parentNode.removeChild(lobster);
+                }
+            }, 400);
+        }
+    }
+    
+    // Setup visibility detection for home slide
+    function setupMobileHomeSlideDetection() {
+        const homeSlide = document.getElementById('home');
+        if (!homeSlide) {
+            setTimeout(setupMobileHomeSlideDetection, 1000);
+            return;
+        }
+        
+        // Mobile uses scroll position detection (since no horizontal scrolling)
+        function checkMobileHomeVisibility() {
+            if (lobstersCreated) return;
+            
+            const rect = homeSlide.getBoundingClientRect();
+            const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > window.innerHeight * 0.2;
+            
+            if (isVisible) {
+                console.log('📱🏠 Home slide is visible on mobile - creating lobsters');
+                createMobileFloatingLobsters();
+            }
+        }
+        
+        // Check on scroll
+        window.addEventListener('scroll', checkMobileHomeVisibility, { passive: true });
+        
+        // Check immediately
+        setTimeout(checkMobileHomeVisibility, 500);
+        
+        console.log('✅ Mobile home slide detection setup');
+    }
+    
+    // Wait for elements to load
+    setTimeout(setupMobileHomeSlideDetection, 1500);
+    
+    // Handle orientation change
+    window.addEventListener('orientationchange', function() {
+        setTimeout(() => {
+            // Recreate lobsters after orientation change
+            const existingLobsters = document.querySelectorAll('.mobile-floating-lobster');
+            existingLobsters.forEach(lobster => {
+                if (lobster.parentNode) {
+                    lobster.parentNode.removeChild(lobster);
+                }
+            });
+            
+            // Reset and recreate
+            lobstersCreated = false;
+            interactedLobsters.length = 0;
+            
+            if (window.innerWidth < 768) {
+                createMobileFloatingLobsters();
+            }
+        }, 500);
+    });
+});
+
+console.log('📱🦞 Mobile floating lobsters script loaded for home slide');
