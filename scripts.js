@@ -3320,10 +3320,8 @@ console.log('📱🦞 Mobile floating lobsters script loaded for home slide');
 // Add this to your Webflow Body Code (Before Close Body Tag)
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Only run on desktop where horizontal scrolling works
-    if (window.innerWidth < 768) return;
-    
-    console.log('🔧 Initializing SEO-friendly URLs while preserving UX...');
+    // Now works on both desktop and mobile
+    console.log('🔧 Initializing SEO-friendly URLs for both desktop and mobile...');
     
     // Map of sections to their SEO-friendly URLs (Based on content structure)
     const sectionURLMap = {
@@ -3361,29 +3359,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // SEO meta data based on actual website content - UPDATED
     const seoData = {
         '/': {
-            title: 'The LBSTR - Strategy & Storytelling Studio | Dubai',
+            title: 'The LBSTR | Strategy & Storytelling Studio',
             description: 'Meet Ekta & Robert, a filmmaker-strategist duo with 25 years of award-winning expertise. Strategy and storytelling studio based in Dubai.',
             keywords: 'strategy storytelling studio dubai, filmmaker strategist duo, ekta saran robert habib, brand strategy storytelling, dubai creative studio'
         },
         '/strategy': {
-            title: 'Brand Strategy & Problem Solving | The LBSTR Studio',
+            title: 'Brand and Integrated Comms Strategy | The LBSTR ',
             description: 'Strategic consulting by The LBSTR strategy and storytelling studio. We help brands answer challenges through repeated prodding, not just prompting. Dubai-based, globally minded.',
             keywords: 'brand strategy dubai, strategic consulting, brand challenges, problem solving, marketing strategy, strategy storytelling studio'
         },
         '/storytelling': {
-            title: 'Brand Storytelling & Film Direction | Ekta Saran | The LBSTR',
+            title: 'Cinematic Storytelling & Film Direction | The LBSTR',
             description: 'Award-winning filmmaker Ekta Saran creates memorable brand stories. The LBSTR strategy and storytelling studio: commercial films for Mini Cooper, ADNOC, and personal films winning festivals.',
             keywords: 'brand storytelling, film director dubai, strategy storytelling studio, ekta saran director, commercial films, creative storytelling'
         },
         '/services': {
-            title: 'Strategy & Storytelling Services | The LBSTR Studio Dubai',
+            title: 'Services | The LBSTR',
             description: 'Comprehensive services from The LBSTR strategy and storytelling studio: brand strategy, creative strategy, integrated communications, scriptwriting, and film direction.',
             keywords: 'strategy storytelling services, brand strategy services, scriptwriting, film direction, integrated communications, dubai studio'
         },
         '/contact': {
-            title: 'Contact The LBSTR | Strategy & Storytelling Studio | hello@thelbstr.com',
+            title: 'Contact | The LBSTR',
             description: 'Work with The LBSTR strategy and storytelling studio. Contact filmmaker-strategist duo Ekta & Robert for brand strategy and storytelling. (Or ask for a book recommendation.)',
             keywords: 'contact strategy storytelling studio, brand strategy consultation, film direction services, hello@thelbstr.com, dubai studio'
+        },
+        '/the-lbstr': {
+            title: 'The LBSTR Story | Strategy & Storytelling Studio',
+            description: 'A strategist-filmmaker duo with 25 years of award-winning expertise in pushing brand decision making and storytelling to where it should go.',
+            keywords: 'about the lbstr, filmmaker strategist duo, ekta saran robert habib, dubai studio story, obsessed disciplined kind'
         }
     };
     
@@ -3395,7 +3398,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update URL with proper history (enables forward/back support)
         const currentURL = window.location.pathname;
         if (currentURL !== newURL) {
-            history.pushState({ section: sectionId }, '', newURL);
+            history.replaceState({ section: sectionId }, '', newURL);
         }
         
         // Update meta tags for SEO
@@ -3476,16 +3479,25 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSEOForSection(visibleSection);
     }
     
-    // Handle direct URL access (when someone visits /strategy directly)
+    // Enhanced direct URL access handler
     function handleDirectURLAccess() {
         const currentPath = window.location.pathname;
-        const targetSection = urlSectionMap[currentPath];
         
+        // If we're on home page, check for redirect intent
+        if (currentPath === '/') {
+            // Let the redirect handler manage navigation
+            setTimeout(() => {
+                if (window.lbstrRedirectHandler) {
+                    window.lbstrRedirectHandler.navigateToIntendedSection();
+                }
+            }, 1000);
+            return;
+        }
+        
+        // Handle other direct access scenarios
+        const targetSection = urlSectionMap[currentPath];
         if (targetSection && document.getElementById(targetSection)) {
             console.log(`🔗 Direct URL access: ${currentPath} → ${targetSection}`);
-            
-            // Let your existing navigation system handle the scroll
-            // We just update the SEO silently
             setTimeout(() => {
                 updateSEOForSection(targetSection);
             }, 1000);
@@ -3538,7 +3550,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    console.log('✅ SEO enhancement active - UX preserved!');
+    console.log('✅ SEO enhancement active - works on both desktop and mobile!');
 });
 
 // Add enhanced structured data for local business and services
@@ -3575,8 +3587,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Brand Strategy",
-                        "description": "Strategic consulting to help brands answer complex challenges",
+                        "name": "Integrated Strategy",
+                        "description": "Strategic marketing consulting to help brands answer complex challenges",
                         "url": "https://thelbstr.com/strategy"
                     }
                 },
@@ -3584,7 +3596,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     "@type": "Offer", 
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Brand Storytelling",
+                        "name": "Cinematic Storytelling",
                         "description": "Compelling narratives that connect with audiences",
                         "url": "https://thelbstr.com/storytelling"
                     }
@@ -3620,7 +3632,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "name": "What makes The LBSTR different from other studios?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "We're a strategy and storytelling studio - a filmmaker-strategist duo combining 25 years of expertise. Ekta is a self-taught film director with wins at Top Shorts Film Festival, and Robert managed Maserati across 12 markets and established the first strategy division in C2 Communication's 35-year history. We believe the only bad stories are the ones left untold."
+                    "text": "We're a strategy and storytelling studio - a filmmaker-strategist duo combining 25 years of expertise. Ekta is a self-taught film director with wins at Top Shorts Film Festival, and Robert managed the Maserati brand across 12 markets, led media and technology divisions and established the first strategy division in C2 Communication's 35-year history. We believe the only bad stories are the ones left untold."
                 }
             },
             {
