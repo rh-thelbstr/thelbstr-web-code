@@ -3315,3 +3315,347 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log('📱🦞 Mobile floating lobsters script loaded for home slide');
+
+'/the-lbstr': {
+            title: 'About The LBSTR | Filmmaker-Strategist Duo | Dubai Studio',
+            description: 'A strategist-filmmaker duo with 25 years of award-winning expertise in pushing brand decision making and storytelling to where it should go.',
+            keywords: 'about the lbstr, filmmaker strategist duo, ekta saran robert habib, dubai studio story, obsessed disciplined kind'
+        },// SEO Fix - Preserve Your Horizontal Scroll Experience
+// Add this to your Webflow Body Code (Before Close Body Tag)
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run on desktop where horizontal scrolling works
+    if (window.innerWidth < 768) return;
+    
+    console.log('🔧 Initializing SEO-friendly URLs while preserving UX...');
+    
+    // Map of sections to their SEO-friendly URLs (Based on content structure)
+    const sectionURLMap = {
+        'home': '/',
+        'the-beginning': '/the-lbstr',
+        'screenplay': '/the-lbstr',     
+        'choice': '/the-lbstr',        
+        'ekta': '/the-lbstr',          
+        'stranger': '/the-lbstr',      
+        'partners': '/the-lbstr',      
+        'the-lbstr': '/the-lbstr',     
+        'values': '/the-lbstr',        
+        'crafts': '/the-lbstr',        
+        'strategy': '/strategy',
+        'the-strategist': '/strategy',
+        'problem-solving': '/strategy',
+        'storytelling': '/storytelling',
+        'ideas': '/storytelling',
+        'the-storyteller': '/storytelling', 
+        'commercial-stories': '/storytelling',
+        'personal-stories': '/storytelling',
+        'services': '/services',
+        'contact': '/contact'
+    };
+    
+    // Reverse map for URL to section
+    const urlSectionMap = {};
+    Object.keys(sectionURLMap).forEach(section => {
+        urlSectionMap[sectionURLMap[section]] = section;
+    });
+    
+    // For /the-lbstr URL, we need to handle multiple sections, so let's target the main one
+    urlSectionMap['/the-lbstr'] = 'the-lbstr'; // Will land on the main slide
+    
+    // SEO meta data based on actual website content - UPDATED
+    const seoData = {
+        '/': {
+            title: 'The LBSTR - Strategy & Storytelling Studio | Dubai',
+            description: 'Meet Ekta & Robert, a filmmaker-strategist duo with 25 years of award-winning expertise. Strategy and storytelling studio based in Dubai.',
+            keywords: 'strategy storytelling studio dubai, filmmaker strategist duo, ekta saran robert habib, brand strategy storytelling, dubai creative studio'
+        },
+        '/strategy': {
+            title: 'Brand Strategy & Problem Solving | The LBSTR Studio',
+            description: 'Strategic consulting by The LBSTR strategy and storytelling studio. We help brands answer challenges through repeated prodding, not just prompting. Dubai-based, globally minded.',
+            keywords: 'brand strategy dubai, strategic consulting, brand challenges, problem solving, marketing strategy, strategy storytelling studio'
+        },
+        '/storytelling': {
+            title: 'Brand Storytelling & Film Direction | Ekta Saran | The LBSTR',
+            description: 'Award-winning filmmaker Ekta Saran creates memorable brand stories. The LBSTR strategy and storytelling studio: commercial films for Mini Cooper, ADNOC, and personal films winning festivals.',
+            keywords: 'brand storytelling, film director dubai, strategy storytelling studio, ekta saran director, commercial films, creative storytelling'
+        },
+        '/services': {
+            title: 'Strategy & Storytelling Services | The LBSTR Studio Dubai',
+            description: 'Comprehensive services from The LBSTR strategy and storytelling studio: brand strategy, creative strategy, integrated communications, scriptwriting, and film direction.',
+            keywords: 'strategy storytelling services, brand strategy services, scriptwriting, film direction, integrated communications, dubai studio'
+        },
+        '/contact': {
+            title: 'Contact The LBSTR | Strategy & Storytelling Studio | hello@thelbstr.com',
+            description: 'Work with The LBSTR strategy and storytelling studio. Contact filmmaker-strategist duo Ekta & Robert for brand strategy and storytelling. (Or ask for a book recommendation.)',
+            keywords: 'contact strategy storytelling studio, brand strategy consultation, film direction services, hello@thelbstr.com, dubai studio'
+        }
+    };
+    
+    // Function to update URL and meta tags without affecting UX
+    function updateSEOForSection(sectionId) {
+        const newURL = sectionURLMap[sectionId];
+        if (!newURL) return;
+        
+        // Update URL with proper history (enables forward/back support)
+        const currentURL = window.location.pathname;
+        if (currentURL !== newURL) {
+            history.pushState({ section: sectionId }, '', newURL);
+        }
+        
+        // Update meta tags for SEO
+        const seo = seoData[newURL];
+        if (seo) {
+            // Update title
+            document.title = seo.title;
+            
+            // Update meta description
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if (!metaDesc) {
+                metaDesc = document.createElement('meta');
+                metaDesc.name = 'description';
+                document.head.appendChild(metaDesc);
+            }
+            metaDesc.content = seo.description;
+            
+            // Update meta keywords
+            let metaKeywords = document.querySelector('meta[name="keywords"]');
+            if (!metaKeywords) {
+                metaKeywords = document.createElement('meta');
+                metaKeywords.name = 'keywords';
+                document.head.appendChild(metaKeywords);
+            }
+            metaKeywords.content = seo.keywords;
+            
+            // Update canonical tag to avoid duplicate content
+            let canonicalTag = document.querySelector('link[rel="canonical"]');
+            if (!canonicalTag) {
+                canonicalTag = document.createElement('link');
+                canonicalTag.rel = 'canonical';
+                document.head.appendChild(canonicalTag);
+            }
+            canonicalTag.href = `https://thelbstr.com${newURL}`;
+            
+            // Update Open Graph tags
+            updateOpenGraph(seo, newURL);
+            
+            console.log(`📊 SEO updated for: ${sectionId} (${newURL})`);
+        }
+    }
+    
+    // Function to update Open Graph meta tags
+    function updateOpenGraph(seo, url) {
+        const ogTags = [
+            { property: 'og:title', content: seo.title },
+            { property: 'og:description', content: seo.description },
+            { property: 'og:url', content: `https://thelbstr.com${url}` },
+            { property: 'og:type', content: 'website' },
+            { property: 'og:site_name', content: 'The LBSTR' }
+        ];
+        
+        ogTags.forEach(tag => {
+            let ogTag = document.querySelector(`meta[property="${tag.property}"]`);
+            if (!ogTag) {
+                ogTag = document.createElement('meta');
+                ogTag.setAttribute('property', tag.property);
+                document.head.appendChild(ogTag);
+            }
+            ogTag.content = tag.content;
+        });
+    }
+    
+    // Detect current section and update SEO
+    function detectCurrentSection() {
+        const slides = document.querySelectorAll('.slide');
+        let visibleSection = 'home';
+        
+        slides.forEach(slide => {
+            const rect = slide.getBoundingClientRect();
+            const isVisible = rect.left < window.innerWidth * 0.8 && rect.right > window.innerWidth * 0.2;
+            
+            if (isVisible) {
+                visibleSection = slide.id || 'home';
+            }
+        });
+        
+        updateSEOForSection(visibleSection);
+    }
+    
+    // Handle direct URL access (when someone visits /strategy directly)
+    function handleDirectURLAccess() {
+        const currentPath = window.location.pathname;
+        const targetSection = urlSectionMap[currentPath];
+        
+        if (targetSection && document.getElementById(targetSection)) {
+            console.log(`🔗 Direct URL access: ${currentPath} → ${targetSection}`);
+            
+            // Let your existing navigation system handle the scroll
+            // We just update the SEO silently
+            setTimeout(() => {
+                updateSEOForSection(targetSection);
+            }, 1000);
+        }
+    }
+    
+    // Set up observers for section changes
+    function setupSectionObserver() {
+        // Use your existing slide detection logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                    const sectionId = entry.target.id;
+                    updateSEOForSection(sectionId);
+                }
+            });
+        }, {
+            threshold: [0.5, 1.0]
+        });
+        
+        // Observe all slides
+        document.querySelectorAll('.slide').forEach(slide => {
+            observer.observe(slide);
+        });
+    }
+    
+    // Initialize on page load
+    setTimeout(() => {
+        handleDirectURLAccess();
+        detectCurrentSection();
+        setupSectionObserver();
+        
+        // Also listen to your existing navigation events
+        document.addEventListener('slideChanged', function(e) {
+            if (e.detail && e.detail.sectionId) {
+                updateSEOForSection(e.detail.sectionId);
+            }
+        });
+        
+    }, 2000);
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(e) {
+        if (e.state && e.state.section) {
+            // Let your existing navigation handle the scroll
+            // Just update SEO
+            setTimeout(() => {
+                updateSEOForSection(e.state.section);
+            }, 500);
+        }
+    });
+    
+    console.log('✅ SEO enhancement active - UX preserved!');
+});
+
+// Add enhanced structured data for local business and services
+document.addEventListener('DOMContentLoaded', function() {
+    // Main Organization Schema - UPDATED
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "The LBSTR",
+        "description": "Strategy and storytelling studio helping brands solve their biggest challenges",
+        "url": "https://thelbstr.com",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Dubai",
+            "addressRegion": "Dubai",
+            "addressCountry": "AE"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "25.2048",
+            "longitude": "55.2708"
+        },
+        "serviceArea": {
+            "@type": "Place",
+            "name": "Global"
+        },
+        "areaServed": ["Dubai", "UAE", "Middle East", "Global"],
+        "slogan": "The only bad stories are the ones left untold",
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Strategy and Storytelling Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Brand Strategy",
+                        "description": "Strategic consulting to help brands answer complex challenges",
+                        "url": "https://thelbstr.com/strategy"
+                    }
+                },
+                {
+                    "@type": "Offer", 
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Brand Storytelling",
+                        "description": "Compelling narratives that connect with audiences",
+                        "url": "https://thelbstr.com/storytelling"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service", 
+                        "name": "Strategy & Storytelling Services",
+                        "description": "Comprehensive strategy and storytelling solutions",
+                        "url": "https://thelbstr.com/services"
+                    }
+                }
+            ]
+        }
+    };
+    
+    // FAQ Schema based on actual Slide 15 content
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What brand challenges does The LBSTR solve?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We help brands answer challenges like: getting mixed feedback on brand positioning, finding growth opportunities, understanding new audience segments, improving marketing ROI, aligning messaging across channels, competitive threats, cultural adaptation, traffic conversion, and creating memorable storytelling."
+                }
+            },
+            {
+                "@type": "Question", 
+                "name": "What makes The LBSTR different from other studios?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We're a strategy and storytelling studio - a filmmaker-strategist duo combining 25 years of expertise. Ekta is a self-taught film director with wins at Top Shorts Film Festival, and Robert managed Maserati across 12 markets and established the first strategy division in C2 Communication's 35-year history. We believe the only bad stories are the ones left untold."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What services does The LBSTR strategy and storytelling studio provide?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We offer brand strategy (diagnosis, positioning, messaging), creative strategy (insight, ideation, territories), integrated communications (journey mapping, content strategy), scriptwriting, film conceptualization, and directing for both commercial and personal stories."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Who are Ekta Saran and Robert Habib?",
+                "acceptedAnswer": {
+                    "@type": "Answer", 
+                    "text": "Ekta Saran is a writer-director obsessed with filmmaking craft, currently co-writing a feature film for Image Nation. Robert Habib is a strategist who's spent a decade asking 'What's the story?' across brand, media, technology and strategy roles. They met over a shared love of 'The Lobster' film."
+                }
+            }
+        ]
+    };
+    
+    // Add schemas to page
+    const schemas = [organizationSchema, faqSchema];
+    
+    schemas.forEach((schema, index) => {
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(schema);
+        script.id = `structured-data-${index}`;
+        document.head.appendChild(script);
+    });
+    
+    console.log('✅ Enhanced structured data added: LocalBusiness + FAQ schemas');
+});
