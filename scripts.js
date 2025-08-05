@@ -3316,11 +3316,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 console.log('📱🦞 Mobile floating lobsters script loaded for home slide');
 
-'/the-lbstr': {
-            title: 'About The LBSTR | Filmmaker-Strategist Duo | Dubai Studio',
-            description: 'A strategist-filmmaker duo with 25 years of award-winning expertise in pushing brand decision making and storytelling to where it should go.',
-            keywords: 'about the lbstr, filmmaker strategist duo, ekta saran robert habib, dubai studio story, obsessed disciplined kind'
-        },// SEO Fix - Preserve Your Horizontal Scroll Experience
+// SEO Fix - Preserve Your Horizontal Scroll Experience
 // Add this to your Webflow Body Code (Before Close Body Tag)
 
 document.addEventListener('DOMContentLoaded', function() {
