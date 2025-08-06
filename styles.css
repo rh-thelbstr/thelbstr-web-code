@@ -1855,7 +1855,7 @@ a, button, .clickable, [data-cursor="pointer"] {
     min-width: 200px !important; /* Give enough space for both links */
     
     /* Move down MORE to align with Contact bottom - increased from -1vh */
-    margin-top: 3vh !important;
+    margin-top: 2vh !important;
     position: relative !important;
     top: 2vh !important;
 }
@@ -1889,7 +1889,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         justify-content: flex-end !important;
         flex-wrap: nowrap !important;
         align-items: flex-end !important;
-        margin-top: 3vh !important;
+        margin-top: 2vh !important;
         position: relative !important;
         top: 2vh !important;
     }
@@ -1902,7 +1902,7 @@ a, button, .clickable, [data-cursor="pointer"] {
         gap: 1.0rem !important;
         justify-content: flex-end !important;
         align-items: flex-end !important;
-        margin-top: 3vh !important;
+        margin-top: 2vh !important;
         position: relative !important;
         top: 2vh !important;
     }
