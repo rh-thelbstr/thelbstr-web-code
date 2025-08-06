@@ -1772,80 +1772,44 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 }
 
-/* Rotate Logo 90 Degrees Clockwise - DESKTOP ONLY - Add this to your styles.css */
+/* ONLY Logo Rotation and Center Alignment Fix - DESKTOP ONLY */
 
-/* Desktop logo styling with rotation */
+/* Desktop logo styling with rotation and center alignment */
 @media (min-width: 768px) {
     .nav-lbstr-logo {
+        /* Keep your existing styles intact */
         width: 120px !important;
         height: auto !important;
         display: block !important;
         object-fit: contain !important;
-        /* Rotate 90 degrees clockwise so text reads vertically top-down */
+        
+        /* ONLY ADD: Rotation and vertical centering */
         transform: rotate(90deg) !important;
         transform-origin: center center !important;
-        /* Center alignment in nav bar */
-        margin: auto 0 !important;
-        align-self: center !important;
-        /* Safari-specific fixes */
-        min-width: 120px !important;
-        max-width: 120px !important;
-        box-sizing: border-box !important;
+        
+        /* ONLY ADD: Center alignment without breaking nav layout */
+        position: relative !important;
+        top: 50% !important;
+        transform: rotate(90deg) translateY(-50%) !important;
     }
 }
 
-/* Safari-specific targeting with rotation - DESKTOP ONLY */
+/* Safari-specific targeting - MINIMAL CHANGES */
 @media (min-width: 768px) {
     @supports (-webkit-appearance: none) {
         .nav-lbstr-logo {
-            width: 120px !important;
-            height: 40px !important;
-            object-fit: contain !important;
-            object-position: center center !important;
-            transform: rotate(90deg) !important;
-            transform-origin: center center !important;
+            transform: rotate(90deg) translateY(-50%) !important;
         }
     }
 }
 
-/* Additional Safari WebKit fix with rotation - DESKTOP ONLY */
-@media screen and (min-width: 768px) and (-webkit-min-device-pixel-ratio: 0) {
-    .nav-lbstr-logo {
-        width: 120px !important;
-        height: 40px !important;
-        vertical-align: middle !important;
-        transform: rotate(90deg) !important;
-        transform-origin: center center !important;
-    }
-}
-
-/* Ensure nav bar container properly aligns rotated logo - DESKTOP ONLY */
-@media (min-width: 768px) {
-    .nav-bar {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 0 1.5rem !important;
-        height: 60px !important; /* Ensure nav bar has consistent height */
-    }
-    
-    /* Container for the logo to ensure proper centering */
-    .nav-lbstr-logo {
-        margin: 0 !important;
-        position: relative !important;
-        top: 0 !important;
-        vertical-align: middle !important;
-    }
-}
-
-/* Mobile: Keep existing logo styling - NO rotation */
+/* Mobile: Keep everything exactly as it was - NO changes */
 @media (max-width: 767px) {
     .nav-bar .nav-lbstr-logo {
         margin-left: 1.5rem !important;
         margin-right: 0 !important;
         width: 120px !important;
         height: auto !important;
-        /* NO transform/rotation on mobile */
         transform: none !important;
     }
     
@@ -1854,7 +1818,6 @@ a, button, .clickable, [data-cursor="pointer"] {
     .nav-bar.nav-white .nav-lbstr-logo {
         margin-left: 1.5rem !important;
         margin-right: 0 !important;
-        /* NO transform/rotation on mobile */
         transform: none !important;
     }
 }   
