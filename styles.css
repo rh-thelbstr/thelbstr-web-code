@@ -1836,3 +1836,76 @@ a, button, .clickable, [data-cursor="pointer"] {
         padding-right: 0 !important; /* Remove padding on mobile */
     }
 }   
+
+/* Fix Social Links Spacing Difference Between Safari and Chrome */
+
+/* Target the social handles container in desktop menu */
+.nav-menu-desktop .social-handles,
+.social-handles {
+    /* Force consistent layout */
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 2rem !important; /* Consistent spacing between LinkedIn and Instagram */
+    white-space: nowrap !important; /* Prevent wrapping */
+    
+    /* Ensure container doesn't shrink */
+    flex-shrink: 0 !important;
+    min-width: 200px !important; /* Give enough space for both links */
+}
+
+/* Target individual social links */
+.nav-menu-desktop .social-handles a,
+.social-handles a,
+.nav-menu-desktop [class*="link"],
+.social-handles [class*="link"] {
+    /* Normalize text rendering */
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    
+    /* Consistent text styling across browsers */
+    letter-spacing: 0.05em !important;
+    word-spacing: normal !important;
+    
+    /* Remove any margins that might differ between browsers */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Safari-specific targeting to match Chrome behavior */
+@supports (-webkit-appearance: none) {
+    .nav-menu-desktop .social-handles,
+    .social-handles {
+        gap: 2rem !important;
+        justify-content: flex-end !important;
+        flex-wrap: nowrap !important;
+    }
+}
+
+/* Chrome-specific targeting (if needed) */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .nav-menu-desktop .social-handles,
+    .social-handles {
+        gap: 2rem !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+    }
+}
+
+/* Ensure parent container gives enough space */
+.nav-menu-desktop {
+    /* Make sure the desktop menu has enough width for social links */
+    min-width: 300px !important;
+}
+
+/* If the social handles are text-based (not actual links) */
+.nav-menu-desktop .social-handles,
+.social-handles {
+    font-size: inherit !important;
+    line-height: 1 !important;
+    
+    /* Prevent text from breaking differently in browsers */
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+}
