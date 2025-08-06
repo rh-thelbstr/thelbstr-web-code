@@ -1772,45 +1772,60 @@ a, button, .clickable, [data-cursor="pointer"] {
     }
 }
 
-/* ONLY Logo Rotation and Center Alignment Fix - DESKTOP ONLY */
+/* Safari Logo Fix - Add this to your styles.css */
 
-/* Desktop logo styling with rotation and center alignment */
-@media (min-width: 768px) {
+.nav-lbstr-logo {
+    width: 120px !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+    /* Safari-specific fixes */
+    min-width: 120px !important;
+    max-width: 120px !important;
+    /* Add padding to the right */
+    padding-right: 2vw !important;
+    /* Force proper dimensions */
+    box-sizing: border-box !important;
+}
+
+/* Safari-specific targeting */
+@supports (-webkit-appearance: none) {
     .nav-lbstr-logo {
-        /* Keep your existing styles intact */
+        /* Force exact dimensions in Safari */
         width: 120px !important;
-        height: auto !important;
-        display: block !important;
+        height: 40px !important; /* Set explicit height for Safari */
         object-fit: contain !important;
-        
-        /* ONLY ADD: Rotation and vertical centering */
-        transform: rotate(90deg) !important;
-        transform-origin: center center !important;
-        
-        /* ONLY ADD: Center alignment without breaking nav layout */
-        position: relative !important;
-        top: 50% !important;
-        transform: rotate(90deg) translateY(-50%) !important;
+        object-position: left center !important;
+        padding-right: 2vw !important;
     }
 }
 
-/* Safari-specific targeting - MINIMAL CHANGES */
-@media (min-width: 768px) {
-    @supports (-webkit-appearance: none) {
-        .nav-lbstr-logo {
-            transform: rotate(90deg) translateY(-50%) !important;
-        }
+/* Additional Safari WebKit fix */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .nav-lbstr-logo {
+        width: 120px !important;
+        height: 40px !important;
+        vertical-align: middle !important;
+        padding-right: 2vw !important;
     }
 }
 
-/* Mobile: Keep everything exactly as it was - NO changes */
+/* Ensure nav bar container properly aligns logo */
+.nav-bar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 !important;
+}
+
+/* Mobile fixes to maintain your existing mobile styling */
 @media (max-width: 767px) {
     .nav-bar .nav-lbstr-logo {
         margin-left: 1.5rem !important;
         margin-right: 0 !important;
         width: 120px !important;
         height: auto !important;
-        transform: none !important;
+        padding-right: 0 !important; /* Remove padding on mobile */
     }
     
     .nav-bar.nav-green .nav-lbstr-logo,
@@ -1818,6 +1833,6 @@ a, button, .clickable, [data-cursor="pointer"] {
     .nav-bar.nav-white .nav-lbstr-logo {
         margin-left: 1.5rem !important;
         margin-right: 0 !important;
-        transform: none !important;
+        padding-right: 0 !important; /* Remove padding on mobile */
     }
 }   
