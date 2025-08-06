@@ -1846,13 +1846,16 @@ a, button, .clickable, [data-cursor="pointer"] {
     display: flex !important;
     flex-direction: row !important;
     justify-content: flex-end !important;
-    align-items: center !important;
-    gap: 2rem !important; /* Consistent spacing between LinkedIn and Instagram */
+    align-items: flex-end !important; /* Changed to bottom align with Contact */
+    gap: 1.5rem !important; /* Reduced from 2rem to 1.5rem */
     white-space: nowrap !important; /* Prevent wrapping */
     
     /* Ensure container doesn't shrink */
     flex-shrink: 0 !important;
     min-width: 200px !important; /* Give enough space for both links */
+    
+    /* Move down 1vh to align with Contact bottom */
+    margin-bottom: -1vh !important;
 }
 
 /* Target individual social links */
@@ -1864,7 +1867,10 @@ a, button, .clickable, [data-cursor="pointer"] {
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     
-    /* Consistent text styling across browsers */
+    /* Updated typography specifications */
+    font-size: 18px !important;
+    font-family: 'Selecta', sans-serif !important;
+    font-weight: 500 !important; /* Selecta Medium */
     letter-spacing: 0.05em !important;
     word-spacing: normal !important;
     
@@ -1877,9 +1883,11 @@ a, button, .clickable, [data-cursor="pointer"] {
 @supports (-webkit-appearance: none) {
     .nav-menu-desktop .social-handles,
     .social-handles {
-        gap: 2rem !important;
+        gap: 1.5rem !important;
         justify-content: flex-end !important;
         flex-wrap: nowrap !important;
+        align-items: flex-end !important;
+        margin-bottom: -1vh !important;
     }
 }
 
@@ -1887,9 +1895,10 @@ a, button, .clickable, [data-cursor="pointer"] {
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     .nav-menu-desktop .social-handles,
     .social-handles {
-        gap: 2rem !important;
+        gap: 1.5rem !important;
         justify-content: flex-end !important;
-        align-items: center !important;
+        align-items: flex-end !important;
+        margin-bottom: -1vh !important;
     }
 }
 
