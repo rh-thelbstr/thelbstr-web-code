@@ -3668,300 +3668,304 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Enhanced structured data added: LocalBusiness + FAQ schemas');
 });
 
-// BURGER NOTIFICATION LAYER - FIXED VERSION
-// This properly manages X state without creating duplicates
+// FILM-STYLE MODAL TRANSFORMATION
+// Makes all mobile modals look like the film modal - full screen with [close] at top
 
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on mobile
     if (window.innerWidth >= 768) return;
     
-    console.log('🔔 Adding burger notification layer (fixed)...');
+    console.log('🎬 Transforming modals to film style...');
     
-    // Create a global burger notification system
-    window.BurgerNotifier = {
+    // Modal transformer system
+    const ModalTransformer = {
         
-        isXShowing: false,
-        
-        // Force burger to X (but check for existing X first)
-        forceX() {
-            console.log('🔔 Modal opened - forcing X');
+        // Transform any modal to film style
+        transformToFilmStyle(modalOverlay) {
+            if (!modalOverlay) return;
             
-            // First, clean up any orphaned X icons
-            this.cleanupAllX();
+            console.log('🎬 Transforming modal to film style');
             
-            const burger = document.querySelector('.nav-burger-icon-black');
-            if (!burger) return;
-            
-            // Add menu-open class
-            burger.classList.add('menu-open');
-            
-            // Hide burger image
-            const img = burger.querySelector('img');
-            if (img) {
-                img.style.opacity = '0';
-                img.style.transition = 'opacity 0.2s ease';
-            }
-            
-            // Create ONE X icon
-            this.createSingleX();
-            this.isXShowing = true;
-        },
-        
-        // Force burger back and cleanup ALL X icons
-        forceBurger() {
-            console.log('🔔 Modal closed - forcing burger and cleaning up');
-            
-            const burger = document.querySelector('.nav-burger-icon-black');
-            if (!burger) return;
-            
-            // Remove menu-open class
-            burger.classList.remove('menu-open');
-            
-            // Show burger image
-            const img = burger.querySelector('img');
-            if (img) {
-                img.style.opacity = '1';
-                img.style.transition = 'opacity 0.2s ease';
-            }
-            
-            // Clean up ALL X icons (including orphaned ones)
-            this.cleanupAllX();
-            this.isXShowing = false;
-        },
-        
-        // Remove ALL X icons
-        cleanupAllX() {
-            // Remove all possible X icon classes
-            const xSelectors = [
-                '.external-x-icon',
-                '.burger-x-icon',
-                '.burger-x-icon-backup',
-                '[class*="x-icon"]'
-            ];
-            
-            xSelectors.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(el => {
-                    console.log(`🧹 Removing X: ${el.className}`);
-                    el.remove();
-                });
-            });
-            
-            // Also check for any divs containing just ✕
-            document.querySelectorAll('div').forEach(div => {
-                if (div.innerHTML === '✕' && div.style.position === 'fixed') {
-                    console.log('🧹 Removing orphaned X element');
-                    div.remove();
-                }
-            });
-        },
-        
-        // Create a single X icon (only if none exists)
-        createSingleX() {
-            // Check if X already exists
-            const existingX = document.querySelector('.external-x-icon, .burger-x-icon, .burger-x-icon-backup');
-            if (existingX) {
-                console.log('✅ X already exists, not creating duplicate');
-                return;
-            }
-            
-            const burger = document.querySelector('.nav-burger-icon-black');
+            // Hide nav bar
             const navBar = document.querySelector('.nav-bar');
-            if (!burger) return;
+            if (navBar) {
+                navBar.style.display = 'none';
+            }
             
-            const rect = burger.getBoundingClientRect();
-            const isWhiteNav = navBar && navBar.classList.contains('nav-white');
-            
-            const xIcon = document.createElement('div');
-            xIcon.className = 'burger-x-unified';
-            xIcon.innerHTML = '✕';
-            xIcon.style.cssText = `
+            // Make modal truly full screen
+            modalOverlay.style.cssText = `
                 position: fixed !important;
-                top: ${rect.top}px !important;
-                left: ${rect.left}px !important;
-                width: ${rect.width}px !important;
-                height: ${rect.height}px !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                background: #000000 !important;
+                z-index: 10000 !important;
                 display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                font-size: 1.8rem !important;
-                color: ${isWhiteNav ? 'black' : 'white'} !important;
-                z-index: 10002 !important;
-                cursor: pointer !important;
-                pointer-events: auto !important;
-                font-family: system-ui, -apple-system, sans-serif !important;
-                line-height: 1 !important;
-                transition: opacity 0.2s ease !important;
+                flex-direction: column !important;
+                overflow-y: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
             `;
             
-            document.body.appendChild(xIcon);
-            console.log('✅ Created single X icon');
+            // Find modal content container
+            const modalContent = modalOverlay.querySelector('[class*="modal-content"]') || 
+                                modalOverlay.firstElementChild;
             
-            xIcon.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.closeAnyModal();
-            });
-        },
-        
-        // Helper to close any modal
-        closeAnyModal() {
-            console.log('🔄 Attempting to close active modal...');
-            
-            // Services modal - special handling
-            if (window.servicesToggleSystem && window.servicesToggleSystem.activeService) {
-                window.servicesToggleSystem.closeActiveService();
-                return;
+            if (modalContent) {
+                // Style the content container
+                modalContent.style.cssText = `
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    max-width: 100vw !important;
+                    max-height: 100vh !important;
+                    margin: 0 !important;
+                    border-radius: 0 !important;
+                    position: relative !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    background: #000000 !important;
+                `;
+                
+                // Hide or restyle the header (green bar)
+                const modalHeader = modalContent.querySelector('[class*="modal-header"]');
+                if (modalHeader) {
+                    modalHeader.style.display = 'none';
+                }
+                
+                // Make body take full space
+                const modalBody = modalContent.querySelector('[class*="modal-body"]');
+                if (modalBody) {
+                    modalBody.style.cssText = `
+                        flex: 1 !important;
+                        overflow-y: auto !important;
+                        padding: 4rem 1.5rem 2rem 1.5rem !important;
+                        background: #000000 !important;
+                        color: white !important;
+                        width: 100% !important;
+                    `;
+                }
             }
             
-            // Try all close buttons
-            const closeButtons = [
-                '.services-modal-close',
-                '.mobile-modal-close', 
-                '.slide14-modal-close',
-                '.slide18-modal-close'
-            ];
+            // Add film-style [close] button
+            this.addFilmCloseButton(modalOverlay);
+        },
+        
+        // Add [close] button exactly like film modal
+        addFilmCloseButton(modalOverlay) {
+            // Remove any existing close buttons first
+            const existingClose = modalOverlay.querySelector('.film-style-close');
+            if (existingClose) existingClose.remove();
             
-            for (let selector of closeButtons) {
-                const btn = document.querySelector(selector);
-                if (btn && btn.offsetParent !== null) { // Check if visible
-                    console.log(`🔄 Clicking ${selector}`);
+            // Create [close] button
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'film-style-close';
+            closeBtn.textContent = '[close]';
+            closeBtn.style.cssText = `
+                position: fixed !important;
+                top: 1.5rem !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                background: none !important;
+                border: none !important;
+                color: white !important;
+                font-family: 'Selecta' !important;
+                font-size: 14px !important;
+                font-weight: normal !important;
+                letter-spacing: 1px !important;
+                cursor: pointer !important;
+                transition: opacity 0.3s ease !important;
+                z-index: 10001 !important;
+                padding: 0 !important;
+                text-align: center !important;
+                text-decoration: none !important;
+            `;
+            
+            // Mobile specific sizing
+            closeBtn.style.fontSize = '12px !important';
+            closeBtn.style.top = '1rem !important';
+            
+            // Add hover effect
+            closeBtn.addEventListener('touchstart', () => {
+                closeBtn.style.opacity = '0.7';
+            });
+            
+            closeBtn.addEventListener('touchend', () => {
+                closeBtn.style.opacity = '1';
+            });
+            
+            // Add click handler
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.closeModal(modalOverlay);
+            });
+            
+            // Add to modal
+            modalOverlay.appendChild(closeBtn);
+        },
+        
+        // Close modal and restore nav
+        closeModal(modalOverlay) {
+            console.log('🎬 Closing film-style modal');
+            
+            // Find the original close button and click it
+            const closeButtons = modalOverlay.querySelectorAll('[class*="modal-close"]');
+            closeButtons.forEach(btn => {
+                if (btn.className !== 'film-style-close') {
                     btn.click();
-                    return;
+                }
+            });
+            
+            // Restore nav bar
+            const navBar = document.querySelector('.nav-bar');
+            if (navBar) {
+                navBar.style.display = '';
+            }
+            
+            // If services modal, use special close
+            if (modalOverlay.classList.contains('services-modal-overlay')) {
+                if (window.servicesToggleSystem) {
+                    window.servicesToggleSystem.closeActiveService();
                 }
             }
         },
         
-        // Check if any modal is actually open
-        isModalOpen() {
-            // Check for active modals
-            const activeModals = document.querySelectorAll('.modal-active');
-            if (activeModals.length > 0) return true;
+        // Watch for modals becoming active
+        watchModals() {
+            const modalSelectors = [
+                '.services-modal-overlay',
+                '.mobile-modal-overlay',
+                '#slide14-modal-overlay',
+                '.slide18-modal-overlay'
+            ];
             
-            // Check services modal specifically
-            const servicesModal = document.querySelector('.services-modal-overlay');
-            if (servicesModal && window.getComputedStyle(servicesModal).display === 'flex') return true;
+            // Check periodically for active modals
+            setInterval(() => {
+                modalSelectors.forEach(selector => {
+                    const modal = document.querySelector(selector);
+                    if (modal) {
+                        const isActive = modal.classList.contains('modal-active') || 
+                                       window.getComputedStyle(modal).display === 'flex';
+                        
+                        if (isActive && !modal.hasAttribute('data-film-styled')) {
+                            this.transformToFilmStyle(modal);
+                            modal.setAttribute('data-film-styled', 'true');
+                        } else if (!isActive && modal.hasAttribute('data-film-styled')) {
+                            // Modal closed, clean up
+                            modal.removeAttribute('data-film-styled');
+                            const closeBtn = modal.querySelector('.film-style-close');
+                            if (closeBtn) closeBtn.remove();
+                            
+                            // Restore nav
+                            const navBar = document.querySelector('.nav-bar');
+                            if (navBar) {
+                                navBar.style.display = '';
+                            }
+                        }
+                    }
+                });
+            }, 100);
+        },
+        
+        // Initialize
+        init() {
+            console.log('🎬 Film-style modal transformer ready');
             
-            return false;
+            // Start watching for modals
+            this.watchModals();
+            
+            // Also handle modal closes
+            document.addEventListener('click', (e) => {
+                if (e.target.className && e.target.className.includes('modal-close')) {
+                    setTimeout(() => {
+                        const navBar = document.querySelector('.nav-bar');
+                        if (navBar) {
+                            navBar.style.display = '';
+                        }
+                    }, 300);
+                }
+            });
+            
+            // Handle ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    setTimeout(() => {
+                        const navBar = document.querySelector('.nav-bar');
+                        if (navBar) {
+                            navBar.style.display = '';
+                        }
+                    }, 300);
+                }
+            });
         }
     };
     
-    // Clean up on page load (remove any stuck X icons)
-    window.BurgerNotifier.cleanupAllX();
-    
-    // INTERCEPT MODAL OPENS/CLOSES
-    
-    // 1. Services Modal (Slide 21)
-    setTimeout(() => {
-        const serviceTriggers = document.querySelectorAll('.brand, .creative, .imc, .solve4, .scriptwriting, .film-conceptualisation, .directing');
-        serviceTriggers.forEach(trigger => {
-            trigger.addEventListener('click', () => {
-                console.log('🔔 Service clicked');
-                setTimeout(() => window.BurgerNotifier.forceX(), 150);
-            });
-        });
-        
-        // Intercept service close
-        const originalCloseService = window.servicesToggleSystem?.closeActiveService;
-        if (window.servicesToggleSystem && originalCloseService) {
-            window.servicesToggleSystem.closeActiveService = function() {
-                const result = originalCloseService.apply(this, arguments);
-                console.log('🔔 Service closing');
-                setTimeout(() => window.BurgerNotifier.forceBurger(), 300);
-                return result;
-            };
-        }
-    }, 2000);
-    
-    // 2. Values Modal (Slide 11)
-    setTimeout(() => {
-        const valueTriggers = document.querySelectorAll('[id^="expand-trigger"]');
-        valueTriggers.forEach(trigger => {
-            trigger.addEventListener('click', () => {
-                if (window.innerWidth < 768) { // Only on mobile
-                    console.log('🔔 Value clicked');
-                    setTimeout(() => window.BurgerNotifier.forceX(), 150);
-                }
-            });
-        });
-    }, 2000);
-    
-    // 3. Slide 14 Modals
-    setTimeout(() => {
-        const slide14Triggers = document.querySelectorAll('.bio-expand-trigger-4, .brands-expand-trigger-5, .recog-expand-trigger-6');
-        slide14Triggers.forEach(trigger => {
-            trigger.addEventListener('click', () => {
-                console.log('🔔 Slide 14 item clicked');
-                setTimeout(() => window.BurgerNotifier.forceX(), 150);
-            });
-        });
-    }, 2000);
-    
-    // 4. Slide 18 Modal
-    setTimeout(() => {
-        const slide18Trigger = document.querySelector('.bio-ekta-trigger');
-        if (slide18Trigger) {
-            slide18Trigger.addEventListener('click', () => {
-                console.log('🔔 Slide 18 bio clicked');
-                setTimeout(() => window.BurgerNotifier.forceX(), 150);
-            });
-        }
-    }, 2000);
-    
-    // 5. Global close button listener
-    document.addEventListener('click', (e) => {
-        if (e.target.className && typeof e.target.className === 'string' && 
-            e.target.className.includes('modal-close')) {
-            console.log('🔔 Modal close button clicked');
-            setTimeout(() => {
-                if (!window.BurgerNotifier.isModalOpen()) {
-                    window.BurgerNotifier.forceBurger();
-                }
-            }, 400);
-        }
-    });
-    
-    // 6. ESC key handling
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            console.log('🔔 ESC pressed');
-            setTimeout(() => {
-                if (!window.BurgerNotifier.isModalOpen()) {
-                    window.BurgerNotifier.forceBurger();
-                }
-            }, 400);
-        }
-    });
-    
-    // 7. Periodic cleanup check (failsafe)
-    setInterval(() => {
-        if (!window.BurgerNotifier.isModalOpen() && window.BurgerNotifier.isXShowing) {
-            console.log('🧹 Cleanup check: No modal but X exists, cleaning up');
-            window.BurgerNotifier.forceBurger();
-        }
-    }, 1000);
-    
-    console.log('✅ Burger notification layer active (fixed version)');
+    // Start the transformer
+    ModalTransformer.init();
 });
 
-// Add CSS to hide duplicate X attempts
+// CSS for film-style modals
 document.addEventListener('DOMContentLoaded', function() {
     if (window.innerWidth >= 768) return;
     
     const style = document.createElement('style');
     style.textContent = `
         @media (max-width: 767px) {
-            /* Hide the pseudo-element X */
-            .nav-burger-icon-black::after,
-            .nav-burger-icon-black.menu-open::after {
+            /* Film-style close button */
+            .film-style-close {
+                position: fixed !important;
+                top: 1rem !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                background: none !important;
+                border: none !important;
+                color: white !important;
+                font-family: 'Selecta', sans-serif !important;
+                font-size: 12px !important;
+                font-weight: normal !important;
+                letter-spacing: 1px !important;
+                cursor: pointer !important;
+                transition: opacity 0.3s ease !important;
+                z-index: 10001 !important;
+                padding: 0.5rem !important;
+                text-align: center !important;
+                text-decoration: none !important;
+            }
+            
+            .film-style-close:active {
+                opacity: 0.7 !important;
+            }
+            
+            /* Hide modal headers when film-styled */
+            [data-film-styled="true"] .services-modal-header,
+            [data-film-styled="true"] .mobile-modal-header,
+            [data-film-styled="true"] .slide14-modal-header,
+            [data-film-styled="true"] .slide18-modal-header {
                 display: none !important;
             }
             
-            /* Unified X styling */
-            .burger-x-unified {
-                font-family: system-ui, -apple-system, sans-serif !important;
-                line-height: 1 !important;
-                background: transparent !important;
+            /* Ensure content is visible */
+            [data-film-styled="true"] .services-modal-body,
+            [data-film-styled="true"] .mobile-modal-body,
+            [data-film-styled="true"] .slide14-modal-body,
+            [data-film-styled="true"] .slide18-modal-body,
+            [data-film-styled="true"] > div:last-child {
+                padding-top: 4rem !important;
+                background: #000000 !important;
+                color: white !important;
+            }
+            
+            /* Keep all text white in film-style modals */
+            [data-film-styled="true"] * {
+                color: white !important;
+            }
+            
+            /* Except for green numbers/links if needed */
+            [data-film-styled="true"] span[style*="color: #32b550"],
+            [data-film-styled="true"] .link-2,
+            [data-film-styled="true"] .link-3 {
+                color: #32b550 !important;
             }
         }
     `;
