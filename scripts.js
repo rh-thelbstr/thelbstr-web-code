@@ -2294,6 +2294,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('❌ Missing mobile menu elements');
         return;
     }
+    // --- Helper: put nav-bar back into normal flow ---
+    function restoreNavBar () {
+    const props = ['position','z-index','top','left','right'];
+    props.forEach(p => navBar.style.removeProperty(p));
+    }
     
     // Function to properly close menu and clean up everything
     function cleanCloseMenu() {
@@ -2316,6 +2321,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Unlock scroll
         document.body.style.overflow = '';
+
+        // NEW: drop the nav-bar back into normal flow
+        restoreNavBar();
         
         console.log('✅ Menu cleanly closed');
     }
@@ -3809,3 +3817,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Manual scroll restoration system initialized');
 })();
+
+/* ---------- Overlay ⇆ burger-icon synchroniser ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  const burger = document.querySelector('.nav-burger-icon-black');
+  if (!burger) return;
+
+  setInterval(() => {
+    const overlayOpen = document.querySelector('[class$="-modal"].modal-active');
+    burger.classList.toggle('menu-open', !!overlayOpen);
+  }, 120);
+});
