@@ -3667,3 +3667,145 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Enhanced structured data added: LocalBusiness + FAQ schemas');
 });
+
+// Add this to your Webflow Head Code - Manual Scroll Restoration (Chrome Only)
+// Manual scroll position storage and restoration for Chrome ONLY
+(function() {
+    'use strict';
+    
+    // Only run on desktop where you have horizontal scrolling
+    if (window.innerWidth < 768) return;
+    
+    // Detect Chrome specifically (don't run on Safari)
+    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) && !/Edge/.test(navigator.userAgent);
+    if (!isChrome) {
+        console.log('🍎 Safari detected - skipping scroll restoration (Safari handles this natively)');
+        return;
+    }
+    
+    console.log('🔄 Setting up manual scroll restoration for Chrome...');
+    
+    let scrollPosition = 0;
+    let isRestoring = false;
+    
+    // Save scroll position before page unloads
+    function saveScrollPosition() {
+        scrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        sessionStorage.setItem('lbstrScrollPosition', scrollPosition.toString());
+        console.log('💾 Saved scroll position:', scrollPosition);
+    }
+    
+    // Restore scroll position after page loads
+    function restoreScrollPosition() {
+        const savedPosition = sessionStorage.getItem('lbstrScrollPosition');
+        
+        if (savedPosition && !isRestoring) {
+            isRestoring = true;
+            const targetPosition = parseInt(savedPosition);
+            
+            console.log('🔄 Attempting to restore scroll position:', targetPosition);
+            
+            // Wait for GSAP and your scroll system to be ready
+            function attemptRestore(attempt = 1, maxAttempts = 8) {
+                console.log(`🔄 Restore attempt ${attempt}/${maxAttempts}`);
+                
+                // Check if GSAP ScrollTrigger is ready
+                if (typeof ScrollTrigger === 'undefined') {
+                    if (attempt < maxAttempts) {
+                        setTimeout(() => attemptRestore(attempt + 1, maxAttempts), 300);
+                    } else {
+                        console.log('❌ GSAP not ready, restoration failed');
+                        sessionStorage.removeItem('lbstrScrollPosition');
+                    }
+                    return;
+                }
+                
+                // Check if your scroll system is initialized
+                const wrapper = document.querySelector('.wrapper');
+                const scrollContainer = document.querySelector('.scroll-container');
+                
+                if (!wrapper || !scrollContainer) {
+                    if (attempt < maxAttempts) {
+                        setTimeout(() => attemptRestore(attempt + 1, maxAttempts), 300);
+                    } else {
+                        console.log('❌ Scroll elements not ready, restoration failed');
+                        sessionStorage.removeItem('lbstrScrollPosition');
+                    }
+                    return;
+                }
+                
+                // Check if wrapper has been properly sized (indicates scroll system is ready)
+                const wrapperWidth = wrapper.offsetWidth;
+                const expectedMinWidth = window.innerWidth * 2; // At least 2 slides worth
+                
+                if (wrapperWidth < expectedMinWidth) {
+                    if (attempt < maxAttempts) {
+                        console.log(`⏳ Wrapper not ready (${wrapperWidth}px), waiting...`);
+                        setTimeout(() => attemptRestore(attempt + 1, maxAttempts), 300);
+                    } else {
+                        console.log('❌ Wrapper sizing not ready, restoration failed');
+                        sessionStorage.removeItem('lbstrScrollPosition');
+                    }
+                    return;
+                }
+                
+                // Everything looks ready, restore scroll position
+                try {
+                    // Disable scroll restoration to prevent conflicts
+                    if ('scrollRestoration' in history) {
+                        history.scrollRestoration = 'manual';
+                    }
+                    
+                    // Smooth scroll to saved position
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'auto' // Instant restore, no animation
+                    });
+                    
+                    console.log('✅ Successfully restored scroll position:', targetPosition);
+                    
+                    // Clean up
+                    sessionStorage.removeItem('lbstrScrollPosition');
+                    
+                    // Re-enable automatic scroll restoration after restore
+                    setTimeout(() => {
+                        if ('scrollRestoration' in history) {
+                            history.scrollRestoration = 'auto';
+                        }
+                        isRestoring = false;
+                    }, 100);
+                    
+                } catch (error) {
+                    console.error('❌ Error during scroll restoration:', error);
+                    sessionStorage.removeItem('lbstrScrollPosition');
+                    isRestoring = false;
+                }
+            }
+            
+            // Start restoration attempts
+            attemptRestore();
+        } else {
+            console.log('📍 No saved scroll position or already restoring');
+            isRestoring = false;
+        }
+    }
+    
+    // Save position on page unload
+    window.addEventListener('beforeunload', saveScrollPosition);
+    
+    // Also save on page hide (for mobile back button scenarios)
+    window.addEventListener('pagehide', saveScrollPosition);
+    
+    // Restore position after page loads
+    window.addEventListener('load', function() {
+        // Wait a bit for your initialization scripts to run first
+        setTimeout(restoreScrollPosition, 1000);
+    });
+    
+    // Alternative: Listen for DOMContentLoaded as backup
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(restoreScrollPosition, 1500);
+    });
+    
+    console.log('✅ Manual scroll restoration system initialized');
+})();
