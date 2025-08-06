@@ -3668,21 +3668,27 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Enhanced structured data added: LocalBusiness + FAQ schemas');
 });
 
-// BURGER NOTIFICATION LAYER - Add this WITHOUT removing existing code
-// This adds explicit notifications when modals open/close
+// BURGER NOTIFICATION LAYER - FIXED VERSION
+// This properly manages X state without creating duplicates
 
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on mobile
     if (window.innerWidth >= 768) return;
     
-    console.log('🔔 Adding burger notification layer...');
+    console.log('🔔 Adding burger notification layer (fixed)...');
     
     // Create a global burger notification system
     window.BurgerNotifier = {
         
-        // Force burger to X
+        isXShowing: false,
+        
+        // Force burger to X (but check for existing X first)
         forceX() {
             console.log('🔔 Modal opened - forcing X');
+            
+            // First, clean up any orphaned X icons
+            this.cleanupAllX();
+            
             const burger = document.querySelector('.nav-burger-icon-black');
             if (!burger) return;
             
@@ -3691,24 +3697,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Hide burger image
             const img = burger.querySelector('img');
-            if (img) img.style.opacity = '0';
-            
-            // Try to trigger any existing X creation
-            if (window.burgerStateManager) {
-                window.burgerStateManager.showX();
+            if (img) {
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.2s ease';
             }
             
-            // Also create X if not exists (backup)
-            setTimeout(() => {
-                if (!document.querySelector('.external-x-icon, .burger-x-icon')) {
-                    this.createXIcon();
-                }
-            }, 50);
+            // Create ONE X icon
+            this.createSingleX();
+            this.isXShowing = true;
         },
         
-        // Force burger back
+        // Force burger back and cleanup ALL X icons
         forceBurger() {
-            console.log('🔔 Modal closed - forcing burger');
+            console.log('🔔 Modal closed - forcing burger and cleaning up');
+            
             const burger = document.querySelector('.nav-burger-icon-black');
             if (!burger) return;
             
@@ -3717,20 +3719,52 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Show burger image
             const img = burger.querySelector('img');
-            if (img) img.style.opacity = '1';
-            
-            // Remove any X icons
-            const xIcons = document.querySelectorAll('.external-x-icon, .burger-x-icon');
-            xIcons.forEach(x => x.remove());
-            
-            // Try to trigger existing burger restoration
-            if (window.burgerStateManager) {
-                window.burgerStateManager.showBurger();
+            if (img) {
+                img.style.opacity = '1';
+                img.style.transition = 'opacity 0.2s ease';
             }
+            
+            // Clean up ALL X icons (including orphaned ones)
+            this.cleanupAllX();
+            this.isXShowing = false;
         },
         
-        // Create X icon as backup
-        createXIcon() {
+        // Remove ALL X icons
+        cleanupAllX() {
+            // Remove all possible X icon classes
+            const xSelectors = [
+                '.external-x-icon',
+                '.burger-x-icon',
+                '.burger-x-icon-backup',
+                '[class*="x-icon"]'
+            ];
+            
+            xSelectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    console.log(`🧹 Removing X: ${el.className}`);
+                    el.remove();
+                });
+            });
+            
+            // Also check for any divs containing just ✕
+            document.querySelectorAll('div').forEach(div => {
+                if (div.innerHTML === '✕' && div.style.position === 'fixed') {
+                    console.log('🧹 Removing orphaned X element');
+                    div.remove();
+                }
+            });
+        },
+        
+        // Create a single X icon (only if none exists)
+        createSingleX() {
+            // Check if X already exists
+            const existingX = document.querySelector('.external-x-icon, .burger-x-icon, .burger-x-icon-backup');
+            if (existingX) {
+                console.log('✅ X already exists, not creating duplicate');
+                return;
+            }
+            
             const burger = document.querySelector('.nav-burger-icon-black');
             const navBar = document.querySelector('.nav-bar');
             if (!burger) return;
@@ -3739,7 +3773,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const isWhiteNav = navBar && navBar.classList.contains('nav-white');
             
             const xIcon = document.createElement('div');
-            xIcon.className = 'burger-x-icon-backup';
+            xIcon.className = 'burger-x-unified';
             xIcon.innerHTML = '✕';
             xIcon.style.cssText = `
                 position: fixed !important;
@@ -3755,20 +3789,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 z-index: 10002 !important;
                 cursor: pointer !important;
                 pointer-events: auto !important;
+                font-family: system-ui, -apple-system, sans-serif !important;
+                line-height: 1 !important;
+                transition: opacity 0.2s ease !important;
             `;
             
             document.body.appendChild(xIcon);
+            console.log('✅ Created single X icon');
             
             xIcon.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                // Close any open modal
                 this.closeAnyModal();
             });
         },
         
         // Helper to close any modal
         closeAnyModal() {
+            console.log('🔄 Attempting to close active modal...');
+            
+            // Services modal - special handling
+            if (window.servicesToggleSystem && window.servicesToggleSystem.activeService) {
+                window.servicesToggleSystem.closeActiveService();
+                return;
+            }
+            
             // Try all close buttons
             const closeButtons = [
                 '.services-modal-close',
@@ -3779,39 +3824,50 @@ document.addEventListener('DOMContentLoaded', function() {
             
             for (let selector of closeButtons) {
                 const btn = document.querySelector(selector);
-                if (btn) {
+                if (btn && btn.offsetParent !== null) { // Check if visible
+                    console.log(`🔄 Clicking ${selector}`);
                     btn.click();
                     return;
                 }
             }
+        },
+        
+        // Check if any modal is actually open
+        isModalOpen() {
+            // Check for active modals
+            const activeModals = document.querySelectorAll('.modal-active');
+            if (activeModals.length > 0) return true;
             
-            // Try services system
-            if (window.servicesToggleSystem) {
-                window.servicesToggleSystem.closeActiveService();
-            }
+            // Check services modal specifically
+            const servicesModal = document.querySelector('.services-modal-overlay');
+            if (servicesModal && window.getComputedStyle(servicesModal).display === 'flex') return true;
+            
+            return false;
         }
     };
     
+    // Clean up on page load (remove any stuck X icons)
+    window.BurgerNotifier.cleanupAllX();
+    
     // INTERCEPT MODAL OPENS/CLOSES
-    // We'll add listeners to the actual triggers
     
     // 1. Services Modal (Slide 21)
     setTimeout(() => {
-        // Intercept service opens
         const serviceTriggers = document.querySelectorAll('.brand, .creative, .imc, .solve4, .scriptwriting, .film-conceptualisation, .directing');
         serviceTriggers.forEach(trigger => {
             trigger.addEventListener('click', () => {
-                console.log('🔔 Service clicked - will notify burger');
-                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+                console.log('🔔 Service clicked');
+                setTimeout(() => window.BurgerNotifier.forceX(), 150);
             });
         });
         
-        // Intercept service closes
+        // Intercept service close
         const originalCloseService = window.servicesToggleSystem?.closeActiveService;
         if (window.servicesToggleSystem && originalCloseService) {
             window.servicesToggleSystem.closeActiveService = function() {
                 const result = originalCloseService.apply(this, arguments);
-                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
+                console.log('🔔 Service closing');
+                setTimeout(() => window.BurgerNotifier.forceBurger(), 300);
                 return result;
             };
         }
@@ -3819,85 +3875,90 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 2. Values Modal (Slide 11)
     setTimeout(() => {
-        const valueTriggers = document.querySelectorAll('.expand-trigger-1, .expand-trigger-2, .expand-trigger-3, #expand-trigger-1, #expand-trigger-2, #expand-trigger-3');
+        const valueTriggers = document.querySelectorAll('[id^="expand-trigger"]');
         valueTriggers.forEach(trigger => {
             trigger.addEventListener('click', () => {
-                console.log('🔔 Value clicked - will notify burger');
-                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+                if (window.innerWidth < 768) { // Only on mobile
+                    console.log('🔔 Value clicked');
+                    setTimeout(() => window.BurgerNotifier.forceX(), 150);
+                }
             });
-        });
-        
-        // Watch for close
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('mobile-modal-close')) {
-                console.log('🔔 Values modal closing');
-                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
-            }
         });
     }, 2000);
     
-    // 3. Slide 14 Modals (Bio, Brands, Recognition)
+    // 3. Slide 14 Modals
     setTimeout(() => {
         const slide14Triggers = document.querySelectorAll('.bio-expand-trigger-4, .brands-expand-trigger-5, .recog-expand-trigger-6');
         slide14Triggers.forEach(trigger => {
             trigger.addEventListener('click', () => {
-                console.log('🔔 Slide 14 item clicked - will notify burger');
-                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+                console.log('🔔 Slide 14 item clicked');
+                setTimeout(() => window.BurgerNotifier.forceX(), 150);
             });
-        });
-        
-        // Watch for close
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('slide14-modal-close')) {
-                console.log('🔔 Slide 14 modal closing');
-                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
-            }
         });
     }, 2000);
     
-    // 4. Slide 18 Modal (Ekta Bio)
+    // 4. Slide 18 Modal
     setTimeout(() => {
         const slide18Trigger = document.querySelector('.bio-ekta-trigger');
         if (slide18Trigger) {
             slide18Trigger.addEventListener('click', () => {
-                console.log('🔔 Slide 18 bio clicked - will notify burger');
-                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+                console.log('🔔 Slide 18 bio clicked');
+                setTimeout(() => window.BurgerNotifier.forceX(), 150);
             });
         }
-        
-        // Watch for close
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('slide18-modal-close')) {
-                console.log('🔔 Slide 18 modal closing');
-                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
-            }
-        });
     }, 2000);
     
-    // 5. Also watch for ESC key (modals close on ESC)
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            console.log('🔔 ESC pressed - checking for modals');
+    // 5. Global close button listener
+    document.addEventListener('click', (e) => {
+        if (e.target.className && typeof e.target.className === 'string' && 
+            e.target.className.includes('modal-close')) {
+            console.log('🔔 Modal close button clicked');
             setTimeout(() => {
-                const anyModalOpen = document.querySelector('.modal-active, [style*="display: flex"].services-modal-overlay');
-                if (!anyModalOpen) {
+                if (!window.BurgerNotifier.isModalOpen()) {
                     window.BurgerNotifier.forceBurger();
                 }
-            }, 300);
+            }, 400);
         }
     });
     
-    console.log('✅ Burger notification layer active - test opening modals now');
+    // 6. ESC key handling
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            console.log('🔔 ESC pressed');
+            setTimeout(() => {
+                if (!window.BurgerNotifier.isModalOpen()) {
+                    window.BurgerNotifier.forceBurger();
+                }
+            }, 400);
+        }
+    });
+    
+    // 7. Periodic cleanup check (failsafe)
+    setInterval(() => {
+        if (!window.BurgerNotifier.isModalOpen() && window.BurgerNotifier.isXShowing) {
+            console.log('🧹 Cleanup check: No modal but X exists, cleaning up');
+            window.BurgerNotifier.forceBurger();
+        }
+    }, 1000);
+    
+    console.log('✅ Burger notification layer active (fixed version)');
 });
 
-// Add some CSS to ensure X is visible
+// Add CSS to hide duplicate X attempts
 document.addEventListener('DOMContentLoaded', function() {
     if (window.innerWidth >= 768) return;
     
     const style = document.createElement('style');
     style.textContent = `
         @media (max-width: 767px) {
-            .burger-x-icon-backup {
+            /* Hide the pseudo-element X */
+            .nav-burger-icon-black::after,
+            .nav-burger-icon-black.menu-open::after {
+                display: none !important;
+            }
+            
+            /* Unified X styling */
+            .burger-x-unified {
                 font-family: system-ui, -apple-system, sans-serif !important;
                 line-height: 1 !important;
                 background: transparent !important;
