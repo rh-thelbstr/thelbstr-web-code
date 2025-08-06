@@ -3668,7 +3668,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Enhanced structured data added: LocalBusiness + FAQ schemas');
 });
 
-// FILM-STYLE MODAL TRANSFORMATION
+// FILM-STYLE MODAL TRANSFORMATION - FIXED Z-INDEX VERSION
 // Makes all mobile modals look like the film modal - full screen with [close] at top
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -3686,13 +3686,21 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('🎬 Transforming modal to film style');
             
-            // Hide nav bar
+            // AGGRESSIVE NAV BAR HANDLING
             const navBar = document.querySelector('.nav-bar');
             if (navBar) {
-                navBar.style.display = 'none';
+                // Store original z-index
+                navBar.setAttribute('data-original-z', navBar.style.zIndex || '');
+                // Force nav bar behind modal
+                navBar.style.zIndex = '1 !important';
+                navBar.style.position = 'fixed';
+                
+                // Alternative: completely hide it
+                // navBar.style.visibility = 'hidden';
+                // navBar.style.opacity = '0';
             }
             
-            // Make modal truly full screen
+            // Make modal absolutely on top with maximum z-index
             modalOverlay.style.cssText = `
                 position: fixed !important;
                 top: 0 !important;
@@ -3700,7 +3708,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 width: 100vw !important;
                 height: 100vh !important;
                 background: #000000 !important;
-                z-index: 10000 !important;
+                z-index: 99999 !important;
                 display: flex !important;
                 flex-direction: column !important;
                 overflow-y: auto !important;
@@ -3713,7 +3721,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 modalOverlay.firstElementChild;
             
             if (modalContent) {
-                // Style the content container
+                // Style the content container with high z-index
                 modalContent.style.cssText = `
                     width: 100vw !important;
                     height: 100vh !important;
@@ -3725,6 +3733,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     display: flex !important;
                     flex-direction: column !important;
                     background: #000000 !important;
+                    z-index: 99999 !important;
                 `;
                 
                 // Hide or restyle the header (green bar)
@@ -3749,6 +3758,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Add film-style [close] button
             this.addFilmCloseButton(modalOverlay);
+            
+            // Double-check nav is behind after a brief delay
+            setTimeout(() => {
+                if (navBar) {
+                    navBar.style.setProperty('z-index', '1', 'important');
+                }
+            }, 10);
         },
         
         // Add [close] button exactly like film modal
@@ -3763,27 +3779,23 @@ document.addEventListener('DOMContentLoaded', function() {
             closeBtn.textContent = '[close]';
             closeBtn.style.cssText = `
                 position: fixed !important;
-                top: 1.5rem !important;
+                top: 1rem !important;
                 left: 50% !important;
                 transform: translateX(-50%) !important;
                 background: none !important;
                 border: none !important;
                 color: white !important;
                 font-family: 'Selecta' !important;
-                font-size: 14px !important;
+                font-size: 12px !important;
                 font-weight: normal !important;
                 letter-spacing: 1px !important;
                 cursor: pointer !important;
                 transition: opacity 0.3s ease !important;
-                z-index: 10001 !important;
+                z-index: 100000 !important;
                 padding: 0 !important;
                 text-align: center !important;
                 text-decoration: none !important;
             `;
-            
-            // Mobile specific sizing
-            closeBtn.style.fontSize = '12px !important';
-            closeBtn.style.top = '1rem !important';
             
             // Add hover effect
             closeBtn.addEventListener('touchstart', () => {
@@ -3817,10 +3829,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Restore nav bar
+            // Restore nav bar z-index
             const navBar = document.querySelector('.nav-bar');
             if (navBar) {
-                navBar.style.display = '';
+                const originalZ = navBar.getAttribute('data-original-z') || '10001';
+                navBar.style.zIndex = originalZ;
+                navBar.style.visibility = '';
+                navBar.style.opacity = '';
+                navBar.removeAttribute('data-original-z');
             }
             
             // If services modal, use special close
@@ -3849,8 +3865,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                        window.getComputedStyle(modal).display === 'flex';
                         
                         if (isActive && !modal.hasAttribute('data-film-styled')) {
-                            this.transformToFilmStyle(modal);
-                            modal.setAttribute('data-film-styled', 'true');
+                            // Small delay to ensure modal is fully rendered
+                            setTimeout(() => {
+                                this.transformToFilmStyle(modal);
+                                modal.setAttribute('data-film-styled', 'true');
+                            }, 50);
                         } else if (!isActive && modal.hasAttribute('data-film-styled')) {
                             // Modal closed, clean up
                             modal.removeAttribute('data-film-styled');
@@ -3860,7 +3879,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Restore nav
                             const navBar = document.querySelector('.nav-bar');
                             if (navBar) {
-                                navBar.style.display = '';
+                                const originalZ = navBar.getAttribute('data-original-z') || '10001';
+                                navBar.style.zIndex = originalZ;
+                                navBar.style.visibility = '';
+                                navBar.style.opacity = '';
                             }
                         }
                     }
@@ -3881,7 +3903,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(() => {
                         const navBar = document.querySelector('.nav-bar');
                         if (navBar) {
-                            navBar.style.display = '';
+                            const originalZ = navBar.getAttribute('data-original-z') || '10001';
+                            navBar.style.zIndex = originalZ;
+                            navBar.style.visibility = '';
+                            navBar.style.opacity = '';
                         }
                     }, 300);
                 }
@@ -3893,7 +3918,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(() => {
                         const navBar = document.querySelector('.nav-bar');
                         if (navBar) {
-                            navBar.style.display = '';
+                            const originalZ = navBar.getAttribute('data-original-z') || '10001';
+                            navBar.style.zIndex = originalZ;
+                            navBar.style.visibility = '';
+                            navBar.style.opacity = '';
                         }
                     }, 300);
                 }
@@ -3905,7 +3933,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ModalTransformer.init();
 });
 
-// CSS for film-style modals
+// CSS for film-style modals with aggressive z-index
 document.addEventListener('DOMContentLoaded', function() {
     if (window.innerWidth >= 768) return;
     
@@ -3927,7 +3955,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 letter-spacing: 1px !important;
                 cursor: pointer !important;
                 transition: opacity 0.3s ease !important;
-                z-index: 10001 !important;
+                z-index: 100000 !important;
                 padding: 0.5rem !important;
                 text-align: center !important;
                 text-decoration: none !important;
@@ -3937,11 +3965,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 opacity: 0.7 !important;
             }
             
+            /* Force modals above everything */
+            [data-film-styled="true"] {
+                z-index: 99999 !important;
+            }
+            
             /* Hide modal headers when film-styled */
             [data-film-styled="true"] .services-modal-header,
             [data-film-styled="true"] .mobile-modal-header,
             [data-film-styled="true"] .slide14-modal-header,
-            [data-film-styled="true"] .slide18-modal-header {
+            [data-film-styled="true"] .slide18-modal-header,
+            [data-film-styled="true"] [class*="modal-header"] {
                 display: none !important;
             }
             
@@ -3966,6 +4000,11 @@ document.addEventListener('DOMContentLoaded', function() {
             [data-film-styled="true"] .link-2,
             [data-film-styled="true"] .link-3 {
                 color: #32b550 !important;
+            }
+            
+            /* Force nav bar behind when modal is active */
+            body:has([data-film-styled="true"]) .nav-bar {
+                z-index: 1 !important;
             }
         }
     `;
