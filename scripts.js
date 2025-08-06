@@ -3667,3 +3667,242 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Enhanced structured data added: LocalBusiness + FAQ schemas');
 });
+
+// BURGER NOTIFICATION LAYER - Add this WITHOUT removing existing code
+// This adds explicit notifications when modals open/close
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run on mobile
+    if (window.innerWidth >= 768) return;
+    
+    console.log('🔔 Adding burger notification layer...');
+    
+    // Create a global burger notification system
+    window.BurgerNotifier = {
+        
+        // Force burger to X
+        forceX() {
+            console.log('🔔 Modal opened - forcing X');
+            const burger = document.querySelector('.nav-burger-icon-black');
+            if (!burger) return;
+            
+            // Add menu-open class
+            burger.classList.add('menu-open');
+            
+            // Hide burger image
+            const img = burger.querySelector('img');
+            if (img) img.style.opacity = '0';
+            
+            // Try to trigger any existing X creation
+            if (window.burgerStateManager) {
+                window.burgerStateManager.showX();
+            }
+            
+            // Also create X if not exists (backup)
+            setTimeout(() => {
+                if (!document.querySelector('.external-x-icon, .burger-x-icon')) {
+                    this.createXIcon();
+                }
+            }, 50);
+        },
+        
+        // Force burger back
+        forceBurger() {
+            console.log('🔔 Modal closed - forcing burger');
+            const burger = document.querySelector('.nav-burger-icon-black');
+            if (!burger) return;
+            
+            // Remove menu-open class
+            burger.classList.remove('menu-open');
+            
+            // Show burger image
+            const img = burger.querySelector('img');
+            if (img) img.style.opacity = '1';
+            
+            // Remove any X icons
+            const xIcons = document.querySelectorAll('.external-x-icon, .burger-x-icon');
+            xIcons.forEach(x => x.remove());
+            
+            // Try to trigger existing burger restoration
+            if (window.burgerStateManager) {
+                window.burgerStateManager.showBurger();
+            }
+        },
+        
+        // Create X icon as backup
+        createXIcon() {
+            const burger = document.querySelector('.nav-burger-icon-black');
+            const navBar = document.querySelector('.nav-bar');
+            if (!burger) return;
+            
+            const rect = burger.getBoundingClientRect();
+            const isWhiteNav = navBar && navBar.classList.contains('nav-white');
+            
+            const xIcon = document.createElement('div');
+            xIcon.className = 'burger-x-icon-backup';
+            xIcon.innerHTML = '✕';
+            xIcon.style.cssText = `
+                position: fixed !important;
+                top: ${rect.top}px !important;
+                left: ${rect.left}px !important;
+                width: ${rect.width}px !important;
+                height: ${rect.height}px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-size: 1.8rem !important;
+                color: ${isWhiteNav ? 'black' : 'white'} !important;
+                z-index: 10002 !important;
+                cursor: pointer !important;
+                pointer-events: auto !important;
+            `;
+            
+            document.body.appendChild(xIcon);
+            
+            xIcon.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Close any open modal
+                this.closeAnyModal();
+            });
+        },
+        
+        // Helper to close any modal
+        closeAnyModal() {
+            // Try all close buttons
+            const closeButtons = [
+                '.services-modal-close',
+                '.mobile-modal-close', 
+                '.slide14-modal-close',
+                '.slide18-modal-close'
+            ];
+            
+            for (let selector of closeButtons) {
+                const btn = document.querySelector(selector);
+                if (btn) {
+                    btn.click();
+                    return;
+                }
+            }
+            
+            // Try services system
+            if (window.servicesToggleSystem) {
+                window.servicesToggleSystem.closeActiveService();
+            }
+        }
+    };
+    
+    // INTERCEPT MODAL OPENS/CLOSES
+    // We'll add listeners to the actual triggers
+    
+    // 1. Services Modal (Slide 21)
+    setTimeout(() => {
+        // Intercept service opens
+        const serviceTriggers = document.querySelectorAll('.brand, .creative, .imc, .solve4, .scriptwriting, .film-conceptualisation, .directing');
+        serviceTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                console.log('🔔 Service clicked - will notify burger');
+                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+            });
+        });
+        
+        // Intercept service closes
+        const originalCloseService = window.servicesToggleSystem?.closeActiveService;
+        if (window.servicesToggleSystem && originalCloseService) {
+            window.servicesToggleSystem.closeActiveService = function() {
+                const result = originalCloseService.apply(this, arguments);
+                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
+                return result;
+            };
+        }
+    }, 2000);
+    
+    // 2. Values Modal (Slide 11)
+    setTimeout(() => {
+        const valueTriggers = document.querySelectorAll('.expand-trigger-1, .expand-trigger-2, .expand-trigger-3, #expand-trigger-1, #expand-trigger-2, #expand-trigger-3');
+        valueTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                console.log('🔔 Value clicked - will notify burger');
+                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+            });
+        });
+        
+        // Watch for close
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('mobile-modal-close')) {
+                console.log('🔔 Values modal closing');
+                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
+            }
+        });
+    }, 2000);
+    
+    // 3. Slide 14 Modals (Bio, Brands, Recognition)
+    setTimeout(() => {
+        const slide14Triggers = document.querySelectorAll('.bio-expand-trigger-4, .brands-expand-trigger-5, .recog-expand-trigger-6');
+        slide14Triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                console.log('🔔 Slide 14 item clicked - will notify burger');
+                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+            });
+        });
+        
+        // Watch for close
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('slide14-modal-close')) {
+                console.log('🔔 Slide 14 modal closing');
+                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
+            }
+        });
+    }, 2000);
+    
+    // 4. Slide 18 Modal (Ekta Bio)
+    setTimeout(() => {
+        const slide18Trigger = document.querySelector('.bio-ekta-trigger');
+        if (slide18Trigger) {
+            slide18Trigger.addEventListener('click', () => {
+                console.log('🔔 Slide 18 bio clicked - will notify burger');
+                setTimeout(() => window.BurgerNotifier.forceX(), 100);
+            });
+        }
+        
+        // Watch for close
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('slide18-modal-close')) {
+                console.log('🔔 Slide 18 modal closing');
+                setTimeout(() => window.BurgerNotifier.forceBurger(), 100);
+            }
+        });
+    }, 2000);
+    
+    // 5. Also watch for ESC key (modals close on ESC)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            console.log('🔔 ESC pressed - checking for modals');
+            setTimeout(() => {
+                const anyModalOpen = document.querySelector('.modal-active, [style*="display: flex"].services-modal-overlay');
+                if (!anyModalOpen) {
+                    window.BurgerNotifier.forceBurger();
+                }
+            }, 300);
+        }
+    });
+    
+    console.log('✅ Burger notification layer active - test opening modals now');
+});
+
+// Add some CSS to ensure X is visible
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth >= 768) return;
+    
+    const style = document.createElement('style');
+    style.textContent = `
+        @media (max-width: 767px) {
+            .burger-x-icon-backup {
+                font-family: system-ui, -apple-system, sans-serif !important;
+                line-height: 1 !important;
+                background: transparent !important;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+});
