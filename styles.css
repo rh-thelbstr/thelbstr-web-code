@@ -1784,6 +1784,9 @@ a, button, .clickable, [data-cursor="pointer"] {
         /* Rotate 90 degrees clockwise so text reads vertically top-down */
         transform: rotate(90deg) !important;
         transform-origin: center center !important;
+        /* Center alignment in nav bar */
+        margin: auto 0 !important;
+        align-self: center !important;
         /* Safari-specific fixes */
         min-width: 120px !important;
         max-width: 120px !important;
@@ -1822,12 +1825,16 @@ a, button, .clickable, [data-cursor="pointer"] {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 0 !important;
+        padding: 0 1.5rem !important;
+        height: 60px !important; /* Ensure nav bar has consistent height */
     }
     
-    /* Optional: Add breathing room around rotated logo */
+    /* Container for the logo to ensure proper centering */
     .nav-lbstr-logo {
-        margin: 0 10px !important;
+        margin: 0 !important;
+        position: relative !important;
+        top: 0 !important;
+        vertical-align: middle !important;
     }
 }
 
