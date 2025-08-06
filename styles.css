@@ -1847,15 +1847,17 @@ a, button, .clickable, [data-cursor="pointer"] {
     flex-direction: row !important;
     justify-content: flex-end !important;
     align-items: flex-end !important; /* Changed to bottom align with Contact */
-    gap: 1.5rem !important; /* Reduced from 2rem to 1.5rem */
+    gap: 1.0rem !important; /* Reduced from 2rem to 1.5rem */
     white-space: nowrap !important; /* Prevent wrapping */
     
     /* Ensure container doesn't shrink */
     flex-shrink: 0 !important;
     min-width: 200px !important; /* Give enough space for both links */
     
-    /* Move down 1vh to align with Contact bottom */
-    margin-bottom: -1vh !important;
+    /* Move down MORE to align with Contact bottom - increased from -1vh */
+    margin-top: 3vh !important;
+    position: relative !important;
+    top: 2vh !important;
 }
 
 /* Target individual social links */
@@ -1883,11 +1885,13 @@ a, button, .clickable, [data-cursor="pointer"] {
 @supports (-webkit-appearance: none) {
     .nav-menu-desktop .social-handles,
     .social-handles {
-        gap: 1.5rem !important;
+        gap: 1.0rem !important;
         justify-content: flex-end !important;
         flex-wrap: nowrap !important;
         align-items: flex-end !important;
-        margin-bottom: -1vh !important;
+        margin-top: 3vh !important;
+        position: relative !important;
+        top: 2vh !important;
     }
 }
 
@@ -1895,10 +1899,12 @@ a, button, .clickable, [data-cursor="pointer"] {
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     .nav-menu-desktop .social-handles,
     .social-handles {
-        gap: 1.5rem !important;
+        gap: 1.0rem !important;
         justify-content: flex-end !important;
         align-items: flex-end !important;
-        margin-bottom: -1vh !important;
+        margin-top: 3vh !important;
+        position: relative !important;
+        top: 2vh !important;
     }
 }
 
