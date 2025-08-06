@@ -1771,3 +1771,64 @@ a, button, .clickable, [data-cursor="pointer"] {
         opacity: 1 !important;
     }
 }
+
+/* Safari Logo Fix - Add this to your styles.css */
+
+.nav-lbstr-logo {
+    width: 120px !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+    /* Safari-specific fixes */
+    min-width: 120px !important;
+    max-width: 120px !important;
+    /* Ensure proper scaling */
+    transform: scale(1) !important;
+    /* Force proper dimensions */
+    box-sizing: border-box !important;
+}
+
+/* Safari-specific targeting */
+@supports (-webkit-appearance: none) {
+    .nav-lbstr-logo {
+        /* Force exact dimensions in Safari */
+        width: 120px !important;
+        height: 40px !important; /* Set explicit height for Safari */
+        object-fit: contain !important;
+        object-position: left center !important;
+    }
+}
+
+/* Additional Safari WebKit fix */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .nav-lbstr-logo {
+        width: 120px !important;
+        height: 40px !important;
+        vertical-align: middle !important;
+    }
+}
+
+/* Ensure nav bar container properly aligns logo */
+.nav-bar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 !important;
+}
+
+/* Mobile fixes to maintain your existing mobile styling */
+@media (max-width: 767px) {
+    .nav-bar .nav-lbstr-logo {
+        margin-left: 1.5rem !important;
+        margin-right: 0 !important;
+        width: 120px !important;
+        height: auto !important;
+    }
+    
+    .nav-bar.nav-green .nav-lbstr-logo,
+    .nav-bar.nav-black .nav-lbstr-logo,
+    .nav-bar.nav-white .nav-lbstr-logo {
+        margin-left: 1.5rem !important;
+        margin-right: 0 !important;
+    }
+}   
