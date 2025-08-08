@@ -1924,3 +1924,7 @@ a, button, .clickable, [data-cursor="pointer"] {
     word-break: keep-all !important;
     overflow-wrap: normal !important;
 }
+
+   .menu-container-left {
+  gap: clamp(30px, min(4vw, 6vh), 60px) !important;
+}
