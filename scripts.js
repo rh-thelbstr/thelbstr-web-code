@@ -3828,3 +3828,123 @@ document.addEventListener('DOMContentLoaded', () => {
     burger.classList.toggle('menu-open', !!overlayOpen);
   }, 120);
 });
+
+// Perfect Scaling Canvas System (No White Box, No Zoom)
+(function() {
+  'use strict';
+  
+  console.log('🎯 Initializing perfect scaling canvas system...');
+  
+  // Configuration
+  const baseW = 1512, baseH = 992;
+  let design = null;
+  
+  // Main initialization function
+  function initScalingSystem() {
+    // Only apply on desktop
+    if (window.innerWidth < 768) {
+      console.log('📱 Mobile detected - skipping canvas system');
+      return;
+    }
+    
+    console.log('🖥️ Desktop detected - setting up canvas wrapper');
+    
+    const body = document.body;
+    
+    // Create the canvas and design wrappers
+    const canvas = document.createElement('div');
+    canvas.id = 'canvas';
+    
+    design = document.createElement('div');
+    design.id = 'design';
+    
+    // Move all existing body content into the design container
+    while (body.firstChild) {
+      design.appendChild(body.firstChild);
+    }
+    
+    // Add the structure
+    canvas.appendChild(design);
+    body.appendChild(canvas);
+    
+    console.log('✅ Canvas wrapper applied');
+    
+    // Initial scaling
+    fitDesign();
+    
+    // Set up resize listener
+    window.addEventListener('resize', fitDesign, { passive: true });
+    window.addEventListener('load', fitDesign);
+  }
+  
+  // Scaling function
+  function fitDesign() {
+    if (!design || window.innerWidth < 768) return;
+    
+    const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
+    
+    // Center horizontally/vertically after scaling
+    const x = (window.innerWidth - baseW * scale) / 2;
+    const y = (window.innerHeight - baseH * scale) / 2;
+    
+    design.style.transform = `translate(${x / scale}px, ${y / scale}px) scale(${scale})`;
+    
+    console.log(`🎯 Scaled to ${(scale * 100).toFixed(1)}% (${window.innerWidth}×${window.innerHeight})`);
+  }
+  
+  // Handle window resize for mobile/desktop switching
+  function handleResize() {
+    const isDesktop = window.innerWidth >= 768;
+    const hasCanvas = document.getElementById('canvas');
+    
+    if (isDesktop && !hasCanvas) {
+      // Switched to desktop - need to create canvas
+      console.log('💻 Switched to desktop - creating canvas');
+      initScalingSystem();
+    } else if (!isDesktop && hasCanvas) {
+      // Switched to mobile - need to remove canvas
+      console.log('📱 Switched to mobile - removing canvas');
+      removeCanvas();
+    } else if (isDesktop && hasCanvas) {
+      // Desktop resize - just rescale
+      fitDesign();
+    }
+  }
+  
+  // Remove canvas system (for mobile)
+  function removeCanvas() {
+    const canvas = document.getElementById('canvas');
+    const design = document.getElementById('design');
+    
+    if (canvas && design) {
+      const body = document.body;
+      
+      // Move content back to body
+      while (design.firstChild) {
+        body.appendChild(design.firstChild);
+      }
+      
+      // Remove canvas
+      canvas.remove();
+      
+      console.log('🧹 Canvas system removed for mobile');
+    }
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScalingSystem);
+  } else {
+    initScalingSystem();
+  }
+  
+  // Handle resize with debouncing
+  let resizeTimeout;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 150);
+  }, { passive: true });
+  
+  console.log('🎉 Perfect scaling canvas system loaded');
+  
+})();
