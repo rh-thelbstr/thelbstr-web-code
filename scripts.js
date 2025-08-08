@@ -3828,3 +3828,29 @@ document.addEventListener('DOMContentLoaded', () => {
     burger.classList.toggle('menu-open', !!overlayOpen);
   }, 120);
 });
+
+// Disable GSAP ScrollTrigger on short screens
+(function() {
+  function handleShortScreens() {
+    if (window.innerWidth >= 768 && window.innerHeight <= 700) {
+      console.log('📱 Short desktop screen detected - disabling GSAP');
+      
+      // Kill any existing ScrollTriggers
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      }
+      
+      // Reset any transforms
+      if (typeof gsap !== 'undefined') {
+        gsap.set(".wrapper", { x: 0, clearProps: "all" });
+      }
+    }
+  }
+  
+  // Run on load and resize
+  window.addEventListener('resize', handleShortScreens, { passive: true });
+  window.addEventListener('load', handleShortScreens);
+  
+  // Run immediately
+  handleShortScreens();
+})();
