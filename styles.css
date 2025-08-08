@@ -1925,15 +1925,22 @@ a, button, .clickable, [data-cursor="pointer"] {
     overflow-wrap: normal !important;
 }
 
-/* ---------- MacBook Pro 16" Perfect Scaling (Your Approved Design) ---------- */
+/* ---------- Fixed MacBook Pro Perfect Scaling (No White Bar) ---------- */
 :root {
-  --base-width: 1512px;   /* Your MacBook Pro width (without inspector) */
-  --base-height: 992px;   /* Your MacBook Pro height (from screenshot) */
-  --slide-count: 22;      /* Total number of slides */
+  --base-width: 1512px;
+  --base-height: 992px;
+  --slide-count: 22;
 }
 
 @media (min-width: 768px) {
-  /* Main scaling container - scales your "approved" design proportionally */
+  /* Prevent white space by ensuring body takes full viewport */
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Hide any overflow that causes white space */
+  }
+  
+  /* Main scaling container */
   .scroll-container {
     width: var(--base-width);
     height: var(--base-height);
@@ -1943,26 +1950,40 @@ a, button, .clickable, [data-cursor="pointer"] {
       calc(100vh / var(--base-height))
     ));
     overflow: hidden;
+    position: relative; /* Ensure proper positioning */
   }
   
-  /* Wrapper maintains horizontal scroll with fixed dimensions */
+  /* Wrapper */
   .wrapper {
-    width: calc(var(--base-width) * var(--slide-count)); /* 1512px × 22 slides */
+    width: calc(var(--base-width) * var(--slide-count));
     height: var(--base-height);
-    transform: none; /* Parent handles scaling */
+    transform: none;
   }
   
-  /* Individual slides at your approved design size */
+  /* Slides */
   .slide {
     width: var(--base-width);
     height: var(--base-height);
     min-height: var(--base-height);
     flex-shrink: 0;
   }
+  
+  /* Force full viewport coverage */
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
 }
 
-/* Keep mobile unchanged */
+/* Mobile unchanged */
 @media (max-width: 767px) {
+  html, body {
+    overflow-x: hidden !important;
+  }
+  
   .scroll-container,
   .wrapper,
   .slide {
