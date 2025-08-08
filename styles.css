@@ -1924,3 +1924,18 @@ a, button, .clickable, [data-cursor="pointer"] {
     word-break: keep-all !important;
     overflow-wrap: normal !important;
 }
+
+/* ---------- Short viewport-safe height fix ---------- */
+/* Applies to all slides and wrapper containers */
+.slide,
+.wrapper {
+  min-height: 100svh;       /* modern browsers */
+  min-height: 100vh;        /* fallback for older browsers */
+}
+
+/* Allow vertical scroll inside slides when viewport height is very short */
+@media (min-width: 768px) and (max-height: 760px) {
+  .scroll-container {
+    overflow-y: auto !important;
+  }
+}
