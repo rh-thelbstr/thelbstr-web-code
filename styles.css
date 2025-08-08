@@ -1925,71 +1925,22 @@ a, button, .clickable, [data-cursor="pointer"] {
     overflow-wrap: normal !important;
 }
 
-/* ---------- Fixed MacBook Pro Perfect Scaling (No White Bar) ---------- */
-:root {
-  --base-width: 1512px;
-  --base-height: 992px;
-  --slide-count: 22;
-}
-
 @media (min-width: 768px) {
-  /* Prevent white space by ensuring body takes full viewport */
-  body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* Hide any overflow that causes white space */
+  .scroll-container {
+    width: 100vw;
+    height: 100vh;
+    transform-origin: top left;
+    transform: scale(1); /* Let the content scale naturally */
+    overflow: hidden;
   }
   
-  /* Main scaling container */
-  .scroll-container {
-    width: var(--base-width);
-    height: var(--base-height);
-    transform-origin: top left;
+  .wrapper {
+    width: calc(100vw * var(--slide-count));
+    height: 100vh;
     transform: scale(min(
       calc(100vw / var(--base-width)),
       calc(100vh / var(--base-height))
     ));
-    overflow: hidden;
-    position: relative; /* Ensure proper positioning */
-  }
-  
-  /* Wrapper */
-  .wrapper {
-    width: calc(var(--base-width) * var(--slide-count));
-    height: var(--base-height);
-    transform: none;
-  }
-  
-  /* Slides */
-  .slide {
-    width: var(--base-width);
-    height: var(--base-height);
-    min-height: var(--base-height);
-    flex-shrink: 0;
-  }
-  
-  /* Force full viewport coverage */
-  html, body {
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-/* Mobile unchanged */
-@media (max-width: 767px) {
-  html, body {
-    overflow-x: hidden !important;
-  }
-  
-  .scroll-container,
-  .wrapper,
-  .slide {
-    transform: none !important;
-    width: 100vw !important;
-    height: auto !important;
-    min-height: 100vh !important;
+    transform-origin: top left;
   }
 }
