@@ -1924,3 +1924,42 @@ a, button, .clickable, [data-cursor="pointer"] {
     word-break: keep-all !important;
     overflow-wrap: normal !important;
 }
+
+/* Safe height-based scaling - no layout breakage */
+@media (min-width: 768px) {
+  /* Scale root font-size from height (safe, layout-friendly) */
+  html {
+    font-size: clamp(14px, calc(16px * (100vh / 992px)), 18px);
+  }
+}
+
+/* Very short desktop heights: disable pins/complex transforms */
+@media (min-width: 768px) and (max-height: 700px) {
+  /* Disable any pinning/horizontal scroll transforms */
+  .scroll-container {
+    position: static !important;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  
+  .wrapper {
+    transform: none !important;
+    position: static !important;
+    width: 100vw !important;
+    height: auto !important;
+  }
+  
+  .slide {
+    position: static !important;
+    transform: none !important;
+    width: 100vw !important;
+    height: auto !important;
+    min-height: 90vh !important;
+  }
+  
+  /* Disable GSAP animations on short screens */
+  [data-aos], [data-scroll] {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
