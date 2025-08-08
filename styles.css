@@ -1925,22 +1925,81 @@ a, button, .clickable, [data-cursor="pointer"] {
     overflow-wrap: normal !important;
 }
 
+/* ---------- True Canals Amsterdam Scaling (Fixed) ---------- */
+:root {
+  --base-width: 1512px;
+  --base-height: 992px;
+  --slide-count: 22;
+}
+
 @media (min-width: 768px) {
-  .scroll-container {
+  /* Viewport container that fills the screen */
+  html, body {
+    margin: 0;
+    padding: 0;
     width: 100vw;
     height: 100vh;
-    transform-origin: top left;
-    transform: scale(1); /* Let the content scale naturally */
-    overflow: hidden;
+    overflow: hidden; /* Prevent scrollbars during scaling */
   }
   
-  .wrapper {
-    width: calc(100vw * var(--slide-count));
-    height: 100vh;
+  /* Scaling wrapper - this is the key */
+  .scroll-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--base-width);
+    height: var(--base-height);
+    transform-origin: top left;
     transform: scale(min(
       calc(100vw / var(--base-width)),
       calc(100vh / var(--base-height))
     ));
-    transform-origin: top left;
+  }
+  
+  /* Content wrapper at fixed dimensions */
+  .wrapper {
+    width: calc(var(--base-width) * var(--slide-count));
+    height: var(--base-height);
+    position: relative;
+  }
+  
+  /* Individual slides at fixed dimensions */
+  .slide {
+    width: var(--base-width);
+    height: var(--base-height);
+    min-height: var(--base-height);
+    flex-shrink: 0;
+  }
+  
+  /* Ensure body has the scaled height for scroll calculations */
+  body {
+    height: calc(100vh * var(--slide-count)); /* Enable horizontal scroll */
+  }
+}
+
+/* Mobile - completely reset */
+@media (max-width: 767px) {
+  html, body {
+    overflow: visible !important;
+    position: static !important;
+    height: auto !important;
+  }
+  
+  .scroll-container {
+    position: static !important;
+    transform: none !important;
+    width: 100vw !important;
+    height: auto !important;
+  }
+  
+  .wrapper {
+    width: 100vw !important;
+    height: auto !important;
+  }
+  
+  .slide {
+    width: 100vw !important;
+    height: auto !important;
+    min-height: 100vh !important;
   }
 }
