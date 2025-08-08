@@ -3828,3 +3828,91 @@ document.addEventListener('DOMContentLoaded', () => {
     burger.classList.toggle('menu-open', !!overlayOpen);
   }, 120);
 });
+
+/* =========================================================
+   LBSTR Universal Scale Wrapper
+   Drop into scripts.js (loads after DOMContentLoaded)
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+  const baseW = 1512;
+  const baseH = 992;
+
+  // Create wrapper elements
+  const canvas = document.createElement("div");
+  const design = document.createElement("div");
+  canvas.id = "lbstr-canvas";
+  design.id = "lbstr-design";
+  canvas.appendChild(design);
+
+  // Elements to keep OUTSIDE the scaling wrapper
+  const FIXED_SELECTORS = [
+    ".nav-white",
+    ".nav-green",
+    ".nav-black",
+    "#wf-cookie-banner" // example, remove if not needed
+  ];
+
+  function shouldStay(node) {
+    return (
+      node.nodeType === 1 &&
+      FIXED_SELECTORS.some((sel) => node.matches(sel))
+    );
+  }
+
+  // Move all body children into design wrapper except fixed ones
+  [...document.body.childNodes].forEach((node) => {
+    if (!shouldStay(node)) {
+      design.appendChild(node);
+    }
+  });
+
+  // Append the scaling canvas to the body
+  document.body.appendChild(canvas);
+
+  // Scaling logic
+  function fit() {
+    const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
+    const x = (window.innerWidth - baseW * scale) / 2;
+    const y = (window.innerHeight - baseH * scale) / 2;
+    design.style.transform = `translate(${x / scale}px, ${y / scale}px) scale(${scale})`;
+  }
+
+  window.addEventListener("resize", fit, { passive: true });
+  fit();
+});
+
+// =========================================================
+// Add required CSS via JS so it loads after Webflow styles
+// =========================================================
+const style = document.createElement("style");
+style.textContent = `
+  #lbstr-canvas {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: var(--page-bg, #000);
+    z-index: 0; /* nav bars above this */
+  }
+  #lbstr-design {
+    width: 1512px;
+    height: 992px;
+    transform-origin: top left;
+  }
+  /* Fallback for short viewports */
+  @media (max-height: 650px) {
+    #lbstr-canvas {
+      position: relative;
+      height: 100vh;
+      overflow: auto;
+    }
+    #lbstr-design {
+      transform: none !important;
+      width: 100%;
+      height: auto;
+    }
+  }
+`;
+document.head.appendChild(style);
