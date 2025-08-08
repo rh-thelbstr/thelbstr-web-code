@@ -1924,3 +1924,55 @@ a, button, .clickable, [data-cursor="pointer"] {
     word-break: keep-all !important;
     overflow-wrap: normal !important;
 }
+
+/* ---------- Perfect Scaling Canvas (No White Box, No Zoom) ---------- */
+
+/* Only apply on desktop */
+@media (min-width: 768px) {
+  /* Full-viewport canvas that centers the scaled design */
+  #canvas {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden; /* prevent white gutters */
+    background: #000; /* match your site background */
+  }
+  
+  /* Your "ideal" design box (MacBook Pro dimensions) */
+  #design {
+    width: 1512px;
+    height: 992px;
+    transform-origin: top left; /* so scale math is predictable */
+  }
+  
+  /* Fallback: super-short heights → allow vertical scroll instead of scaling to oblivion */
+  @media (max-height: 650px) {
+    #canvas {
+      position: relative;
+      height: 100vh;
+      overflow: auto;
+    }
+    
+    #design {
+      transform: none !important;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+/* Mobile - completely untouched */
+@media (max-width: 767px) {
+  #canvas,
+  #design {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    inset: auto !important;
+    display: block !important;
+    place-items: normal !important;
+    overflow: visible !important;
+  }
+}
