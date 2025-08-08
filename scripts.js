@@ -3830,89 +3830,97 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =========================================================
-   LBSTR Universal Scale Wrapper
-   Drop into scripts.js (loads after DOMContentLoaded)
+   LBSTR Option B — Specificity + Minimal !important
+   Scales a known wrapper without moving DOM nodes
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", function () {
+(function () {
   const baseW = 1512;
   const baseH = 992;
 
-  // Create wrapper elements
-  const canvas = document.createElement("div");
-  const design = document.createElement("div");
-  canvas.id = "lbstr-canvas";
-  design.id = "lbstr-design";
-  canvas.appendChild(design);
+  // 1) Add a high-specificity hook on <html>
+  document.documentElement.classList.add('lbstr-overrides');
 
-  // Elements to keep OUTSIDE the scaling wrapper
-  const FIXED_SELECTORS = [
-    ".nav-white",
-    ".nav-green",
-    ".nav-black",
-    "#wf-cookie-banner" // example, remove if not needed
-  ];
+  // 2) Find the main content wrapper to scale (edit if needed)
+  const TARGET_SELECTORS = ['.scroll-container', '.wrapper', 'main', '#page-wrap'];
+  const target = TARGET_SELECTORS.map(s => document.querySelector(s)).find(Boolean);
 
-  function shouldStay(node) {
-    return (
-      node.nodeType === 1 &&
-      FIXED_SELECTORS.some((sel) => node.matches(sel))
-    );
+  if (!target) {
+    console.warn('LBSTR Option B: No target wrapper found. Update TARGET_SELECTORS.');
+    return;
   }
 
-  // Move all body children into design wrapper except fixed ones
-  [...document.body.childNodes].forEach((node) => {
-    if (!shouldStay(node)) {
-      design.appendChild(node);
-    }
-  });
+  // Tag it so our CSS can be very specific (beats Webflow without !important spam)
+  target.classList.add('lbstr-scale-target');
 
-  // Append the scaling canvas to the body
-  document.body.appendChild(canvas);
-
-  // Scaling logic
-  function fit() {
-    const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
-    const x = (window.innerWidth - baseW * scale) / 2;
-    const y = (window.innerHeight - baseH * scale) / 2;
-    design.style.transform = `translate(${x / scale}px, ${y / scale}px) scale(${scale})`;
-  }
-
-  window.addEventListener("resize", fit, { passive: true });
-  fit();
-});
-
-// =========================================================
-// Add required CSS via JS so it loads after Webflow styles
-// =========================================================
-const style = document.createElement("style");
-style.textContent = `
-  #lbstr-canvas {
-    position: fixed;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    background: var(--page-bg, #000);
-    z-index: 0; /* nav bars above this */
-  }
-  #lbstr-design {
-    width: 1512px;
-    height: 992px;
-    transform-origin: top left;
-  }
-  /* Fallback for short viewports */
-  @media (max-height: 650px) {
-    #lbstr-canvas {
-      position: relative;
-      height: 100vh;
-      overflow: auto;
-    }
-    #lbstr-design {
-      transform: none !important;
+  // 3) Inject CSS AFTER Webflow so our rules win
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Root guards */
+    html.lbstr-overrides, html.lbstr-overrides body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       width: 100%;
-      height: auto;
+      overflow: hidden; /* prevent stray scrollbars when scaled */
     }
+
+    /* Make sure nothing else sets transforms on container unexpectedly */
+    html.lbstr-overrides .lbstr-scale-target {
+      width: ${baseW}px;
+      height: ${baseH}px;
+      transform-origin: top left;
+      will-change: transform;
+    }
+
+    /* Center it in the viewport like a canvas */
+    html.lbstr-overrides .lbstr-scale-stage {
+      position: fixed; inset: 0;
+      display: grid; place-items: center;
+      overflow: hidden;
+      z-index: 0; /* your nav bars can sit above this */
+    }
+
+    /* Short-height fallback: disable scaling and just allow vertical scrolling */
+    @media (max-height: 650px) {
+      html.lbstr-overrides, html.lbstr-overrides body {
+        overflow: auto;
+      }
+      html.lbstr-overrides .lbstr-scale-stage {
+        position: relative;
+        height: 100vh;
+        overflow: auto;
+      }
+      html.lbstr-overrides .lbstr-scale-target {
+        transform: none !important;
+        width: 100%;
+        height: auto;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 4) Create a non-invasive stage around the target (doesn't move siblings)
+  //    We only wrap the target itself, not the whole body (keeps navs unaffected).
+  const stage = document.createElement('div');
+  stage.className = 'lbstr-scale-stage';
+  target.parentNode.insertBefore(stage, target);
+  stage.appendChild(target);
+
+  // 5) Fit logic — compute scale & center offsets
+  function fit() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const scale = Math.min(vw / baseW, vh / baseH);
+
+    // Compute centering translation in *scaled* coordinate space
+    const x = (vw - baseW * scale) / 2;
+    const y = (vh - baseH * scale) / 2;
+
+    // Use translate inside the scale to keep math stable
+    target.style.transform = `translate(${x / scale}px, ${y / scale}px) scale(${scale})`;
   }
-`;
-document.head.appendChild(style);
+
+  window.addEventListener('resize', fit, { passive: true });
+  fit();
+})();
