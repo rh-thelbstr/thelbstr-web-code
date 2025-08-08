@@ -1925,17 +1925,95 @@ a, button, .clickable, [data-cursor="pointer"] {
     overflow-wrap: normal !important;
 }
 
-/* ---------- Short viewport-safe height fix ---------- */
-/* Applies to all slides and wrapper containers */
-.slide,
-.wrapper {
+/* ---------- Dual-breakpoint short viewport fix ---------- */
+/* Base heights for all slides */
+.slide {
   min-height: 100svh;       /* modern browsers */
-  min-height: 100vh;        /* fallback for older browsers */
+  min-height: 100vh;        /* fallback */
+  height: auto;             /* allow content to expand if needed */
 }
 
-/* Allow vertical scroll inside slides when viewport height is very short */
-@media (min-width: 768px) and (max-height: 760px) {
+.wrapper {
+  min-height: 100svh;
+  min-height: 100vh;
+}
+
+/* Standard short laptops (like your colleague's Lenovo) */
+@media (min-width: 768px) and (max-height: 650px) {
+  .slide {
+    min-height: 650px;      /* ensure minimum usable height */
+    height: auto;           /* allow content to flow naturally */
+  }
+  
+  /* Keep horizontal scroll intact but allow vertical scroll within slides */
   .scroll-container {
-    overflow-y: auto !important;
+    overflow-y: visible !important;
+  }
+  
+  /* Individual slides can scroll if content overflows */
+  .slide {
+    overflow-y: auto;
+    scrollbar-width: thin;  /* Firefox */
+  }
+  
+  /* Clean scrollbars */
+  .slide::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .slide::-webkit-scrollbar-thumb {
+    background: rgba(50, 181, 80, 0.3);
+    border-radius: 3px;
+  }
+  
+  .slide::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Very short or heavily windowed browsers */
+@media (min-width: 768px) and (max-height: 500px) {
+  .slide {
+    /* More aggressive scaling to fit content */
+    transform: scale(0.85);
+    transform-origin: center center;
+    min-height: 85vh;
+    overflow-y: auto;
+  }
+  
+  /* Adjust wrapper width to compensate for scaling */
+  .wrapper {
+    transform-origin: left center;
+  }
+  
+  /* Ensure text remains readable after scaling */
+  .slide * {
+    font-size: inherit;
+    line-height: inherit;
+  }
+  
+  /* Enhanced scrollbar for very small screens */
+  .slide::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .slide::-webkit-scrollbar-thumb {
+    background: rgba(50, 181, 80, 0.5);
+    border-radius: 4px;
+  }
+  
+  /* Reduce spacing on very short screens */
+  .slide {
+    padding: 1rem !important;
+  }
+}
+
+/* Prevent any conflicts with your existing mobile styles */
+@media (max-width: 767px) {
+  .slide {
+    transform: none !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
   }
 }
