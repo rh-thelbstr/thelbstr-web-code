@@ -1925,95 +1925,50 @@ a, button, .clickable, [data-cursor="pointer"] {
     overflow-wrap: normal !important;
 }
 
-/* ---------- Dual-breakpoint short viewport fix ---------- */
-/* Base heights for all slides */
-.slide {
-  min-height: 100svh;       /* modern browsers */
-  min-height: 100vh;        /* fallback */
-  height: auto;             /* allow content to expand if needed */
+/* ---------- MacBook Pro 16" Perfect Scaling (Your Approved Design) ---------- */
+:root {
+  --base-width: 1512px;   /* Your MacBook Pro width (without inspector) */
+  --base-height: 992px;   /* Your MacBook Pro height (from screenshot) */
+  --slide-count: 22;      /* Total number of slides */
 }
 
-.wrapper {
-  min-height: 100svh;
-  min-height: 100vh;
-}
-
-/* Standard short laptops (like your colleague's Lenovo) */
-@media (min-width: 768px) and (max-height: 650px) {
-  .slide {
-    min-height: 650px;      /* ensure minimum usable height */
-    height: auto;           /* allow content to flow naturally */
-  }
-  
-  /* Keep horizontal scroll intact but allow vertical scroll within slides */
+@media (min-width: 768px) {
+  /* Main scaling container - scales your "approved" design proportionally */
   .scroll-container {
-    overflow-y: visible !important;
+    width: var(--base-width);
+    height: var(--base-height);
+    transform-origin: top left;
+    transform: scale(min(
+      calc(100vw / var(--base-width)),
+      calc(100vh / var(--base-height))
+    ));
+    overflow: hidden;
   }
   
-  /* Individual slides can scroll if content overflows */
-  .slide {
-    overflow-y: auto;
-    scrollbar-width: thin;  /* Firefox */
-  }
-  
-  /* Clean scrollbars */
-  .slide::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .slide::-webkit-scrollbar-thumb {
-    background: rgba(50, 181, 80, 0.3);
-    border-radius: 3px;
-  }
-  
-  .slide::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* Very short or heavily windowed browsers */
-@media (min-width: 768px) and (max-height: 500px) {
-  .slide {
-    /* More aggressive scaling to fit content */
-    transform: scale(0.85);
-    transform-origin: center center;
-    min-height: 85vh;
-    overflow-y: auto;
-  }
-  
-  /* Adjust wrapper width to compensate for scaling */
+  /* Wrapper maintains horizontal scroll with fixed dimensions */
   .wrapper {
-    transform-origin: left center;
+    width: calc(var(--base-width) * var(--slide-count)); /* 1512px × 22 slides */
+    height: var(--base-height);
+    transform: none; /* Parent handles scaling */
   }
   
-  /* Ensure text remains readable after scaling */
-  .slide * {
-    font-size: inherit;
-    line-height: inherit;
-  }
-  
-  /* Enhanced scrollbar for very small screens */
-  .slide::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .slide::-webkit-scrollbar-thumb {
-    background: rgba(50, 181, 80, 0.5);
-    border-radius: 4px;
-  }
-  
-  /* Reduce spacing on very short screens */
+  /* Individual slides at your approved design size */
   .slide {
-    padding: 1rem !important;
+    width: var(--base-width);
+    height: var(--base-height);
+    min-height: var(--base-height);
+    flex-shrink: 0;
   }
 }
 
-/* Prevent any conflicts with your existing mobile styles */
+/* Keep mobile unchanged */
 @media (max-width: 767px) {
+  .scroll-container,
+  .wrapper,
   .slide {
     transform: none !important;
-    min-height: 100vh !important;
+    width: 100vw !important;
     height: auto !important;
-    overflow-y: visible !important;
+    min-height: 100vh !important;
   }
 }
