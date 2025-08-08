@@ -1928,11 +1928,3 @@ a, button, .clickable, [data-cursor="pointer"] {
    .menu-container-left {
   gap: clamp(1px, 7vh, 100px) !important;
 }
-
-   /* Force logo scaling */
-.nav-lbstr-logo {
-  width: clamp(80px, min(8vw, 12vh), 120px) !important;
-  height: auto !important;
-  max-width: none !important;
-  max-height: none !important;
-}
