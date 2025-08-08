@@ -1926,5 +1926,5 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
    .menu-container-left {
-  gap: clamp(8px, 2.5vh, 30px) !important;
+  gap: clamp(35px, 5vh, 60px) !important;
 }
