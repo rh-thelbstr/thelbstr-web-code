@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // === SLIDE 14 MODAL SYSTEM ===
 class Slide14ModalSystem {
   constructor() {
-    if (window.innerWidth >= 768) return; // desktop: keep existing layout
+    if (window.innerWidth >= 992) return; // desktop: keep existing layout
     this.triggers = [
       { triggerClass: "bio-expand-trigger-4",    contentClass: "rh-bio-description", title: "Bio" },
       { triggerClass: "brands-expand-trigger-5", contentClass: "brands-list-mobile",  title: "Brands"    },
@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // === SLIDE 18 MODAL SYSTEM ===
 class Slide18ModalSystem {
   constructor() {
-    if (window.innerWidth >= 768) return; // mobile only
+    if (window.innerWidth >= 992) return; // mobile only
     this.triggerClass = "bio-ekta-trigger";
     this.contentClass = "slide-18-copy";
     this.title = "Bio";
@@ -1431,7 +1431,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile - leave desktop completely alone
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 992) {
         console.log('💻 Desktop detected - skipping mobile navigation');
         return;
     }
@@ -1998,7 +1998,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 992) {
         console.log('💻 Desktop detected - skipping mobile progress bar');
         return;
     }
@@ -2087,7 +2087,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Handle window resize - cleanup if switching to desktop
         window.addEventListener('resize', function() {
-            if (window.innerWidth >= 768) {
+            if (window.innerWidth >= 992) {
                 console.log('💻 Switched to desktop - cleaning up mobile progress bar');
                 window.removeEventListener('scroll', throttledUpdate);
                 
@@ -2115,7 +2115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile
-    if (window.innerWidth >= 768) return;
+    if (window.innerWidth >= 992) return;
     
     console.log('🔧 Applying permanent mobile scroll fix...');
     
@@ -2198,7 +2198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // MOBILE PROGRESS BAR HEIGHT FIX
 // Add this after your existing script
 (function() {
-    if (window.innerWidth >= 768) return;
+    if (window.innerWidth >= 992) return;
     
     setTimeout(() => {
         const fill = document.querySelector('.nav-progress-fill');
@@ -2221,7 +2221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // MOBILE PROGRESS BAR COLOR THEME SYNC
 // Add this after your height fix script
 (function() {
-    if (window.innerWidth >= 768) return;
+    if (window.innerWidth >= 992) return;
     
     console.log('🎨 Setting up progress bar color theme sync...');
     
@@ -2282,7 +2282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile
-    if (window.innerWidth >= 768) return;
+    if (window.innerWidth >= 992) return;
     
     console.log('📱 Loading complete mobile menu solution...');
     
@@ -2483,7 +2483,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Desktop logo click navigation - add this to your scripts.js
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on desktop
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 992) {
         const navBar = document.querySelector('.nav-bar');
         
         if (navBar) {
@@ -3021,7 +3021,7 @@ console.log('🦞 Floating lobsters script loaded for home slide');
 
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on mobile
-    if (window.innerWidth >= 768) return;
+    if (window.innerWidth >= 992) return;
     const burger = document.querySelector('.nav-burger-icon-black');
     if (!burger) return;
 
@@ -3056,7 +3056,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   document.addEventListener('DOMContentLoaded', function() {
     // only on mobile
-    if (window.innerWidth >= 768) return;
+    if (window.innerWidth >= 992) return;
 
     const burger = document.querySelector('.nav-burger-icon-black');
     if (!burger) return;
@@ -3075,7 +3075,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Mobile Floating Lobsters Animation - Home Slide Only
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on mobile
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 992) {
         console.log('💻 Desktop detected - skipping mobile floating lobsters');
         return;
     }
