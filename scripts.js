@@ -1091,7 +1091,7 @@ class ServicesToggleSystem {
     
         // Make it green and bold
         trigger.style.color = '#32b550';
-        trigger.style.fontWeight = 'bold';
+        trigger.style.fontWeight = 'normal';
 
         this.servicesContent.style.opacity = '0';
 
