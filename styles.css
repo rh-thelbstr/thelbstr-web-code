@@ -332,7 +332,7 @@ body {
 }
 
 /* Additional mobile-specific targeting */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     body *::selection {
         background: #32b550 !important;
         color: white !important;
@@ -344,7 +344,7 @@ body {
     }
 }
 /* Disable custom cursor on mobile/touch devices */
-@media (max-width: 767px), (hover: none) {
+@media (max-width: 991px), (hover: none) {
     body {
         cursor: auto !important;
     }
@@ -720,7 +720,7 @@ a, button, .clickable, [data-cursor="pointer"] {
    ========================================= */
 
 /* SLIDE 21 SERVICES MODAL */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .services-modal-overlay {
         position: fixed !important;
         top: 0 !important;
@@ -859,7 +859,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* SLIDE 11 VALUES MODAL (Disciplined, etc.) */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .mobile-modal-overlay {
         position: fixed !important;
         top: 0 !important;
@@ -968,7 +968,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* SLIDE 14 MODAL (Biography, Brands, Recognition) */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .slide14-modal-overlay {
         position: fixed !important;
         top: 0 !important;
@@ -1095,7 +1095,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* SLIDE 18 MODAL (Ekta Bio) */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .slide18-modal-overlay {
         position: fixed !important;
         top: 0 !important;
@@ -1224,7 +1224,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* DESKTOP BRACKET FIX - Keep this unchanged */
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     .expand-trigger {
         white-space: nowrap !important;
         display: inline-block !important;
@@ -1562,7 +1562,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* Fix for slide 18 mobile modal - keep links green */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .slide18-modal-body a,
     .slide18-modal-body .link-2,
     .slide18-modal-body .link-3 {
@@ -1576,7 +1576,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* Force consistent mobile nav spacing */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .nav-bar .nav-lbstr-logo {
         margin-left: 1.5rem !important;
         margin-right: 0 !important;
@@ -1654,7 +1654,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* Hide on mobile */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .floating-lobster {
         display: none !important;
     }
@@ -1663,7 +1663,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 /* Global FOUC Prevention for Animated Slides - Add to styles.css */
 
 /* Hide elements initially to prevent flash before animations */
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     /* Slide 2 - The Beginning */
     #the-beginning .date-column,
     #the-beginning .headline-block,
@@ -1757,7 +1757,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* Mobile - show everything normally (no animations) */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     #the-beginning .date-column,
     #the-beginning .headline-block,
     #the-beginning .body-text-block-may2015,
@@ -1817,7 +1817,7 @@ a, button, .clickable, [data-cursor="pointer"] {
 }
 
 /* Mobile fixes to maintain your existing mobile styling */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .nav-bar .nav-lbstr-logo {
         margin-left: 1.5rem !important;
         margin-right: 0 !important;
