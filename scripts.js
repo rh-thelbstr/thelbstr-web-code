@@ -240,7 +240,7 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
    const fill = document.querySelector(".nav-progress-fill");
 
 if (fill) {
-  if (window.innerWidth < 992) {
+  if (window.innerWidth < 768) {
     // ✅ MOBILE: use document.body since .scroll-container isn't producing scroll delta
     requestAnimationFrame(() => {
       window.addEventListener("scroll", () => {
@@ -265,7 +265,7 @@ if (fill) {
   }
   // Reset on resize
   window.addEventListener("resize", () => {
-    if (window.innerWidth < 992) {
+    if (window.innerWidth < 768) {
       fill.style.removeProperty("height");
       fill.style.setProperty("height", "0%", "important");
     } else {
@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // === SLIDE 14 MODAL SYSTEM ===
 class Slide14ModalSystem {
   constructor() {
-    if (window.innerWidth >= 992) return; // desktop: keep existing layout
+    if (window.innerWidth >= 768) return; // desktop: keep existing layout
     this.triggers = [
       { triggerClass: "bio-expand-trigger-4",    contentClass: "rh-bio-description", title: "Bio" },
       { triggerClass: "brands-expand-trigger-5", contentClass: "brands-list-mobile",  title: "Brands"    },
@@ -521,13 +521,13 @@ class Slide14ModalSystem {
 
 // initialize on mobile only
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.innerWidth < 992) new Slide14ModalSystem();
+  if (window.innerWidth < 768) new Slide14ModalSystem();
 });
 
 // === SLIDE 18 MODAL SYSTEM ===
 class Slide18ModalSystem {
   constructor() {
-    if (window.innerWidth >= 992) return; // mobile only
+    if (window.innerWidth >= 768) return; // mobile only
     this.triggerClass = "bio-ekta-trigger";
     this.contentClass = "slide-18-copy";
     this.title = "Bio";
@@ -625,7 +625,7 @@ class Slide18ModalSystem {
 
 // Update the initialization to include Slide 18
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.innerWidth < 992) {
+  if (window.innerWidth < 768) {
     new Slide14ModalSystem();
     new Slide18ModalSystem(); // Add this line
   }
@@ -1431,7 +1431,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile - leave desktop completely alone
-    if (window.innerWidth >= 992) {
+    if (window.innerWidth >= 768) {
         console.log('💻 Desktop detected - skipping mobile navigation');
         return;
     }
@@ -1649,7 +1649,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on desktop - leave mobile to the clean mobile system
-    if (window.innerWidth < 992) {
+    if (window.innerWidth < 768) {
         console.log('📱 Mobile detected - skipping desktop menu');
         return;
     }
@@ -1998,7 +1998,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile
-    if (window.innerWidth >= 992) {
+    if (window.innerWidth >= 768) {
         console.log('💻 Desktop detected - skipping mobile progress bar');
         return;
     }
@@ -2087,7 +2087,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Handle window resize - cleanup if switching to desktop
         window.addEventListener('resize', function() {
-            if (window.innerWidth >= 992) {
+            if (window.innerWidth >= 768) {
                 console.log('💻 Switched to desktop - cleaning up mobile progress bar');
                 window.removeEventListener('scroll', throttledUpdate);
                 
@@ -2115,7 +2115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile
-    if (window.innerWidth >= 992) return;
+    if (window.innerWidth >= 768) return;
     
     console.log('🔧 Applying permanent mobile scroll fix...');
     
@@ -2198,7 +2198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // MOBILE PROGRESS BAR HEIGHT FIX
 // Add this after your existing script
 (function() {
-    if (window.innerWidth >= 992) return;
+    if (window.innerWidth >= 768) return;
     
     setTimeout(() => {
         const fill = document.querySelector('.nav-progress-fill');
@@ -2221,7 +2221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // MOBILE PROGRESS BAR COLOR THEME SYNC
 // Add this after your height fix script
 (function() {
-    if (window.innerWidth >= 992) return;
+    if (window.innerWidth >= 768) return;
     
     console.log('🎨 Setting up progress bar color theme sync...');
     
@@ -2282,7 +2282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on mobile
-    if (window.innerWidth >= 992) return;
+    if (window.innerWidth >= 768) return;
     
     console.log('📱 Loading complete mobile menu solution...');
     
@@ -2483,7 +2483,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Desktop logo click navigation - add this to your scripts.js
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on desktop
-    if (window.innerWidth >= 992) {
+    if (window.innerWidth >= 768) {
         const navBar = document.querySelector('.nav-bar');
         
         if (navBar) {
@@ -2547,7 +2547,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // All Films Thumbnail Animation - Random Frame Selection
 document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth < 992) return;
+    if (window.innerWidth < 768) return;
     
     console.log('🎬 All Films animation with random frame selection...');
     
@@ -2812,7 +2812,7 @@ console.log('🎬 All Films random animation system loaded');
 // Floating Lobsters Animation - Home Slide Only
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on desktop
-    if (window.innerWidth < 992) {
+    if (window.innerWidth < 768) {
         console.log('📱 Mobile detected - skipping floating lobsters');
         return;
     }
@@ -3004,7 +3004,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle window resize
     window.addEventListener('resize', function() {
-        if (window.innerWidth < 992) {
+        if (window.innerWidth < 768) {
             // Remove all lobsters on mobile
             const lobsters = document.querySelectorAll('.floating-lobster');
             lobsters.forEach(lobster => {
@@ -3021,7 +3021,7 @@ console.log('🦞 Floating lobsters script loaded for home slide');
 
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on mobile
-    if (window.innerWidth >= 992) return;
+    if (window.innerWidth >= 768) return;
     const burger = document.querySelector('.nav-burger-icon-black');
     if (!burger) return;
 
@@ -3056,7 +3056,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   document.addEventListener('DOMContentLoaded', function() {
     // only on mobile
-    if (window.innerWidth >= 992) return;
+    if (window.innerWidth >= 768) return;
 
     const burger = document.querySelector('.nav-burger-icon-black');
     if (!burger) return;
@@ -3075,7 +3075,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Mobile Floating Lobsters Animation - Home Slide Only
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on mobile
-    if (window.innerWidth >= 992) {
+    if (window.innerWidth >= 768) {
         console.log('💻 Desktop detected - skipping mobile floating lobsters');
         return;
     }
@@ -3315,7 +3315,7 @@ document.addEventListener('DOMContentLoaded', function() {
             lobstersCreated = false;
             interactedLobsters.length = 0;
             
-            if (window.innerWidth < 992) {
+            if (window.innerWidth < 768) {
                 createMobileFloatingLobsters();
             }
         }, 500);
@@ -3682,7 +3682,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
     
     // Only run on desktop where you have horizontal scrolling
-    if (window.innerWidth < 992) return;
+    if (window.innerWidth < 768) return;
     
     // Detect Chrome specifically (don't run on Safari)
     const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) && !/Edge/.test(navigator.userAgent);
