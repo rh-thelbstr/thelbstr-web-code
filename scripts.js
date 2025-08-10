@@ -240,7 +240,7 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
    const fill = document.querySelector(".nav-progress-fill");
 
 if (fill) {
-  if (window.innerWidth < 768) {
+  if (window.innerWidth < 992) {
     // ✅ MOBILE: use document.body since .scroll-container isn't producing scroll delta
     requestAnimationFrame(() => {
       window.addEventListener("scroll", () => {
@@ -265,7 +265,7 @@ if (fill) {
   }
   // Reset on resize
   window.addEventListener("resize", () => {
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 992) {
       fill.style.removeProperty("height");
       fill.style.setProperty("height", "0%", "important");
     } else {
@@ -521,7 +521,7 @@ class Slide14ModalSystem {
 
 // initialize on mobile only
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.innerWidth < 768) new Slide14ModalSystem();
+  if (window.innerWidth < 992) new Slide14ModalSystem();
 });
 
 // === SLIDE 18 MODAL SYSTEM ===
@@ -625,7 +625,7 @@ class Slide18ModalSystem {
 
 // Update the initialization to include Slide 18
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.innerWidth < 768) {
+  if (window.innerWidth < 992) {
     new Slide14ModalSystem();
     new Slide18ModalSystem(); // Add this line
   }
@@ -1649,7 +1649,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
     
     // Only run on desktop - leave mobile to the clean mobile system
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 992) {
         console.log('📱 Mobile detected - skipping desktop menu');
         return;
     }
@@ -2547,7 +2547,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // All Films Thumbnail Animation - Random Frame Selection
 document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth < 768) return;
+    if (window.innerWidth < 992) return;
     
     console.log('🎬 All Films animation with random frame selection...');
     
@@ -2812,7 +2812,7 @@ console.log('🎬 All Films random animation system loaded');
 // Floating Lobsters Animation - Home Slide Only
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on desktop
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 992) {
         console.log('📱 Mobile detected - skipping floating lobsters');
         return;
     }
@@ -3004,7 +3004,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle window resize
     window.addEventListener('resize', function() {
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 992) {
             // Remove all lobsters on mobile
             const lobsters = document.querySelectorAll('.floating-lobster');
             lobsters.forEach(lobster => {
@@ -3315,7 +3315,7 @@ document.addEventListener('DOMContentLoaded', function() {
             lobstersCreated = false;
             interactedLobsters.length = 0;
             
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 992) {
                 createMobileFloatingLobsters();
             }
         }, 500);
@@ -3682,7 +3682,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
     
     // Only run on desktop where you have horizontal scrolling
-    if (window.innerWidth < 768) return;
+    if (window.innerWidth < 992) return;
     
     // Detect Chrome specifically (don't run on Safari)
     const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) && !/Edge/.test(navigator.userAgent);
