@@ -683,7 +683,6 @@ a, button, .clickable, [data-cursor="pointer"] {
 .film-conceptualisation.service-active,
 .directing.service-active {
     color: #32b550 !important;
-    border-bottom: 1px solid #32b550 !important;
 }
 
 .brand, .creative, .imc, .solve4, .scriptwriting, .film-conceptualisation, .directing {
