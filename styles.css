@@ -1928,3 +1928,12 @@ a, button, .clickable, [data-cursor="pointer"] {
    .menu-container-left {
   gap: clamp(1px, 7vh, 100px) !important;
 }
+
+/* Remove green underline from active service in capabilities/services list only */
+.capabilities .service-active,
+.capabilities [data-service-active="true"],
+.services .service-active,
+.services [data-service-active="true"] {
+  border-bottom: none !important;
+  text-decoration: none !important;
+}
