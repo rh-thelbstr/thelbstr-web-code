@@ -1926,3 +1926,25 @@ a, button, .clickable, [data-cursor="pointer"] {
    .menu-container-left {
   gap: clamp(1px, 7vh, 100px) !important;
 }
+
+/* Tablet-specific override - forces mobile-style behavior */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Force tablets to use mobile-style scrolling */
+  .wrapper {
+    position: static !important;
+    width: 100% !important;
+    display: block !important;
+    transform: none !important;
+  }
+  
+  .slide {
+    width: 100vw !important;
+    height: auto !important;
+    position: static !important;
+  }
+  
+  /* Force tablets to use mobile navigation */
+  .nav-menu-desktop {
+    display: none !important;
+  }
+}   
