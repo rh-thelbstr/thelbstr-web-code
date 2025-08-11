@@ -1927,7 +1927,7 @@ a, button, .clickable, [data-cursor="pointer"] {
   gap: clamp(1px, 7vh, 100px) !important;
 }
 
-/* Tablet-specific override - forces mobile-style behavior */
+/* Enhanced tablet-specific override - forces complete mobile behavior */
 @media (min-width: 768px) and (max-width: 991px) {
   /* Force tablets to use mobile-style scrolling */
   .wrapper {
@@ -1943,8 +1943,46 @@ a, button, .clickable, [data-cursor="pointer"] {
     position: static !important;
   }
   
-  /* Force tablets to use mobile navigation */
+  /* Force tablets to use mobile navigation layout */
   .nav-menu-desktop {
     display: none !important;
   }
-}   
+  
+  /* FIX: Force nav bar to stay horizontal like mobile */
+  .nav-bar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    height: 60px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 !important;
+  }
+  
+  /* FIX: Force LBSTR logo to left side like mobile */
+  .nav-lbstr-logo {
+    margin-left: 1.5rem !important;
+    margin-right: 0 !important;
+    transform: none !important;
+    writing-mode: initial !important;
+    text-orientation: initial !important;
+  }
+  
+  /* FIX: Force burger menu to right side like mobile */
+  .nav-burger-icon-black {
+    margin-right: 1.5rem !important;
+    margin-left: 0 !important;
+  }
+  
+  /* FIX: Hide any desktop nav elements that might be showing */
+  .nav-text-rotated-1,
+  .nav-text-rotated-2, 
+  .nav-text-rotated-3,
+  .nav-instagram-link {
+    display: none !important;
+  }
+}
