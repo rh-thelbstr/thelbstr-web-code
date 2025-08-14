@@ -3440,7 +3440,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 canonicalTag.rel = 'canonical';
                 document.head.appendChild(canonicalTag);
             }
-            canonicalTag.href = `https://thelbstr.com${newURL}`;
+            canonicalTag.href = `https://www.thelbstr.com${newURL}`;
             
             // Update Open Graph tags
             updateOpenGraph(seo, newURL);
@@ -3454,7 +3454,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const ogTags = [
             { property: 'og:title', content: seo.title },
             { property: 'og:description', content: seo.description },
-            { property: 'og:url', content: `https://thelbstr.com${url}` },
+            { property: 'og:url', content: `https://www.thelbstr.com${url}` },
             { property: 'og:type', content: 'website' },
             { property: 'og:site_name', content: 'The LBSTR' }
         ];
@@ -3569,7 +3569,7 @@ document.addEventListener('DOMContentLoaded', function() {
         "@type": "LocalBusiness",
         "name": "The LBSTR",
         "description": "Strategy and storytelling studio helping brands solve their biggest challenges",
-        "url": "https://thelbstr.com",
+        "url": "https://www.thelbstr.com",
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Dubai",
@@ -3597,7 +3597,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         "@type": "Service",
                         "name": "Integrated Strategy",
                         "description": "Strategic marketing consulting to help brands answer complex challenges",
-                        "url": "https://thelbstr.com/strategy"
+                        "url": "https://www.thelbstr.com/strategy"
                     }
                 },
                 {
@@ -3606,7 +3606,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         "@type": "Service",
                         "name": "Cinematic Storytelling",
                         "description": "Compelling narratives that connect with audiences",
-                        "url": "https://thelbstr.com/storytelling"
+                        "url": "https://www.thelbstr.com/storytelling"
                     }
                 },
                 {
@@ -3615,7 +3615,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         "@type": "Service", 
                         "name": "Strategy & Storytelling Services",
                         "description": "Comprehensive strategy and storytelling solutions",
-                        "url": "https://thelbstr.com/services"
+                        "url": "https://www.thelbstr.com/services"
                     }
                 }
             ]
