@@ -130,8 +130,14 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
 
     if (isDesktop) {
   gsap.registerPlugin(ScrollTrigger);
-
-        
+   
+    ScrollSmoother.create({
+    wrapper: ".smooth-wrapper",
+    content: ".smooth-content",
+    smooth: 1.2,
+    effects: true
+  });
+   
   const fullWidth = slides.length * window.innerWidth;
   const scrollDistance = fullWidth - window.innerWidth;
 
