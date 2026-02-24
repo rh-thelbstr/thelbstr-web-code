@@ -3854,3 +3854,46 @@ document.addEventListener('DOMContentLoaded', () => {
   // Run immediately
   handleShortScreens();
 })();
+
+// ==========================================
+// CHROME WHEEL EVENT FIX
+// Fixes Chrome 133+ where horizontal scroll only works
+// when cursor is over the nav bar
+// ==========================================
+(function() {
+    'use strict';
+    
+    // Only run on desktop
+    if (window.innerWidth < 768) return;
+    
+    function applyWheelFix() {
+        const scrollContainer = document.querySelector('.scroll-container');
+        const smoothWrapper = document.querySelector('.smooth-wrapper');
+        const smoothContent = document.querySelector('.smooth-content');
+        const wrapper = document.querySelector('.wrapper');
+        
+        [scrollContainer, smoothWrapper, smoothContent, wrapper].forEach(el => {
+            if (el) {
+                el.addEventListener('wheel', function(e) {
+                    if (e.defaultPrevented) return;
+                    
+                    window.scrollBy({
+                        top: e.deltaY,
+                        left: 0,
+                        behavior: 'instant'
+                    });
+                    
+                    e.preventDefault();
+                }, { passive: false });
+            }
+        });
+        
+        console.log('🔧 Chrome wheel event fix applied');
+    }
+    
+    if (document.readyState === 'complete') {
+        applyWheelFix();
+    } else {
+        window.addEventListener('load', applyWheelFix);
+    }
+})();
