@@ -131,8 +131,7 @@ if (navigator.vendor && navigator.vendor.indexOf('Apple') > -1) {
     if (isDesktop) {
   gsap.registerPlugin(ScrollTrigger);
 
-  });
-
+        
   const fullWidth = slides.length * window.innerWidth;
   const scrollDistance = fullWidth - window.innerWidth;
 
