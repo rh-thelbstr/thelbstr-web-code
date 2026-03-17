@@ -642,7 +642,7 @@ const films = {
     'himalaya': { cmsSlug: 'himalaya' },
     'braun': { cmsSlug: 'braun' },
     'adnoc': { cmsSlug: 'adnoc' },
-    'aldar': { cmsSlug: 'aldar-x-chef-izu' },
+    'nike': { cmsSlug: 'nike' },
     'the-laundromat': { cmsSlug: 'the-laundromat' },
     'datsun-fairlady-280z': { cmsSlug: 'datsun-fairlady-280z' },
     'karama-267': { cmsSlug: 'karama-267' },
@@ -820,7 +820,7 @@ setTimeout(() => {
         { text: 'Himalaya', filmId: 'himalaya' },
         { text: 'Braun', filmId: 'braun' },
         { text: 'ADNOC', filmId: 'adnoc' },
-        { text: 'Aldar x Chef Izu', filmId: 'aldar' },
+        { text: 'Nike', filmId: 'nike' },
         { text: 'The Laundromat', filmId: 'the-laundromat' },
         { text: 'Datsun Fairlady 280Z', filmId: 'datsun-fairlady-280z' },
         { text: 'Karama 267', filmId: 'karama-267' },
@@ -834,7 +834,7 @@ setTimeout(() => {
         { className: 'himalaya-frames', filmId: 'himalaya' },
         { className: 'braun-frames', filmId: 'braun' },
         { className: 'adnoc-frames', filmId: 'adnoc' },
-        { className: 'aldar-frames', filmId: 'aldar' },
+        { className: 'nike-frames', filmId: 'nike' },
         { className: 'laundromat-frames', filmId: 'the-laundromat' },
         { className: 'datsun-frames', filmId: 'datsun-fairlady-280z' },
         { className: 'karama-frames', filmId: 'karama-267' },
@@ -2565,7 +2565,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { prefix: 'him-frame', name: 'Himalaya' },
                 { prefix: 'braun-frame', name: 'Braun' },
                 { prefix: 'adnoc-frame', name: 'ADNOC' },
-                { prefix: 'aldar-frame', name: 'Aldar' }
+                { prefix: 'nike-frame', name: 'Nike' }
             ]
         },
         personal: {
